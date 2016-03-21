@@ -24,6 +24,7 @@
 		<class>MastersProject.BeadRepo.SubjectInfoBead</class>
 		<class>MastersProject.BeadRepo.SenderInfoBead</class>
 		<class>MastersProject.BeadRepo.NotificationInfoBead</class>
+		<class>MastersProject.BeadRepo.AppInfoBead</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC" />
 			<property name="javax.persistence.jdbc.url"	value="jdbc:sqlite:anothertest.db" />

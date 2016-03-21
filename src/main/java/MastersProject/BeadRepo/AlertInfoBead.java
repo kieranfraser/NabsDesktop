@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.Transient;
 
+import MastersProject.Controllers.NabsDesktopController;
 import MastersProject.FuzzyLogic.AlertFuzzy;
 import MastersProject.Interface.BeadInputInterface;
 import MastersProject.Interface.BeadOutputInterface;
@@ -49,7 +50,9 @@ Runnable{
 		AlertFuzzy alertFuzzy = new AlertFuzzy();
 		double inferredValue = alertFuzzy.processalert(senderInput, subjectInput);
 		System.out.println("Inferred minutes: "+inferredValue);
-		System.out.println("Fire Notification "+this.getPartNumber()+" in: "+DateUtility.cleanMinutes(inferredValue));
+		String result = "Fire Notification "+this.getPartNumber()+" in: "+DateUtility.cleanMinutes(inferredValue);
+		System.out.println(result);
+		App.result = result;
 	}
 
 	@Override

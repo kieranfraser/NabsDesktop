@@ -4,6 +4,7 @@
 
 package MastersProject.Controllers;
 
+import MastersProject.Nabs.App;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -23,7 +24,7 @@ public class NabsDesktopController {
 
     @FXML
     void sayHello(ActionEvent event) {
-    	consoleTextArea.setText("Button has been clicked!");
+    	String result = App.fireNotification();
+    	consoleTextArea.setText(result);
     }
-
 }

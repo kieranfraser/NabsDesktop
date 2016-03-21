@@ -44,27 +44,18 @@ public class App extends Application
 	private static SenderInfoBead senderInfoBead;
 	private static SubjectInfoBead subjectInfoBead;
 	
+	private static ArrayList<UpliftedNotification> notifications;
+	private static UpliftedNotification notification;
+	private static int notificationNumber;
+	
+	public static String result;
+	
     public static void main( String[] args )
     {
 
         factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     	em = factory.createEntityManager();
     	
-		/**
-		 * Take in the uplifted notifications (this will be received via an external
-		 * push at the demo.
-		 */
-		ArrayList<UpliftedNotification> notifications = readNotifications();
-		UpliftedNotification notification = notifications.get(0);
-		
-		/**
-		 * For a given notification create a bead group
-		 */
-		initBeadRepoForNotification(notification);
-		
-		System.out.println("Notification fired.");
-		notificationInfoBead.notificationReceived(notification);
-
     	launch(args);
     }
 
@@ -170,9 +161,37 @@ public class App extends Application
 	    AnchorPane pane = FXMLLoader.load( url );
 	    Scene scene = new Scene( pane );
 	    
+	    notificationNumber = -1;
+	    /**
+		 * Take in the uplifted notifications (this will be received via an external
+		 * push at the demo.
+		 */
+		notifications = readNotifications();
+		
 	    // setting the stage
 	    primaryStage.setScene( scene );
-	    primaryStage.setTitle( "Hello World Demo" );
+	    primaryStage.setTitle( "Demo" );
 	    primaryStage.show();
+	}
+	
+	public static String fireNotification(){
+		result = null;
+		if(notificationNumber<notifications.size()){
+			notificationNumber++;
+			notification = notifications.get(notificationNumber);
+			
+			/**
+			 * For a given notification create a bead group
+			 */
+			initBeadRepoForNotification(notification);
+			System.out.println("Notification fired.");
+			notificationInfoBead.notificationReceived(notification);
+			
+		}
+		else{
+			System.out.println("No more notifications!");
+		}
+		while(result == null){}
+		return result;
 	}
 }
