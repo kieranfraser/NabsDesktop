@@ -120,7 +120,7 @@ Runnable{
 					eventInput += 0.1;
 					break;
 				case 5:
-					eventInput += 0.5;
+					eventInput += 0.05;
 					break;
 				}
 			}

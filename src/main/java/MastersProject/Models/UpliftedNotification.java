@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import MastersProject.Nabs.App;
 
 public class UpliftedNotification implements Serializable{
 	
@@ -96,6 +100,11 @@ public class UpliftedNotification implements Serializable{
 		this.dateImportance = dateImportance;
 	}
 	
-	
+	public static int getRank(String table, String value){
+		EntityManager em = App.getEntityManager();
+		Query q = em.createQuery("select t.rank from "+table+" t where t.value = '"+value+"'");
+		int result = (int) q.getSingleResult();
+		return result;
+	}
 	
 }

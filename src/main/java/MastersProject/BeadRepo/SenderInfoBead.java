@@ -114,16 +114,18 @@ Runnable{
 					eventInput += 0.1;
 					break;
 				case 5:
-					eventInput += 0.5;
+					eventInput += 0.049;
 					break;
 				}
 			}
 			eventNo++;
 		}
-		
+		System.out.println("********************************");
 		// Mamdami inferrence controller 
 		SenderFuzzy senderFuzzy = new SenderFuzzy();
 		double senderInput = (double) notification.getSenderRank()/10.0;
+		System.out.println("SenderInput: "+senderInput);
+		System.out.println("EventInput: "+eventInput);
 		double inferredValue = senderFuzzy.processSender(senderInput, eventInput);
 		System.out.println("MastersProject.BeadRepo.SenderInfoBead: Inferred value = "+inferredValue);
 		

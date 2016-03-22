@@ -18,6 +18,7 @@ import MastersProject.Constants.ConnectionType;
 import MastersProject.DBHelper.ImportUplift;
 import MastersProject.Models.InformationBead;
 import MastersProject.Models.UpliftedNotification;
+import MastersProject.Models.UpliftValues.AppUplift;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -152,6 +153,8 @@ public class App extends Application
     
     public static void closeEntityManager(){
     	em.close();
+    	factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+    	em = factory.createEntityManager();
     }
 
 	@Override
@@ -167,31 +170,70 @@ public class App extends Application
 		 * push at the demo.
 		 */
 		notifications = readNotifications();
+		setNextNotificaiton();
 		
 	    // setting the stage
 	    primaryStage.setScene( scene );
 	    primaryStage.setTitle( "Demo" );
+	    //primaryStage.setFullScreen(true);
 	    primaryStage.show();
 	}
 	
-	public static String fireNotification(){
-		result = null;
+	/**
+	 * After the rank's have been updated, must update the notification 
+	 * uplift list as rank is inserted at the uplift point. Also refresh the 
+	 * currently selected notification.
+	 */
+	public static void refreshNotificationsOnRankUpdate(){
+		notifications = readNotifications();
+		notification = notifications.get(notificationNumber);
+	}
+	
+	public static boolean setNextNotificaiton(){
 		if(notificationNumber<notifications.size()){
 			notificationNumber++;
 			notification = notifications.get(notificationNumber);
-			
+			return true;
+		}
+		else	return false;
+	}
+	
+	public static boolean setPrevNotification(){
+		if(notificationNumber>0){
+			notificationNumber--;
+			notification = notifications.get(notificationNumber);
+			return true;
+		}
+		else return false;
+	}
+	
+	public static String fireNotification(UpliftedNotification customNotification, String type){
+
+		result = null;
+		switch(type){
+		case "Nabbed":
 			/**
 			 * For a given notification create a bead group
 			 */
 			initBeadRepoForNotification(notification);
-			System.out.println("Notification fired.");
 			notificationInfoBead.notificationReceived(notification);
+			break;
+		case "Custom":
+			/**
+			 * For a given notification create a bead group
+			 */
+			initBeadRepoForNotification(customNotification);
+			notificationInfoBead.notificationReceived(customNotification);
+			break;
+		}
+		
 			
-		}
-		else{
-			System.out.println("No more notifications!");
-		}
 		while(result == null){}
 		return result;
 	}
+
+	public static UpliftedNotification getNotification() {
+		return notification;
+	}	
+	
 }
