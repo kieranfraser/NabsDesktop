@@ -31,6 +31,8 @@ import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 import com.google.gdata.util.ServiceException;
 
+import MastersProject.Utilities.DateUtility;
+
 
 public class GoogleCalendarData {
 	/** Application name. */
@@ -104,80 +106,68 @@ public class GoogleCalendarData {
                 HTTP_TRANSPORT, JSON_FACTORY, credential)
                 .setApplicationName(APPLICATION_NAME)
                 .build();
-    }    
+    }
     
-    public static ArrayList<CalendarEvent> getCalendarResults(int nextNoEvents) throws IOException, ServiceException, ParseException{
-    	
-    	com.google.api.services.calendar.Calendar service =
-	            getCalendarService();
+    /**
+     * Get the next n events from the date and time input
+     * @param n - number of events
+     * @param date - the date to compare
+     * @return An array list of calendar events 
+     * @throws ParseException 
+     * @throws IOException 
+     */
+    public static ArrayList<CalendarEvent> getNextNEvents(int n, Date dateFrom) 
+    		throws ParseException, IOException {
+    	com.google.api.services.calendar.Calendar service = getCalendarService();
     	
     	calendarIDS = new ArrayList<String>();
     	calendars = new ArrayList<Calendar>();
-    	 
-    	// Iterate through entries in calendar list
-    	/*String pageToken = null;
-    	do {
-    	  CalendarList calendarList = service.calendarList().list().setPageToken(pageToken).execute();
-    	  List<CalendarListEntry> items = calendarList.getItems();
-
-    	  for (CalendarListEntry calendarListEntry : items) {
-    	    System.out.println("Summary: "+calendarListEntry.getSummary());
-    	    System.out.println("id: "+calendarListEntry.getId());
-    	    calendarIDS.add(calendarListEntry.getId());
-    	  }
-    	  pageToken = calendarList.getNextPageToken();
-    	} while (pageToken != null);
-    	
-    	for(String id : calendarIDS){
-    		// Retrieve a specific calendar list entry
-    		calendars.add(service.calendars().get(id).execute());
-    	}*/
-    	
-    // set min time to be September
-    	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-    	Date dateSept = formatter.parse("27/09/2015");
-    	DateTime september = new DateTime(dateSept.getTime());
-	// List all events from the primary calendar from september (start of notifications)
-        DateTime now = new DateTime(System.currentTimeMillis());
+    	//DateTime date = new DateTime(dateFrom.getTime());
+    	DateTime date = new DateTime(dateFrom, TimeZone.getDefault());
         Events events = service.events().list("primary")
-            .setTimeMin(september)
+            .setTimeMin(date)
             .setOrderBy("startTime")
             .setSingleEvents(true)
             .execute();
         List<Event> items = events.getItems();
         ArrayList<CalendarEvent> requiredEvents = new ArrayList<CalendarEvent>();
         
-        for(int i=0; i<nextNoEvents; i++){
-        	EventDateTime eventDateTime = items.get(i).getStart();
-        	String date = eventDateTime.getDateTime().toString();
-        	System.out.println(date);
-        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-        	sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        	Date convertedDate = sdf.parse(date);
-        	System.out.println(convertedDate);
-        	sdf.applyPattern("dd/MM/yyyy HH:mm:ss");
-        	System.out.println(sdf.format(convertedDate));
-        	/*sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'BST' yyyy");
-        	Date convertedString = sdf.parse(convertedDate.toString());
-        	System.out.println(convertedString);*/
+        for(int i=0; i<n; i++){
+        	Date convertedStartDate = DateUtility.convertEventDateTimeToDate(items.get(i).getStart());
+        	Date convertedEndDate = DateUtility.convertEventDateTimeToDate(items.get(i).getEnd());
         	CalendarEvent event = new CalendarEvent(items.get(i).getDescription(),
-        			convertedDate, items.get(i).getLocation());
+        			convertedStartDate, convertedEndDate, items.get(i).getLocation(), items.get(i).getSummary());
         	requiredEvents.add(event);
         }
-        
         return requiredEvents;
-        /*if (items.size() == 0) {
-            System.out.println("No upcoming events found.");
-        } else {
-            System.out.println("Upcoming events");
-            for (Event event : items) {
-                DateTime start = event.getStart().getDateTime();
-                if (start == null) {
-                    start = event.getStart().getDate();
-                }
-                System.out.printf("%s (%s)\n", event.getSummary(), start);
-            }
-        }*/
     }
+    
+    /**
+     * Get the next event - to be used for the user context
+     * @param dateFrom
+     * @return
+     * @throws ParseException
+     * @throws IOException
+     */
+   public static CalendarEvent getNextEvent(Date dateFrom)
+	   throws ParseException, IOException {
+   		com.google.api.services.calendar.Calendar service = getCalendarService();
+    	calendarIDS = new ArrayList<String>();
+    	calendars = new ArrayList<Calendar>();
+
+    	DateTime date = new DateTime(dateFrom, TimeZone.getDefault());
+        Events events = service.events().list("primary")
+            .setTimeMin(date)
+            .setOrderBy("startTime")
+            .setSingleEvents(true)
+            .execute();
+        List<Event> items = events.getItems();
+    	Date convertedStartDate = DateUtility.convertEventDateTimeToDate(items.get(0).getStart());
+    	Date convertedEndDate = DateUtility.convertEventDateTimeToDate(items.get(0).getEnd());
+    	CalendarEvent event = new CalendarEvent(items.get(0).getDescription(),
+    			convertedStartDate, convertedEndDate, items.get(0).getLocation(), items.get(0).getSummary());
+        return event;
+    }
+    
       
 }

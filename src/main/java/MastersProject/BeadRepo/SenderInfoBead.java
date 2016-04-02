@@ -17,6 +17,7 @@ import com.google.gdata.util.ServiceException;
 import MastersProject.FuzzyLogic.SenderFuzzy;
 import MastersProject.GoogleData.CalendarEvent;
 import MastersProject.GoogleData.GoogleCalendarData;
+import MastersProject.Inference.EventInference;
 import MastersProject.Interface.BeadInputInterface;
 import MastersProject.Interface.BeadOutputInterface;
 import MastersProject.Models.InfoItemFields;
@@ -73,6 +74,10 @@ Runnable{
 	@Override
 	public void getEvidence(String senderId, Date sentTime, Triplet inputData) {
 		System.out.println("Sender");
+		
+		/**
+		 * Storing the upliftedNotification in the Triplet as a json string.
+		 */
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			notification = mapper.readValue(inputData.getInformationItem().getInformationValue(),
@@ -82,10 +87,10 @@ Runnable{
 			e1.printStackTrace();
 		}
 		
-		// get the calendar data for the next 5 events
+		// get the calendar data for the next 10 events
 		try {
-			events = GoogleCalendarData.getCalendarResults(5);
-		} catch (IOException | ServiceException | ParseException e) {
+			events = GoogleCalendarData.getNextNEvents(10, notification.getDate());
+		} catch (IOException |  ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -93,34 +98,20 @@ Runnable{
 		this.run();
 	}
 	
+	/**
+	 * Infer whether the notification sender is important based on event and sender importance.
+	 * The importance of the event is dependent on whether it matches with the event "sender"
+	 * and is also based on how close the event is to the current time. Get the next 10 events.
+	 */
 	@Override
 	public void inferInfoBeadAttr() {
-		double eventInput = 0.0001;
-		int eventNo = 1;
-		for(CalendarEvent event : events){
-			String description = event.getDescription();
-			if(description.contains(notification.getSender())){
-				switch(eventNo){
-				case 1:
-					eventInput += 0.35;
-					break;
-				case 2:
-					eventInput += 0.3;
-					break;
-				case 3:
-					eventInput += 0.2;
-					break;
-				case 4:
-					eventInput += 0.1;
-					break;
-				case 5:
-					eventInput += 0.049;
-					break;
-				}
-			}
-			eventNo++;
+		
+		double eventInput = EventInference.getEventImportanceValue("Sender", events, notification);
+
+		if(eventInput == 0.0){
+			eventInput = 0.00001;
 		}
-		System.out.println("********************************");
+		
 		// Mamdami inferrence controller 
 		SenderFuzzy senderFuzzy = new SenderFuzzy();
 		double senderInput = (double) notification.getSenderRank()/10.0;

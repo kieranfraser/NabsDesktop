@@ -30,9 +30,9 @@ public class SubjectFuzzy {
 		
 		eventRelevance = new InputVariable();
 		eventRelevance.setName("EventRelevance");
-		eventRelevance.setRange(0.000, 1.000);
+		eventRelevance.setRange(0.000, 1.001);
 		eventRelevance.addTerm(new Triangle("NOTRELEVANT", 0.000, 0.350, 0.700));
-		eventRelevance.addTerm(new Triangle("RELEVANT", 0.350, 0.700, 1.000));
+		eventRelevance.addTerm(new Triangle("RELEVANT", 0.350, 0.700, 1.001));
 		engine.addInputVariable(eventRelevance);
 		
 		subjectRelevance = new OutputVariable();

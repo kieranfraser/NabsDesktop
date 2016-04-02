@@ -4,13 +4,24 @@
 
 package MastersProject.Controllers;
 
+import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.poi.ss.usermodel.DateUtil;
+
 import MastersProject.GUI.UpliftTableContent;
+import MastersProject.GoogleData.CalendarEvent;
+import MastersProject.GoogleData.GoogleCalendarData;
+import MastersProject.Inference.EventInference;
 import MastersProject.Models.UpliftedNotification;
 import MastersProject.Models.UpliftValues.AppUplift;
 import MastersProject.Models.UpliftValues.BodyUplift;
@@ -18,6 +29,7 @@ import MastersProject.Models.UpliftValues.DateUplift;
 import MastersProject.Models.UpliftValues.SenderUplift;
 import MastersProject.Models.UpliftValues.SubjectUplift;
 import MastersProject.Nabs.App;
+import MastersProject.Utilities.DateUtility;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,6 +38,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
@@ -39,16 +52,23 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.util.converter.IntegerStringConverter;
 
 public class NabsDesktopController implements Initializable{
 
+	 @FXML // fx:id="phoneTab"
+	 private Tab phoneTab; // Value injected by FXMLLoader
+	 
 	@FXML // fx:id="androidImg"
     private ImageView androidImg; // Value injected by FXMLLoader
 
     @FXML // fx:id="tabPaneReceiver"
     private TabPane tabPaneReceiver; // Value injected by FXMLLoader
-
+//
     @FXML // fx:id="NotificationsTab"
     private Tab NotificationsTab; // Value injected by FXMLLoader
 
@@ -63,15 +83,6 @@ public class NabsDesktopController implements Initializable{
 
     @FXML // fx:id="eventInput"
     private TextField eventInput; // Value injected by FXMLLoader
-
-    @FXML // fx:id="nabbedUserRB"
-    private RadioButton nabbedUserRB; // Value injected by FXMLLoader
-
-    @FXML // fx:id="userContextInput"
-    private ToggleGroup userContextInput; // Value injected by FXMLLoader
-
-    @FXML // fx:id="customUserRB"
-    private RadioButton customUserRB; // Value injected by FXMLLoader
 
     @FXML // fx:id="androidImg2"
     private ImageView androidImg2; // Value injected by FXMLLoader
@@ -106,20 +117,20 @@ public class NabsDesktopController implements Initializable{
     @FXML // fx:id="subjectInput"
     private TextField subjectInput; // Value injected by FXMLLoader
 
-    @FXML // fx:id="bodyInput"
-    private TextField bodyInput; // Value injected by FXMLLoader
-
     @FXML // fx:id="applicationInput"
     private TextField applicationInput; // Value injected by FXMLLoader
-
-    @FXML // fx:id="dateInput"
-    private TextField dateInput; // Value injected by FXMLLoader
 
     @FXML // fx:id="nextBtn"
     private Button nextBtn; // Value injected by FXMLLoader
 
     @FXML // fx:id="prevBtn"
     private Button prevBtn; // Value injected by FXMLLoader
+    
+    @FXML // fx:id="datePicker"
+    private DatePicker datePicker; // Value injected by FXMLLoader
+    
+    @FXML // fx:id="timeInput"
+    private TextField timeInput; // Value injected by FXMLLoader
 
     @FXML // fx:id="upliftTab"
     private Tab upliftTab; // Value injected by FXMLLoader
@@ -154,6 +165,39 @@ public class NabsDesktopController implements Initializable{
     @FXML // fx:id="updateBtn"
     private Button updateBtn; // Value injected by FXMLLoader
     
+    @FXML // fx:id="infoBeadTab"
+    private AnchorPane infoBeadTab; // Value injected by FXMLLoader
+
+    @FXML // fx:id="senderBead"
+    private Circle senderBead; // Value injected by FXMLLoader
+
+    @FXML // fx:id="notificationBead"
+    private Circle notificationBead; // Value injected by FXMLLoader
+    
+    @FXML // fx:id="kJan20"
+    private RadioButton kJan20; // Value injected by FXMLLoader
+
+    @FXML // fx:id="notificationExcel"
+    private ToggleGroup notificationExcel; // Value injected by FXMLLoader
+
+    @FXML // fx:id="kJan21"
+    private RadioButton kJan21; // Value injected by FXMLLoader
+
+    @FXML // fx:id="kJan22"
+    private RadioButton kJan22; // Value injected by FXMLLoader
+
+    @FXML // fx:id="oDec02"
+    private RadioButton oDec02; // Value injected by FXMLLoader
+
+    @FXML // fx:id="oDec10"
+    private RadioButton oDec10; // Value injected by FXMLLoader
+
+    @FXML // fx:id="oDec16"
+    private RadioButton oDec16; // Value injected by FXMLLoader
+
+    @FXML // fx:id="notificationTracker"
+    private Text notificationTracker; // Value injected by FXMLLoader
+    
     private int senderRows;
     private int subjectRows;
     private int bodyRows;
@@ -163,19 +207,11 @@ public class NabsDesktopController implements Initializable{
     @FXML
     void enterSender(ActionEvent event) {
     	this.tabPaneSender.getSelectionModel().select(1);
-    	
+    	    	
     	/**
     	 * Init the notification input form
     	 */
 		setFieldsFromNotification();
-		
-		/**
-		 * Init the user context input form
-		 */
-		this.locationInput.setText("Calendar data to do!");
-		this.locationInput.setEditable(false);
-		this.eventInput.setText("Calendar data to do!");
-		this.eventInput.setEditable(false);
 		
 		/**
 		 * Init the uplift values lists
@@ -205,6 +241,13 @@ public class NabsDesktopController implements Initializable{
 			data.add(content);
 		}
 		this.upliftTable.setItems(data);
+		setNotificationTracker();
+    }
+    
+    private void setNotificationTracker(){
+		int sizeOfNotificationArray = App.getNotificationSize();
+		int notificationNumber = App.getNotificationNumber()+1;
+		this.notificationTracker.setText(notificationNumber+"/"+sizeOfNotificationArray);
     }
     
     @FXML
@@ -261,12 +304,14 @@ public class NabsDesktopController implements Initializable{
     void loadNextNotification(ActionEvent event) {
     	App.setNextNotificaiton();
     	setFieldsFromNotification();
+    	setNotificationTracker();
     }
 
     @FXML
     void loadPreviousNotification(ActionEvent event) {
     	App.setPrevNotification();
     	setFieldsFromNotification();
+    	setNotificationTracker();
     }
 
     @FXML
@@ -333,30 +378,10 @@ public class NabsDesktopController implements Initializable{
     	}
     }
 
-    @FXML
-    void userContextRadioClicked(ActionEvent event) {
-    	if(this.nabbedUserRB.isSelected()){
-    		UpliftedNotification notification = App.getNotification(); 
-    		this.locationInput.setText("Calendar data to do!");
-    		this.locationInput.setEditable(false);
-    		this.eventInput.setText("Calendar data to do!");
-    		this.eventInput.setEditable(false);
-    	}
-    	if(this.customUserRB.isSelected()){
-    		this.locationInput.setText("");
-    		this.locationInput.setEditable(true);
-    		this.eventInput.setText("");
-    		this.eventInput.setEditable(true);
-    	}
-    }
-
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		consoleTextArea.setText("Hello hello hello");
-		
-		
+		consoleTextArea.setText("Nabs");
 	}
     
     @FXML
@@ -377,16 +402,22 @@ public class NabsDesktopController implements Initializable{
     	notification.setSubjectRank(UpliftedNotification.getRank("SubjectUplift",
     			this.subjectInput.getText()));
     	
-    	notification.setBody(this.bodyInput.getText());
+    	notification.setBody(this.subjectInput.getText());
     	notification.setBodyRank(UpliftedNotification.getRank("BodyUplift",
-    			this.bodyInput.getText()));
+    			this.subjectInput.getText()));
     	
-    	notification.setDateImportance(this.dateInput.getText());
+    	notification.setDateImportance(notification.getDateImportance());
     	notification.setDateRank(UpliftedNotification.getRank("DateUplift",
-    			this.dateInput.getText()));
+    			"not significant"));
     	
-    	// get the date value
-    	notification.setDate(new Date());
+    	// set the actual date value
+    	String time = this.timeInput.getText();
+    	Date date = DateUtility.localDateToDate(this.datePicker.getValue());
+    	notification.setDate(DateUtility.createDateAndTime(date, time));
+    	
+    	// Set the user variables from user input fields
+    	App.setUserLocation(this.locationInput.getText());
+    	App.setUserEvent(this.eventInput.getText());
     	
     	if(this.nabbedRB.isSelected()){
         	String result = App.fireNotification(notification, "Nabbed");
@@ -394,34 +425,93 @@ public class NabsDesktopController implements Initializable{
     	}
     	if(this.customRB.isSelected()){
     		String result = App.fireNotification(notification, "Custom");
-        	consoleTextArea.setText(result);
+    		String oldMessage = this.consoleTextArea.getText();
+        	consoleTextArea.setText(oldMessage+ "\n"+result);
     	}
     }
     
     private void setFieldsFromNotification(){
+    	
+    	// Sender Phone
     	UpliftedNotification notification = App.getNotification(); 
 		this.senderInput.setText(notification.getSender());
 		this.senderInput.setEditable(false);
 		this.subjectInput.setText(notification.getSubject());
 		this.subjectInput.setEditable(false);
-		this.bodyInput.setText(notification.getBody());
-		this.bodyInput.setEditable(false);
 		this.applicationInput.setText(notification.getApp());
 		this.applicationInput.setEditable(false);
-		this.dateInput.setText(notification.getDateImportance());
-		this.dateInput.setEditable(false);
+		this.datePicker.setValue(DateUtility.dateToLocalDate(notification.getDate()));
+		this.datePicker.setEditable(false);
+		this.timeInput.setText(DateUtility.getTimeAsString(notification.getDate()));
+		this.timeInput.setEditable(false);
+		
+		//Receiver Phone
+		CalendarEvent event = null;
+		try {
+			event = GoogleCalendarData.getNextEvent(notification.getDate());
+		} catch (ParseException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		ArrayList<String> userDetails = EventInference.getCurrentLocationAndEventName(event, notification);
+		this.locationInput.setText(userDetails.get(1));
+		this.locationInput.setEditable(false);
+		this.eventInput.setText(userDetails.get(0));
+		this.eventInput.setEditable(false);
     }
     
+    
+    
     private void setEmptyFields(){
-    	this.senderInput.setText("");
+    	 
+    	// sender phone 
+    	
+    	//this.senderInput.setText("");
 		this.senderInput.setEditable(true);
-		this.subjectInput.setText("");
+		//this.subjectInput.setText("");
 		this.subjectInput.setEditable(true);
-		this.bodyInput.setText("");
-		this.bodyInput.setEditable(true);
-		this.applicationInput.setText("");
+		//this.applicationInput.setText("");
 		this.applicationInput.setEditable(true);
-		this.dateInput.setText("");
-		this.dateInput.setEditable(true);
+		//this.datePicker.getEditor().clear();
+		//this.datePicker.setValue(null);
+		//this.timeInput.setText("");
+		this.timeInput.setEditable(true);
+		
+		// receiver phone
+		this.locationInput.setEditable(true);
+    }
+    
+    @FXML
+    void excelUplift(ActionEvent event) {
+    	if(this.kJan20.isSelected()){
+    		App.setNotificationsExcelInput("kieranJan20.xlsx");
+    	}
+		if(this.kJan21.isSelected()){
+    		App.setNotificationsExcelInput("kieranJan21.xlsx");
+		}
+		if(this.kJan22.isSelected()){
+    		App.setNotificationsExcelInput("kieranJan22.xlsx");
+		}
+		if(this.oDec02.isSelected()){
+    		App.setNotificationsExcelInput("owenDec02.xlsx");
+		}
+		if(this.oDec10.isSelected()){
+    		App.setNotificationsExcelInput("owenDec10.xlsx");
+		}
+		if(this.oDec16.isSelected()){
+    		App.setNotificationsExcelInput("owenDec16.xlsx");
+		}
+		App.refreshNotificationExcelInput();
+    }
+    
+    @FXML
+    void prevPressed(KeyEvent event) {
+    	this.loadPreviousNotification(new ActionEvent());
+    }
+    
+    @FXML
+    void nextPressed(KeyEvent event) {
+    	this.loadNextNotification(new ActionEvent());
     }
 }

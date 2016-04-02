@@ -9,13 +9,16 @@ public class CalendarEvent implements Serializable{
 	
 	private String description;
 	private Date startDate;
+	private Date endDate;
 	private String location;
-	private Date date;
+	private String summary;
 	
-	public CalendarEvent(String description, Date startDate, String location){
+	public CalendarEvent(String description, Date startDate, Date endDate, String location, String summary){
 		this.description = description;
 		this.startDate = startDate;
+		this.endDate = endDate;
 		this.location = location;
+		this.summary = summary;
 	}
 	
 	public String getDescription() {
@@ -39,13 +42,20 @@ public class CalendarEvent implements Serializable{
 		this.startDate = startDate;
 	}
 
-	public Date getDate() {
-		return date;
+	public Date getEndDate() {
+		return endDate;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
-	
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}	
 	
 }

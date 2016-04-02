@@ -34,6 +34,10 @@ import MastersProject.Constants.ConnectionType;
 			@ConversionValue(objectValue = "ALERT", dataValue = "ALERT"),
 			@ConversionValue(objectValue = "SENDER", dataValue = "SENDER"),
 			@ConversionValue(objectValue = "SUBJECT", dataValue = "SUBJECT"),
+			@ConversionValue(objectValue = "APPLICATION", dataValue = "APPLICATION"),
+			@ConversionValue(objectValue = "DATE", dataValue = "DATE"),
+			@ConversionValue(objectValue = "BODY", dataValue = "BODY"),
+			@ConversionValue(objectValue = "LOCATION", dataValue = "LOCATION"),
 			@ConversionValue(objectValue = "USER", dataValue = "USER"),
 			@ConversionValue(objectValue = "NOTIFICATION", dataValue = "NOTIFICATION") }),
 	@ObjectTypeConverter(name = "connectionType", objectType = ConnectionType.class, dataType = String.class, conversionValues = {

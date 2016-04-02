@@ -9,31 +9,25 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import MastersProject.BeadRepo.AlertInfoBead;
+import MastersProject.BeadRepo.AppInfoBead;
+import MastersProject.BeadRepo.BodyInfoBead;
+import MastersProject.BeadRepo.DateInfoBead;
 import MastersProject.BeadRepo.NotificationInfoBead;
 import MastersProject.BeadRepo.SenderInfoBead;
 import MastersProject.BeadRepo.SubjectInfoBead;
+import MastersProject.BeadRepo.UserLocationInfoBead;
 import MastersProject.Constants.ActivationType;
 import MastersProject.Constants.BeadType;
 import MastersProject.Constants.ConnectionType;
 import MastersProject.DBHelper.ImportUplift;
 import MastersProject.Models.InformationBead;
 import MastersProject.Models.UpliftedNotification;
-import MastersProject.Models.UpliftValues.AppUplift;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-
-/**
- * Hello world!
- *
- */
 public class App extends Application
 {
 	private static final String PERSISTENCE_UNIT_NAME = "informationBead";
@@ -44,14 +38,25 @@ public class App extends Application
 	private static NotificationInfoBead notificationInfoBead;
 	private static SenderInfoBead senderInfoBead;
 	private static SubjectInfoBead subjectInfoBead;
+	private static BodyInfoBead bodyInfoBead;
+	private static DateInfoBead dateInfoBead;
+	private static UserLocationInfoBead userLocationInfoBead;
+	private static AppInfoBead appInfoBead;
 	
 	private static ArrayList<UpliftedNotification> notifications;
 	private static UpliftedNotification notification;
 	private static int notificationNumber;
 	
-	public static String result;
+	private static String notificationsExcelInput = "kieranJan20.xlsx";
+	private static int notificationSize;
 	
-    public static void main( String[] args )
+	private static boolean userNabbed = true;
+	private static String userLocation;
+	private static String userEvent;
+	
+	public static String result;
+
+	public static void main( String[] args )
     {
 
         factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
@@ -94,6 +99,44 @@ public class App extends Application
     	subjectInfoBead.setInputInterfaces(new ArrayList<String>());
     	subjectInfoBead.setOutputInterface("output");
     	subjectInfoBead.setVersion("1");
+    	
+    	appInfoBead = new AppInfoBead();
+    	appInfoBead.setAttributeValueType(BeadType.APPLICATION);
+    	appInfoBead.setComMode(ConnectionType.PUSH);
+    	appInfoBead.setOnOff(ActivationType.ON);
+    	appInfoBead.setAuthorizationToSendToID(new ArrayList<String>());
+    	appInfoBead.setInfoBeadName("Application Info Bead");
+    	appInfoBead.setInputInterfaces(new ArrayList<String>());
+    	appInfoBead.setOutputInterface("output");
+    	appInfoBead.setVersion("1");
+    	
+    	bodyInfoBead = new BodyInfoBead();
+    	bodyInfoBead.setAttributeValueType(BeadType.BODY);
+    	bodyInfoBead.setComMode(ConnectionType.PUSH);
+    	bodyInfoBead.setOnOff(ActivationType.ON);
+    	bodyInfoBead.setInfoBeadName("Body Info Bead");
+    	bodyInfoBead.setInputInterfaces(new ArrayList<String>());
+    	bodyInfoBead.setOutputInterface("output");
+    	bodyInfoBead.setVersion("1");
+    	
+    	dateInfoBead = new DateInfoBead();
+    	dateInfoBead.setAttributeValueType(BeadType.DATE);
+    	dateInfoBead.setComMode(ConnectionType.PUSH);
+    	dateInfoBead.setOnOff(ActivationType.ON);
+    	dateInfoBead.setInfoBeadName("Date Info Bead");
+    	dateInfoBead.setInputInterfaces(new ArrayList<String>());
+    	dateInfoBead.setOutputInterface("output");
+    	dateInfoBead.setVersion("1");    	
+    	
+    	userLocationInfoBead = new UserLocationInfoBead();
+    	userLocationInfoBead.setAttributeValueType(BeadType.LOCATION);
+    	userLocationInfoBead.setComMode(ConnectionType.PUSH);
+    	userLocationInfoBead.setOnOff(ActivationType.ON);
+    	userLocationInfoBead.setAuthorizationToSendToID(new ArrayList<String>());
+    	userLocationInfoBead.setInfoBeadName("User Location Info Bead");
+    	userLocationInfoBead.setInputInterfaces(new ArrayList<String>());
+    	userLocationInfoBead.setOutputInterface("output");
+    	userLocationInfoBead.setVersion("1");  
 		
     	notificationInfoBead = new NotificationInfoBead();
     	notificationInfoBead.setAttributeValueType(BeadType.NOTIFICATION);
@@ -107,9 +150,17 @@ public class App extends Application
     	
     	notificationInfoBead.addListener(subjectInfoBead);
     	notificationInfoBead.addListener(senderInfoBead);
+    	notificationInfoBead.addListener(appInfoBead);
+    	notificationInfoBead.addListener(dateInfoBead);
+    	notificationInfoBead.addListener(bodyInfoBead);
+    	notificationInfoBead.addListener(userLocationInfoBead);
     	
     	senderInfoBead.addListener(alertInfoBead);
     	subjectInfoBead.addListener(alertInfoBead);
+    	appInfoBead.addListener(alertInfoBead);
+    	dateInfoBead.addListener(alertInfoBead);
+    	bodyInfoBead.addListener(alertInfoBead);
+    	userLocationInfoBead.addListener(alertInfoBead);
     	
     	saveBead(alertInfoBead, notification.getNotificationId());
     	saveBead(notificationInfoBead, notification.getNotificationId());
@@ -139,7 +190,7 @@ public class App extends Application
     private static ArrayList<UpliftedNotification> readNotifications(){
     	ImportUplift helper = new ImportUplift();
     	try {
-			return helper.importFromExcel();
+			return helper.importFromExcel(notificationsExcelInput);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -171,12 +222,20 @@ public class App extends Application
 		 */
 		notifications = readNotifications();
 		setNextNotificaiton();
+		notificationSize = notifications.size();
 		
 	    // setting the stage
 	    primaryStage.setScene( scene );
 	    primaryStage.setTitle( "Demo" );
 	    //primaryStage.setFullScreen(true);
 	    primaryStage.show();
+	}
+	
+	public static void refreshNotificationExcelInput(){
+		notificationNumber = -1;
+		notifications = readNotifications();
+		setNextNotificaiton();
+		notificationSize = notifications.size();
 	}
 	
 	/**
@@ -190,7 +249,7 @@ public class App extends Application
 	}
 	
 	public static boolean setNextNotificaiton(){
-		if(notificationNumber<notifications.size()){
+		if(notificationNumber<notifications.size()-1){
 			notificationNumber++;
 			notification = notifications.get(notificationNumber);
 			return true;
@@ -207,6 +266,14 @@ public class App extends Application
 		else return false;
 	}
 	
+	/**
+	 * Fire the notification based on whether you want to fire a nabbed and uplifted "real-world"
+	 * notification or a custom notification. This function is called from the controller when the 
+	 * "send" button is pressed.
+	 * @param customNotification
+	 * @param type
+	 * @return
+	 */
 	public static String fireNotification(UpliftedNotification customNotification, String type){
 
 		result = null;
@@ -227,7 +294,10 @@ public class App extends Application
 			break;
 		}
 		
-			
+		/**
+		 * Must wait for the process to finish before alerting the receiving phone of the 
+		 * result.	
+		 */
 		while(result == null){}
 		return result;
 	}
@@ -235,5 +305,41 @@ public class App extends Application
 	public static UpliftedNotification getNotification() {
 		return notification;
 	}	
+	
+    public static void setNotificationsExcelInput(String notificationsExcelInput) {
+		App.notificationsExcelInput = notificationsExcelInput;
+	}
+
+	public static int getNotificationSize() {
+		return notificationSize;
+	}
+
+	public static int getNotificationNumber() {
+		return notificationNumber;
+	}
+
+	public static boolean isUserNabbed() {
+		return userNabbed;
+	}
+
+	public static void setUserNabbed(boolean userNabbed) {
+		App.userNabbed = userNabbed;
+	}
+
+	public static String getUserLocation() {
+		return userLocation;
+	}
+
+	public static void setUserLocation(String userLocation) {
+		App.userLocation = userLocation;
+	}
+
+	public static String getUserEvent() {
+		return userEvent;
+	}
+
+	public static void setUserEvent(String userEvent) {
+		App.userEvent = userEvent;
+	}
 	
 }

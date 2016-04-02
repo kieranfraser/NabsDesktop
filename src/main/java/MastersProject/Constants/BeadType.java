@@ -5,7 +5,11 @@ public enum BeadType {
 	SENDER,
 	SUBJECT,
 	USER, 
-	NOTIFICATION;
+	NOTIFICATION,
+	LOCATION, 
+	APPLICATION,
+	BODY,
+	DATE;
 	
 	public static BeadType stringToType(String string){
 		switch(string){
@@ -19,6 +23,14 @@ public enum BeadType {
 			return BeadType.USER;
 		case "NOTIFICATION":
 			return BeadType.NOTIFICATION;
+		case "LOCATION":
+			return BeadType.LOCATION;
+		case "APPLICATION":
+			return BeadType.APPLICATION;
+		case "BODY":
+			return BeadType.BODY;
+		case "DATE":
+			return BeadType.DATE;
 		default:
 			return null;
 		}

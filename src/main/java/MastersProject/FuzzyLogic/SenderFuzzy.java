@@ -32,7 +32,7 @@ public class SenderFuzzy {
 		eventRelevance.setName("EventRelevance");
 		eventRelevance.setRange(0.000, 1.000);
 		eventRelevance.addTerm(new Triangle("NOTRELEVANT", 0.000, 0.350, 0.700));
-		eventRelevance.addTerm(new Triangle("RELEVANT", 0.350, 0.700, 1.000));
+		eventRelevance.addTerm(new Triangle("RELEVANT", 0.350, 0.700, 1.001));
 		engine.addInputVariable(eventRelevance);
 		
 		senderRelevance = new OutputVariable();
@@ -53,7 +53,7 @@ public class SenderFuzzy {
 		ruleBlock.addRule(Rule.parse("if SenderImportance is NIP and EventRelevance is NOTRELEVANT then SenderRelevance is LOW", engine));
 		ruleBlock.addRule(Rule.parse("if SenderImportance is IMPORTANT and EventRelevance is NOTRELEVANT then SenderRelevance is MEDIUM", engine));
 		ruleBlock.addRule(Rule.parse("if SenderImportance is VIP and EventRelevance is NOTRELEVANT then SenderRelevance is HIGH", engine));
-		ruleBlock.addRule(Rule.parse("if SenderImportance is NIP and EventRelevance is RELEVANT then SenderRelevance is MEDIUM", engine));
+		ruleBlock.addRule(Rule.parse("if SenderImportance is NIP and EventRelevance is RELEVANT then SenderRelevance is LOW", engine));
 		ruleBlock.addRule(Rule.parse("if SenderImportance is IMPORTANT and EventRelevance is RELEVANT then SenderRelevance is HIGH", engine));
 		ruleBlock.addRule(Rule.parse("if SenderImportance is VIP and EventRelevance is RELEVANT then SenderRelevance is HIGH", engine));
 		engine.addRuleBlock(ruleBlock);

@@ -35,14 +35,14 @@ public class ImportUplift {
 	EntityManager em;
 	private static final String PERSISTENCE_UNIT_NAME = "informationBead";
 
-	public ArrayList<UpliftedNotification> importFromExcel() throws IOException{
+	public ArrayList<UpliftedNotification> importFromExcel(String fileName) throws IOException{
 
 	    factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 		em = factory.createEntityManager();
 		
 		ArrayList<UpliftedNotification> list = new ArrayList<UpliftedNotification>();
 		XSSFRow row;
-		FileInputStream fis = new FileInputStream( new File("uplift.xlsx"));
+		FileInputStream fis = new FileInputStream( new File(fileName));
 	    XSSFWorkbook workbook = new XSSFWorkbook(fis);
 	    XSSFSheet spreadsheet = workbook.getSheetAt(0);
 	    Iterator < Row > rowIterator = spreadsheet.iterator();
@@ -51,10 +51,11 @@ public class ImportUplift {
 	     * TODO: Needs to be changed to get more than one notification
 	     */
 	    int i = 0;
-	    while (i<3) 
+	    row = spreadsheet.getRow(i);
+    	i++;
+	    while (row!=null) 
 	    {
-	    	row = spreadsheet.getRow(i);
-        	i++;
+	    	
         	UpliftedNotification notif = new UpliftedNotification();
         	notif.setNotificationId(i);
         	Cell cell = row.getCell(1); 
@@ -76,6 +77,8 @@ public class ImportUplift {
             notif.setDateRank(getRank(date, notif.getDateImportance()));
         	
             list.add(notif);
+            row = spreadsheet.getRow(i);
+        	i++;
 	    }
 	    System.out.println("MastersProject.DBHelper: size of list "+list.size());
 	    fis.close();
