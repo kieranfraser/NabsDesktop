@@ -3,6 +3,7 @@ package MastersProject.Nabs;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -53,6 +54,11 @@ public class App extends Application
 	private static boolean userNabbed = true;
 	private static String userLocation;
 	private static String userEvent;
+	
+	// temp variables for getting contextual timings for alert
+	private static Date nextBreak = new Date();
+	private static Date nextFreePeriod = new Date();
+	private static Date nextContextRelevant = new Date();
 	
 	public static String result;
 
@@ -275,7 +281,7 @@ public class App extends Application
 	 * @return
 	 */
 	public static String fireNotification(UpliftedNotification customNotification, String type){
-
+		
 		result = null;
 		switch(type){
 		case "Nabbed":
@@ -340,6 +346,30 @@ public class App extends Application
 
 	public static void setUserEvent(String userEvent) {
 		App.userEvent = userEvent;
+	}
+
+	public static Date getNextBreak() {
+		return nextBreak;
+	}
+
+	public static void setNextBreak(Date nextBreak) {
+		App.nextBreak = nextBreak;
+	}
+
+	public static Date getNextFreePeriod() {
+		return nextFreePeriod;
+	}
+
+	public static void setNextFreePeriod(Date nextFreePeriod) {
+		App.nextFreePeriod = nextFreePeriod;
+	}
+
+	public static Date getNextContextRelevant() {
+		return nextContextRelevant;
+	}
+
+	public static void setNextContextRelevant(Date nextContextRelevant) {
+		App.nextContextRelevant = nextContextRelevant;
 	}
 	
 }

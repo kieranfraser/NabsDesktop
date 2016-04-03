@@ -21,9 +21,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="2000.0" prefWidth="2000.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MastersProject.Controllers.NabsDesktopController">
+<AnchorPane prefHeight="1600.0" prefWidth="2000.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MastersProject.Controllers.NabsDesktopController">
    <children>
-      <TabPane layoutX="2.0" layoutY="2.0" prefHeight="1999.0" prefWidth="2003.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane layoutX="2.0" layoutY="2.0" prefHeight="1600.0" prefWidth="2003.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab fx:id="phoneTab" text="Phone To Phone">
             <content>

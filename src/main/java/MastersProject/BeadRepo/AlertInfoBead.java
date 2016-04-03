@@ -60,26 +60,37 @@ Runnable{
 		AlertFuzzy alertFuzzy = new AlertFuzzy();
 		double inferredValue = alertFuzzy.processalert(senderInput, subjectInput, appInput);
 		System.out.println("Inferred minutes: "+inferredValue);
-		String result = "Fire Notification "+this.getPartNumber()+" in: "+DateUtility.cleanMinutes(inferredValue)+"\n";
+		String result = "Receive Notification "+this.getPartNumber()+" in: "+DateUtility.cleanMinutes(inferredValue)+"\n";
 		
-		if(inferredValue<30.0){ //now - interrupt
-			result = result + "Notify now"+"\n";
-		}else if(inferredValue<120){ // verysoon - next break
-			if(userLocation == 0.0){
-				result = result + "at next break"+"\n";
+		// now - interrupt
+		if(inferredValue<6.0){ 
+			result = result + "Notify now "+this.getPartNumber()+"\n";
+		
+		// verysoon - next break
+		}else if(inferredValue<60){ 
+			
+			if(userLocation == 1.0){ // if there's an event on
+				result = result + "at next break - "+App.getNextBreak()+" - "+this.getPartNumber()+"\n";
+				
 			}
 			else{
-				result = result + "Notify now"+"\n";
+				result = result + "Notify now "+this.getPartNumber()+"\n";
 			}
-		}else if(inferredValue<400){ // soon - next free period
-			if(userLocation == 0.0){
-				result = result + "Notify next free period"+"\n";
+		
+		// soon - next free period
+		}else if(inferredValue<90){ 
+			
+			
+			if(userLocation == 1.0){
+				result = result + "Notify next free period - "+App.getNextFreePeriod()+" - "+this.getPartNumber()+"\n";
 			}
 			else{
-				result = result + "Notify now"+"\n";
+				result = result + "Notify now "+this.getPartNumber()+"\n";
 			}
-		}else{ // Later & Much Later
-			result = result + "Notify next contextual relevant event"+"\n";
+			
+		// Later & Much Later	
+		}else{ 
+			result = result + "Notify next contextual relevant event - "+App.getNextContextRelevant()+" - "+"\n";
 		}
 		System.out.println(result);
 		App.result = result;

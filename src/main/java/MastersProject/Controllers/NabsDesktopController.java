@@ -386,6 +386,13 @@ public class NabsDesktopController implements Initializable{
     
     @FXML
     void sendNotification(ActionEvent event) {
+
+		// temp - reset the context aware variables
+		App.setNextBreak(new Date());
+		App.setNextFreePeriod(new Date());
+		App.setNextContextRelevant(new Date());
+		
+    	this.consoleTextArea.setText("");
     	UpliftedNotification notification = new UpliftedNotification();
     	
     	notification.setNotificationId(12345);

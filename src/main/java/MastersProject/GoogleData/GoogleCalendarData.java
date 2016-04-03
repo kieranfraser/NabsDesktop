@@ -133,6 +133,7 @@ public class GoogleCalendarData {
         ArrayList<CalendarEvent> requiredEvents = new ArrayList<CalendarEvent>();
         
         for(int i=0; i<n; i++){
+        	System.out.println(items.get(i).getStart());
         	Date convertedStartDate = DateUtility.convertEventDateTimeToDate(items.get(i).getStart());
         	Date convertedEndDate = DateUtility.convertEventDateTimeToDate(items.get(i).getEnd());
         	CalendarEvent event = new CalendarEvent(items.get(i).getDescription(),

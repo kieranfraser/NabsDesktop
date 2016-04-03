@@ -24,8 +24,8 @@ public class SubjectFuzzy {
 		subjectImportance.setName("subjectImportance");
 		subjectImportance.setRange(0.000, 1.000);
 		subjectImportance.addTerm(new Triangle("NIP", 0.000, 0.000, 0.400));
-		subjectImportance.addTerm(new Triangle("IMPORTANT", 0.200, 0.500, 0.800));
-		subjectImportance.addTerm(new Triangle("VIP", 0.600, 1.000, 1.000));
+		subjectImportance.addTerm(new Triangle("IMPORTANT", 0.200, 0.300, 0.800));
+		subjectImportance.addTerm(new Triangle("VIP", 0.700, 1.000, 1.000));
 		engine.addInputVariable(subjectImportance);
 		
 		eventRelevance = new InputVariable();

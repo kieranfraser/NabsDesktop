@@ -3,9 +3,13 @@ package MastersProject.Inference;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import MastersProject.GoogleData.CalendarEvent;
 import MastersProject.Models.UpliftedNotification;
+import MastersProject.Nabs.App;
 import MastersProject.Utilities.DateUtility;
 
 public class EventInference {
@@ -30,7 +34,10 @@ public class EventInference {
 		}
 		
 		ArrayList<Double> rankingValue = new ArrayList<Double>();
+	    Map<CalendarEvent, Double> eventContext = new HashMap<CalendarEvent, Double>();
+	    boolean freePeriodSet = false;
 		rankingValue.add(0.0);
+		int i = 1;
 		for(CalendarEvent event : unfinishedEvents){
 			
 			if(hasContextMatch(event.getDescription(), notification.getSubject(), attribute)){
@@ -39,8 +46,50 @@ public class EventInference {
 				long eventStartTimeDiff = DateUtility.getDifferenceBetweenDatesInMinutes(notificationDate, eventStartDate);
 				System.out.println(event.getSummary());
 				rankingValue.add(applyRating(event, maxStartTimeDiff, eventStartTimeDiff));
+				eventContext.put(event, applyRating(event, maxStartTimeDiff, eventStartTimeDiff));
 			}
+			// setting next free period
+			if(freePeriodSet == false){
+				if(unfinishedEvents.size()>=2){
+					LocalDateTime endThisEvent = DateUtility.dateToLocalDateTime(event.getEndDate());
+					LocalDateTime startNextEvent = DateUtility.dateToLocalDateTime(unfinishedEvents.get(i).getStartDate());
+					long diff = DateUtility.getDifferenceBetweenDatesInMinutes(endThisEvent, startNextEvent);
+					if(diff>15){
+						System.out.println("free period");
+						System.out.println(event.getSummary());
+						System.out.println(event.getStartDate());
+						System.out.println(event.getEndDate());
+						App.setNextFreePeriod(event.getEndDate());
+						freePeriodSet = true;
+					}
+				}
+				else{
+					App.setNextFreePeriod(event.getEndDate());
+				}
+			}
+			
+			i++;
 		}
+		
+		Map.Entry<CalendarEvent, Double> maxEntry = null;
+		
+
+		for (Map.Entry<CalendarEvent, Double> entry : eventContext.entrySet())
+		{
+		    if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
+		    {
+		        maxEntry = entry;
+		    }
+		}
+		if(maxEntry!=null){
+			System.out.println("Context relevant "+maxEntry.getKey().getStartDate());
+			App.setNextContextRelevant(maxEntry.getKey().getStartDate());
+		}
+		else{
+			System.out.println("No context relevant");
+			App.setNextContextRelevant(App.getNextFreePeriod());
+		}
+		
 		return Collections.max(rankingValue);
 	}
 	
@@ -97,19 +146,22 @@ public class EventInference {
 				String summary = event.getSummary();
 				result.add(summary);
 				if(location == null){
-					result.add("unkown");
+					result.add("unknown");
 				}else{
 					result.add(location);
 				}
+				// Set next break
+				Date nextBreak = event.getEndDate();
+				App.setNextBreak(nextBreak);
 			}
 			else{
 				result.add("none");
-				result.add("unkown");
+				result.add("unknown");
 			}
 		}
 		else{
 			result.add("none");
-			result.add("unkown");
+			result.add("unknown");
 		}
 		return result;
 	}

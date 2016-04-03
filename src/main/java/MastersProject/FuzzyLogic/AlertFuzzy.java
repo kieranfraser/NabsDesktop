@@ -50,17 +50,17 @@ public class AlertFuzzy {
 		alertOutput = new OutputVariable();
 		alertOutput.setEnabled(true);
 		alertOutput.setName("AlertOutput");
-		alertOutput.setRange(0.000, 2880.000);
+		alertOutput.setRange(0.000, 280.001);
 		alertOutput.fuzzyOutput().setAccumulation(new Maximum());
 		alertOutput.setDefuzzifier(new Centroid(4000));
 		alertOutput.setDefaultValue(Double.NaN);
 		alertOutput.setLockPreviousOutputValue(false);
 		alertOutput.setLockOutputValueInRange(false);
-		alertOutput.addTerm(new Triangle("NOW", 0.000, 0.000, 5.00));
-		alertOutput.addTerm(new Triangle("VERYSOON", 2.000, 16.000, 30.000));
-		alertOutput.addTerm(new Triangle("SOON", 15.000, 67.000, 300.000));
-		alertOutput.addTerm(new Triangle("LATER", 120.000, 750.000, 1440.000));
-		alertOutput.addTerm(new Triangle("MUCHLATER", 1000.000, 2880.000, 2880.000));
+		alertOutput.addTerm(new Triangle("NOW", 0.000, 0.000, 5.01));
+		alertOutput.addTerm(new Triangle("VERYSOON", 2.000, 16.001, 60.001));
+		alertOutput.addTerm(new Triangle("SOON", 45.000, 60.000, 90.001));
+		alertOutput.addTerm(new Triangle("LATER", 60.000, 100.000, 120.001));
+		alertOutput.addTerm(new Triangle("MUCHLATER", 100.000, 180.000, 280.001));
 		engine.addOutputVariable(alertOutput);
 		
 		RuleBlock ruleBlock = new RuleBlock();
