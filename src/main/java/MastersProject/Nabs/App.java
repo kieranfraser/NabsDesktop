@@ -190,7 +190,8 @@ public class App extends Application
     }
     
     /**
-     * Get the list of uplifted notifications
+     * For Nabsim we are getting this information from the friends and family database as opposed 
+     * .xlsx files. - all analysis can be done here. 
      * @return
      */
     private static ArrayList<UpliftedNotification> readNotifications(){

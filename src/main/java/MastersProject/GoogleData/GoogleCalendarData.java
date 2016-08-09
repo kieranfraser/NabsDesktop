@@ -110,6 +110,11 @@ public class GoogleCalendarData {
     
     /**
      * Get the next n events from the date and time input
+     * 
+     * This needs to be changed for Nabsim - the events are generated 
+     * from the friends&family data-set. - N always being 10, events ordered by start
+     * time/date
+     * 
      * @param n - number of events
      * @param date - the date to compare
      * @return An array list of calendar events 
