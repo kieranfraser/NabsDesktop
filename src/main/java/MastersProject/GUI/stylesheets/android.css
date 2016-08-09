@@ -1,0 +1,5 @@
+.text-area   {
+    -fx-text-fill: black;
+    -fx-font-size: 32px;
+    -fx-border-style: solid;
+}

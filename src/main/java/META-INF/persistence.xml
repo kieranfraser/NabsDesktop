@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+	version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
+	<persistence-unit name="kieran" transaction-type="RESOURCE_LOCAL">
+		<class>MastersProject.Nabs.Kieran</class>
+		<properties>
+			<property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC" />
+			<property name="javax.persistence.jdbc.url"	value="jdbc:sqlite:anothertest.db" />
+		  	<!-- EclipseLink should create the database schema automatically -->
+		  	<property name="eclipselink.ddl-generation" value="create-tables" />
+		</properties>
+	</persistence-unit>
+	<persistence-unit name="informationBead" transaction-type="RESOURCE_LOCAL">
+		<class>MastersProject.Models.InformationBead</class>
+		<class>MastersProject.Models.InfoItemFields</class>
+		<class>MastersProject.Models.Triplet</class>
+		<class>MastersProject.Models.UpliftValues.SenderUplift</class>
+		<class>MastersProject.Models.UpliftValues.SubjectUplift</class>
+		<class>MastersProject.Models.UpliftValues.BodyUplift</class>
+		<class>MastersProject.Models.UpliftValues.AppUplift</class>
+		<class>MastersProject.Models.UpliftValues.DateUplift</class>
+		<class>MastersProject.BeadRepo.AlertInfoBead</class>
+		<class>MastersProject.BeadRepo.SubjectInfoBead</class>
+		<class>MastersProject.BeadRepo.SenderInfoBead</class>
+		<class>MastersProject.BeadRepo.NotificationInfoBead</class>
+		<class>MastersProject.BeadRepo.AppInfoBead</class>
+		<class>MastersProject.BeadRepo.DateInfoBead</class>
+		<class>MastersProject.BeadRepo.BodyInfoBead</class>
+		<class>MastersProject.BeadRepo.UserLocationInfoBead</class>
+		<properties>
+			<property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC" />
+			<property name="javax.persistence.jdbc.url"	value="jdbc:sqlite:anothertest.db" />
+		  	<!-- EclipseLink should create the database schema automatically -->
+		  	<property name="eclipselink.ddl-generation" value="create-tables" />
+		</properties>
+	</persistence-unit>
+</persistence>
