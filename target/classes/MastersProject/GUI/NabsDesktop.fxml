@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -21,26 +22,26 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="1600.0" prefWidth="2000.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MastersProject.Controllers.NabsDesktopController">
+<AnchorPane prefHeight="1000.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MastersProject.Controllers.NabsDesktopController">
    <children>
-      <TabPane layoutX="2.0" layoutY="2.0" prefHeight="1600.0" prefWidth="2003.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane layoutX="2.0" layoutY="2.0" prefWidth="1589.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab fx:id="phoneTab" text="Phone To Phone">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane minHeight="0.0" minWidth="0.0">
                      <children>
-                        <ImageView fx:id="androidImg" fitHeight="1093.0" fitWidth="721.0" layoutX="1285.0" layoutY="86.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="androidImg" fitHeight="945.0" fitWidth="547.0" layoutX="907.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../Images/android_phone.png" />
                            </image>
                         </ImageView>
-                        <TabPane fx:id="tabPaneReceiver" layoutX="1323.0" layoutY="216.0" prefHeight="837.0" prefWidth="479.0" tabClosingPolicy="UNAVAILABLE">
+                        <TabPane fx:id="tabPaneReceiver" layoutX="945.0" layoutY="145.0" prefHeight="731.0" prefWidth="403.0" tabClosingPolicy="UNAVAILABLE">
                           <tabs>
                             <Tab fx:id="NotificationsTab" text="Notifications">
                               <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="660.0" prefWidth="479.0">
                                        <children>
-                                          <TextArea fx:id="consoleTextArea" disable="true" layoutX="21.0" layoutY="51.0" prefHeight="665.0" prefWidth="432.0" style="-fx-background-color: white; -fx-border-style: solid; -fx-opacity: 1;" stylesheets="@stylesheets/android.css" text="This is text" wrapText="true">
+                                          <TextArea fx:id="consoleTextArea" disable="true" layoutX="21.0" layoutY="51.0" prefHeight="543.0" prefWidth="360.0" style="-fx-background-color: white; -fx-border-style: solid; -fx-opacity: 1;" stylesheets="@stylesheets/android.css" text="This is text" wrapText="true">
                                              <font>
                                                 <Font name="Comic Sans MS" size="29.0" />
                                              </font>
@@ -69,40 +70,41 @@
                                                 <Blend />
                                              </effect>
                                           </Label>
-                                          <TextField fx:id="locationInput" editable="false" layoutX="200.0" layoutY="118.0" prefHeight="25.0" prefWidth="246.0" />
-                                          <TextField fx:id="eventInput" editable="false" layoutX="200.0" layoutY="218.0" prefHeight="25.0" prefWidth="246.0" />
+                                          <TextField fx:id="locationInput" editable="false" layoutX="200.0" layoutY="118.0" prefHeight="31.0" prefWidth="156.0" />
+                                          <TextField fx:id="eventInput" editable="false" layoutX="200.0" layoutY="218.0" prefHeight="31.0" prefWidth="182.0" />
                                        </children>
                                     </AnchorPane>
                               </content>
                             </Tab>
                           </tabs>
                         </TabPane>
-                        <ImageView fx:id="androidImg2" fitHeight="1093.0" fitWidth="721.0" layoutX="174.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="androidImg2" fitHeight="1181.0" fitWidth="463.0" layoutX="222.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../Images/android_phone.png" />
                            </image>
                         </ImageView>
-                        <TabPane fx:id="tabPaneSender" layoutX="211.0" layoutY="222.0" prefHeight="850.0" prefWidth="478.0" tabClosingPolicy="UNAVAILABLE">
+                        <TabPane fx:id="tabPaneSender" layoutX="259.0" layoutY="123.0" prefHeight="760.0" prefWidth="380.0" tabClosingPolicy="UNAVAILABLE">
                           <tabs>
                               <Tab fx:id="upliftTab1" text="Begin">
                                  <content>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="853.0" prefWidth="478.0">
                                        <children>
-                                          <Button fx:id="enterBtn" layoutX="114.0" layoutY="506.0" mnemonicParsing="false" onAction="#enterSender" prefHeight="77.0" prefWidth="252.0" style="-fx-background-color: green;" text="Begin" textFill="WHITE">
+                                          <Button fx:id="enterBtn" layoutX="72.0" layoutY="506.0" mnemonicParsing="false" onAction="#enterSender" prefHeight="77.0" prefWidth="252.0" style="-fx-background-color: green;" text="Begin" textFill="WHITE">
                                              <font>
                                                 <Font name="System Bold" size="36.0" />
                                              </font>
                                           </Button>
-                                          <RadioButton fx:id="kJan20" layoutX="175.0" layoutY="100.0" mnemonicParsing="false" onAction="#excelUplift" selected="true" text="Kieran 20 Jan">
+                                          <RadioButton fx:id="kJan20" layoutX="-163.0" layoutY="100.0" mnemonicParsing="false" onAction="#excelUplift" selected="true" text="Kieran 20 Jan">
                                              <toggleGroup>
                                                 <ToggleGroup fx:id="notificationExcel" />
                                              </toggleGroup>
                                           </RadioButton>
-                                          <RadioButton fx:id="kJan21" layoutX="175.0" layoutY="150.0" mnemonicParsing="false" onAction="#excelUplift" text="Kieran 21 Jan" toggleGroup="$notificationExcel" />
-                                          <RadioButton fx:id="kJan22" layoutX="175.0" layoutY="200.0" mnemonicParsing="false" onAction="#excelUplift" text="Kieran 22 Jan" toggleGroup="$notificationExcel" />
-                                          <RadioButton fx:id="oDec02" layoutX="175.0" layoutY="250.0" mnemonicParsing="false" onAction="#excelUplift" text="Owen 02 Dec" toggleGroup="$notificationExcel" />
-                                          <RadioButton fx:id="oDec10" layoutX="175.0" layoutY="300.0" mnemonicParsing="false" onAction="#excelUplift" text="Owen 10 Dec" toggleGroup="$notificationExcel" />
-                                          <RadioButton fx:id="oDec16" layoutX="175.0" layoutY="350.0" mnemonicParsing="false" onAction="#excelUplift" text="Owen 16 Dec" toggleGroup="$notificationExcel" />
+                                          <RadioButton fx:id="kJan21" layoutX="-163.0" layoutY="150.0" mnemonicParsing="false" onAction="#excelUplift" text="Kieran 21 Jan" toggleGroup="$notificationExcel" />
+                                          <RadioButton fx:id="kJan22" layoutX="-163.0" layoutY="200.0" mnemonicParsing="false" onAction="#excelUplift" text="Kieran 22 Jan" toggleGroup="$notificationExcel" />
+                                          <RadioButton fx:id="oDec02" layoutX="-163.0" layoutY="250.0" mnemonicParsing="false" onAction="#excelUplift" text="Owen 02 Dec" toggleGroup="$notificationExcel" />
+                                          <RadioButton fx:id="oDec10" layoutX="-163.0" layoutY="300.0" mnemonicParsing="false" onAction="#excelUplift" text="Owen 10 Dec" toggleGroup="$notificationExcel" />
+                                          <RadioButton fx:id="oDec16" layoutX="-163.0" layoutY="350.0" mnemonicParsing="false" onAction="#excelUplift" text="Owen 16 Dec" toggleGroup="$notificationExcel" />
+                                          <ListView layoutX="23.0" layoutY="14.0" prefHeight="468.0" prefWidth="341.0" />
                                        </children>
                                     </AnchorPane>
                                  </content>
@@ -116,12 +118,12 @@
                                                 <Font name="Corbel" size="26.0" />
                                              </font>
                                           </Button>
-                                          <RadioButton fx:id="nabbedRB" layoutX="160.0" layoutY="626.0" mnemonicParsing="false" onAction="#notificationRadioClicked" prefHeight="82.0" prefWidth="163.0" selected="true" text="Nabbed">
+                                          <RadioButton fx:id="nabbedRB" layoutX="160.0" layoutY="578.0" mnemonicParsing="false" onAction="#notificationRadioClicked" prefHeight="82.0" prefWidth="163.0" selected="true" text="Nabbed">
                                              <toggleGroup>
                                                 <ToggleGroup fx:id="notificationInput" />
                                              </toggleGroup>
                                           </RadioButton>
-                                          <RadioButton fx:id="customRB" layoutX="160.0" layoutY="700.0" mnemonicParsing="false" onAction="#notificationRadioClicked" prefHeight="82.0" prefWidth="174.0" text="Custom" toggleGroup="$notificationInput" />
+                                          <RadioButton fx:id="customRB" layoutX="162.0" layoutY="608.0" mnemonicParsing="false" onAction="#notificationRadioClicked" prefHeight="82.0" prefWidth="174.0" text="Custom" toggleGroup="$notificationInput" />
                                           <Label layoutX="26.0" layoutY="50.0" prefHeight="60.0" prefWidth="106.0" text="Sender:" textAlignment="JUSTIFY">
                                              <font>
                                                 <Font name="System Bold" size="25.0" />
@@ -154,21 +156,21 @@
                                                 <Blend />
                                              </effect>
                                           </Label>
-                                          <TextField fx:id="senderInput" editable="false" layoutX="218.0" layoutY="68.0" prefHeight="25.0" prefWidth="246.0" />
-                                          <TextField fx:id="subjectInput" editable="false" layoutX="218.0" layoutY="168.0" prefHeight="25.0" prefWidth="246.0" />
-                                          <TextField fx:id="applicationInput" editable="false" layoutX="218.0" layoutY="267.0" prefHeight="25.0" prefWidth="246.0" />
-                                          <Button fx:id="nextBtn" layoutX="373.0" layoutY="726.0" mnemonicParsing="false" onAction="#loadNextNotification" onKeyPressed="#nextPressed" prefHeight="46.0" prefWidth="82.0" style="-fx-background-color: grey;" text="Next " textFill="WHITE" textOverrun="CLIP">
+                                          <TextField fx:id="senderInput" editable="false" layoutX="218.0" layoutY="68.0" prefHeight="31.0" prefWidth="145.0" />
+                                          <TextField fx:id="subjectInput" editable="false" layoutX="218.0" layoutY="168.0" prefHeight="31.0" prefWidth="143.0" />
+                                          <TextField fx:id="applicationInput" editable="false" layoutX="218.0" layoutY="267.0" prefHeight="31.0" prefWidth="145.0" />
+                                          <Button fx:id="nextBtn" layoutX="273.0" layoutY="618.0" mnemonicParsing="false" onAction="#loadNextNotification" onKeyPressed="#nextPressed" prefHeight="46.0" prefWidth="82.0" style="-fx-background-color: grey;" text="Next " textFill="WHITE" textOverrun="CLIP">
                                              <font>
                                                 <Font name="System Bold" size="18.0" />
                                              </font>
                                           </Button>
-                                          <Button fx:id="prevBtn" layoutX="25.0" layoutY="728.0" mnemonicParsing="false" onAction="#loadPreviousNotification" onKeyPressed="#prevPressed" prefHeight="46.0" prefWidth="82.0" style="-fx-background-color: grey;" text="Prev" textFill="WHITE" textOverrun="CLIP">
+                                          <Button fx:id="prevBtn" layoutX="19.0" layoutY="626.0" mnemonicParsing="false" onAction="#loadPreviousNotification" onKeyPressed="#prevPressed" prefHeight="46.0" prefWidth="82.0" style="-fx-background-color: grey;" text="Prev" textFill="WHITE" textOverrun="CLIP">
                                              <font>
                                                 <Font name="System Bold" size="18.0" />
                                              </font>
                                           </Button>
-                                          <DatePicker fx:id="datePicker" layoutX="218.0" layoutY="356.0" maxWidth="245.0" minWidth="245.0" />
-                                          <TextField fx:id="timeInput" editable="false" layoutX="333.0" layoutY="401.0" prefHeight="25.0" prefWidth="104.0" />
+                                          <DatePicker fx:id="datePicker" layoutX="153.0" layoutY="356.0" maxWidth="245.0" minWidth="115.0" prefHeight="31.0" prefWidth="213.0" />
+                                          <TextField fx:id="timeInput" editable="false" layoutX="182.0" layoutY="411.0" prefHeight="31.0" prefWidth="176.0" />
                                           <Text fx:id="notificationTracker" layoutX="205.0" layoutY="487.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
                                              <font>
                                                 <Font size="32.0" />
@@ -182,22 +184,22 @@
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <RadioButton fx:id="senderRB" layoutX="30.0" layoutY="616.0" mnemonicParsing="false" onAction="#upliftRadioClicked" prefHeight="34.0" prefWidth="117.0" selected="true" text="Sender">
+                                          <RadioButton fx:id="senderRB" layoutX="32.0" layoutY="506.0" mnemonicParsing="false" onAction="#upliftRadioClicked" prefHeight="34.0" prefWidth="117.0" selected="true" text="Sender">
                                              <toggleGroup>
                                                 <ToggleGroup fx:id="upliftValueRB" />
                                              </toggleGroup>
                                           </RadioButton>
-                                          <RadioButton fx:id="subjectRB" layoutX="30.0" layoutY="660.0" mnemonicParsing="false" onAction="#upliftRadioClicked" prefHeight="34.0" prefWidth="117.0" text="Subject" toggleGroup="$upliftValueRB" />
-                                          <RadioButton fx:id="bodyRB" layoutX="30.0" layoutY="709.0" mnemonicParsing="false" onAction="#upliftRadioClicked" prefHeight="34.0" prefWidth="117.0" text="Body" toggleGroup="$upliftValueRB" />
-                                          <RadioButton fx:id="appRB" layoutX="160.0" layoutY="616.0" mnemonicParsing="false" onAction="#upliftRadioClicked" prefHeight="34.0" prefWidth="117.0" text="App" toggleGroup="$upliftValueRB" />
-                                          <RadioButton fx:id="dateRB" layoutX="160.0" layoutY="660.0" mnemonicParsing="false" onAction="#upliftRadioClicked" prefHeight="34.0" prefWidth="117.0" text="Date" toggleGroup="$upliftValueRB" />
-                                          <TableView fx:id="upliftTable" layoutX="-1.0" layoutY="-2.0" prefHeight="613.0" prefWidth="480.0">
+                                          <RadioButton fx:id="subjectRB" layoutX="32.0" layoutY="550.0" mnemonicParsing="false" onAction="#upliftRadioClicked" prefHeight="34.0" prefWidth="117.0" text="Subject" toggleGroup="$upliftValueRB" />
+                                          <RadioButton fx:id="bodyRB" layoutX="32.0" layoutY="599.0" mnemonicParsing="false" onAction="#upliftRadioClicked" prefHeight="34.0" prefWidth="117.0" text="Body" toggleGroup="$upliftValueRB" />
+                                          <RadioButton fx:id="appRB" layoutX="162.0" layoutY="506.0" mnemonicParsing="false" onAction="#upliftRadioClicked" prefHeight="34.0" prefWidth="117.0" text="App" toggleGroup="$upliftValueRB" />
+                                          <RadioButton fx:id="dateRB" layoutX="162.0" layoutY="550.0" mnemonicParsing="false" onAction="#upliftRadioClicked" prefHeight="34.0" prefWidth="117.0" text="Date" toggleGroup="$upliftValueRB" />
+                                          <TableView fx:id="upliftTable" layoutX="-1.0" layoutY="-2.0" prefHeight="493.0" prefWidth="382.0">
                                             <columns>
-                                              <TableColumn fx:id="upliftValueColumn" prefWidth="342.42864990234375" text="Uplift Value" />
-                                              <TableColumn fx:id="rankColumn" prefWidth="136.57135009765625" text="Rank" />
+                                              <TableColumn fx:id="upliftValueColumn" prefWidth="253.0" text="Uplift Value" />
+                                              <TableColumn fx:id="rankColumn" prefWidth="121.0" text="Rank" />
                                             </columns>
                                           </TableView>
-                                          <Button fx:id="updateBtn" layoutX="270.0" layoutY="648.0" mnemonicParsing="false" onAction="#updateUplift" prefHeight="67.0" prefWidth="139.0" style="-fx-background-color: green;" text="Update" textFill="#f8f8f8">
+                                          <Button fx:id="updateBtn" layoutX="189.0" layoutY="591.0" mnemonicParsing="false" onAction="#updateUplift" prefHeight="67.0" prefWidth="139.0" style="-fx-background-color: green;" text="Update" textFill="#f8f8f8">
                                              <font>
                                                 <Font size="24.0" />
                                              </font>

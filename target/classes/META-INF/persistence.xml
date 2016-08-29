@@ -2,15 +2,6 @@
 <persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 	version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
-	<persistence-unit name="kieran" transaction-type="RESOURCE_LOCAL">
-		<class>MastersProject.Nabs.Kieran</class>
-		<properties>
-			<property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC" />
-			<property name="javax.persistence.jdbc.url"	value="jdbc:sqlite:anothertest.db" />
-		  	<!-- EclipseLink should create the database schema automatically -->
-		  	<property name="eclipselink.ddl-generation" value="create-tables" />
-		</properties>
-	</persistence-unit>
 	<persistence-unit name="informationBead" transaction-type="RESOURCE_LOCAL">
 		<class>MastersProject.Models.InformationBead</class>
 		<class>MastersProject.Models.InfoItemFields</class>
@@ -28,6 +19,13 @@
 		<class>MastersProject.BeadRepo.DateInfoBead</class>
 		<class>MastersProject.BeadRepo.BodyInfoBead</class>
 		<class>MastersProject.BeadRepo.UserLocationInfoBead</class>
+		<class>PhDProject.FriendsFamily.Models.Event</class>
+		<class>PhDProject.FriendsFamily.Models.MobileApp</class>
+		<class>PhDProject.FriendsFamily.Models.Notification</class>
+		<class>PhDProject.FriendsFamily.Models.Personality</class>
+		<class>PhDProject.FriendsFamily.Models.Sender</class>
+		<class>PhDProject.FriendsFamily.Models.Subject</class>
+		<class>PhDProject.FriendsFamily.Models.User</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC" />
 			<property name="javax.persistence.jdbc.url"	value="jdbc:sqlite:anothertest.db" />

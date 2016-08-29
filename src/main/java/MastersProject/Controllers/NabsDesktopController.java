@@ -203,6 +203,13 @@ public class NabsDesktopController implements Initializable{
     private int bodyRows;
     private int appRows;
     private int dateRows;
+    
+    private int senderRank;
+    private int subjectRank;
+    private int appRank;
+    private int bodyRank;
+    private int dateRank;
+    
 
     @FXML
     void enterSender(ActionEvent event) {
@@ -398,24 +405,29 @@ public class NabsDesktopController implements Initializable{
     	notification.setNotificationId(12345);
     	
     	notification.setSender(this.senderInput.getText());
-    	notification.setSenderRank(UpliftedNotification.getRank("SenderUplift", 
-    			this.senderInput.getText()));
+    	/*notification.setSenderRank(UpliftedNotification.getRank("SenderUplift", 
+    			this.senderInput.getText()));*/
+    	notification.setSenderRank(this.senderRank);
     	
     	notification.setApp(this.applicationInput.getText());
-    	notification.setAppRank(UpliftedNotification.getRank("AppUplift",
-    			this.applicationInput.getText()));
+    	/*notification.setAppRank(UpliftedNotification.getRank("AppUplift",
+    			this.applicationInput.getText()));*/
+    	notification.setAppRank(this.appRank);
     	
     	notification.setSubject(this.subjectInput.getText());
-    	notification.setSubjectRank(UpliftedNotification.getRank("SubjectUplift",
-    			this.subjectInput.getText()));
+    	/*notification.setSubjectRank(UpliftedNotification.getRank("SubjectUplift",
+    			this.subjectInput.getText()));*/
+    	notification.setSubjectRank(this.subjectRank);
     	
     	notification.setBody(this.subjectInput.getText());
-    	notification.setBodyRank(UpliftedNotification.getRank("BodyUplift",
-    			this.subjectInput.getText()));
+    	/*notification.setBodyRank(UpliftedNotification.getRank("BodyUplift",
+    			this.subjectInput.getText()));*/
+    	notification.setBodyRank(this.bodyRank);
     	
     	notification.setDateImportance(notification.getDateImportance());
-    	notification.setDateRank(UpliftedNotification.getRank("DateUplift",
-    			"not significant"));
+    	/*notification.setDateRank(UpliftedNotification.getRank("DateUplift",
+    			"not significant"));*/
+    	notification.setDateRank(this.dateRank);
     	
     	// set the actual date value
     	String time = this.timeInput.getText();
@@ -441,13 +453,18 @@ public class NabsDesktopController implements Initializable{
     	
     	// Sender Phone
     	UpliftedNotification notification = App.getNotification(); 
+    	System.out.println(notification.getDate());
 		this.senderInput.setText(notification.getSender());
+		this.senderRank = notification.getSenderRank();
 		this.senderInput.setEditable(false);
 		this.subjectInput.setText(notification.getSubject());
+		this.subjectRank = notification.getSubjectRank();
 		this.subjectInput.setEditable(false);
 		this.applicationInput.setText(notification.getApp());
+		this.appRank = notification.getAppRank();
 		this.applicationInput.setEditable(false);
 		this.datePicker.setValue(DateUtility.dateToLocalDate(notification.getDate()));
+		this.dateRank = notification.getDateRank();
 		this.datePicker.setEditable(false);
 		this.timeInput.setText(DateUtility.getTimeAsString(notification.getDate()));
 		this.timeInput.setEditable(false);

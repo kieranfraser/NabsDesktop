@@ -2,6 +2,8 @@ package MastersProject.Nabs;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -23,6 +25,11 @@ import MastersProject.Constants.ConnectionType;
 import MastersProject.DBHelper.ImportUplift;
 import MastersProject.Models.InformationBead;
 import MastersProject.Models.UpliftedNotification;
+import PhDProject.FriendsFamily.FriendsAndFamily;
+import PhDProject.FriendsFamily.Models.MobileApp;
+import PhDProject.FriendsFamily.Models.Notification;
+import PhDProject.FriendsFamily.Models.User;
+import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -61,13 +68,24 @@ public class App extends Application
 	private static Date nextContextRelevant = new Date();
 	
 	public static String result;
+	
+	private static ArrayList<User> users;
+	
+	private static User selectedUser;
 
-	public static void main( String[] args )
+	public static void main( String[] args ) throws SQLException, ParseException, IOException
     {
 
         factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     	em = factory.createEntityManager();
     	
+    	//FriendsAndFamily ff = new FriendsAndFamily();
+    	//ff.saveUserList();
+    	//ArrayList<User> users = ff.getUsers();
+    	
+    	users = User.getAllUsers(em);
+    	selectedUser = getUserFromId("sp10-01-05");
+
     	launch(args);
     }
 
@@ -195,14 +213,42 @@ public class App extends Application
      * @return
      */
     private static ArrayList<UpliftedNotification> readNotifications(){
-    	ImportUplift helper = new ImportUplift();
+    	ArrayList<UpliftedNotification> notifications = new ArrayList<>();
+    	for(Notification notification: selectedUser.getNotifications()){
+        	UpliftedNotification n = new UpliftedNotification();
+        	n.setApp(notification.getApp().getName());
+        	n.setAppRank(notification.getAppRank());
+        	if(notification.getSender() == null){
+        		n.setSender("kieran");
+        	}
+        	else{
+            	n.setSender(notification.getSender());        		
+        	}
+        	n.setSenderRank(notification.getSenderRank());
+        	try {
+				n.setDate(DateFormatUtility.stringToUpliftedNotificationDate(notification.getDate()));
+			} catch (ParseException e) {}
+        	n.setDateRank(notification.getDateRank());
+        	n.setSubject(notification.getSubject().getSubject());
+        	n.setSubjectRank(notification.getSubjectRank());
+        	n.setBody("fixed value");
+        	n.setBodyRank(0);
+        	n.setDateImportance("not significant");
+        	notifications.add(n);
+    	}
+    	
+    	return notifications;
+    	/*ImportUplift helper = new ImportUplift();
+    	ArrayList<UpliftedNotification> notifications = new ArrayList<>();
     	try {
-			return helper.importFromExcel(notificationsExcelInput);
+			notifications =  helper.importFromExcel(notificationsExcelInput);
+			System.out.println(notifications.get(0).getDate());
+			return notifications;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
-		}
+		}*/
     }
     
     public static EntityManager getEntityManager(){
@@ -238,6 +284,10 @@ public class App extends Application
 	    primaryStage.show();
 	}
 	
+	/**
+	 * Will be modified to read from the list of notifications from user of Friends & Family 
+	 * data-set.
+	 */
 	public static void refreshNotificationExcelInput(){
 		notificationNumber = -1;
 		notifications = readNotifications();
@@ -309,6 +359,15 @@ public class App extends Application
 		return result;
 	}
 
+	private static User getUserFromId(String id){
+		for(User user: users){
+			if(user.getId().equals(id)){
+				return user;
+			}
+		}
+		return null;
+	}
+	
 	public static UpliftedNotification getNotification() {
 		return notification;
 	}	
@@ -371,6 +430,15 @@ public class App extends Application
 
 	public static void setNextContextRelevant(Date nextContextRelevant) {
 		App.nextContextRelevant = nextContextRelevant;
+	}
+	
+	/**
+	 * Called from within the Google Calendar class to get the inferred 
+	 * events associated with the current user from the friends & family data-set.
+	 * @return
+	 */
+	public static User getSelectedUser(){
+		return selectedUser;
 	}
 	
 }

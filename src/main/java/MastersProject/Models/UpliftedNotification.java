@@ -105,6 +105,5 @@ public class UpliftedNotification implements Serializable{
 		Query q = em.createQuery("select t.rank from "+table+" t where t.value = '"+value+"'");
 		int result = (int) q.getSingleResult();
 		return result;
-	}
-	
+	}	
 }

@@ -57,7 +57,7 @@ public class EventInference {
 			}
 			// setting next free period
 			if(freePeriodSet == false){
-				if(unfinishedEvents.size()>=2){
+				if(unfinishedEvents.size()>=2 && i < unfinishedEvents.size()){
 					LocalDateTime endThisEvent = DateUtility.dateToLocalDateTime(event.getEndDate());
 					LocalDateTime startNextEvent = DateUtility.dateToLocalDateTime(unfinishedEvents.get(i).getStartDate());
 					long diff = DateUtility.getDifferenceBetweenDatesInMinutes(endThisEvent, startNextEvent);

@@ -3,15 +3,13 @@ package MastersProject.GoogleData;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -22,16 +20,13 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.DateTime;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Calendar;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
-import com.google.api.services.calendar.model.Events;
-import com.google.gdata.util.ServiceException;
 
-import MastersProject.Utilities.DateUtility;
+import MastersProject.Nabs.App;
+import PhDProject.FriendsFamily.Models.User;
+import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
 
 
 public class GoogleCalendarData {
@@ -58,6 +53,9 @@ public class GoogleCalendarData {
     
     private static ArrayList<String> calendarIDS;
     private static ArrayList<Calendar> calendars;
+    
+    private static int counter = 0;
+	private static ArrayList<PhDProject.FriendsFamily.Models.Event> possibleEvents = new ArrayList<>();
 
     static {
         try {
@@ -123,33 +121,102 @@ public class GoogleCalendarData {
      */
     public static ArrayList<CalendarEvent> getNextNEvents(int n, Date dateFrom) 
     		throws ParseException, IOException {
-    	com.google.api.services.calendar.Calendar service = getCalendarService();
+    	counter = 0;
+    	possibleEvents = new ArrayList<>();
+    	boolean greaterDate = false;
     	
-    	calendarIDS = new ArrayList<String>();
-    	calendars = new ArrayList<Calendar>();
-    	//DateTime date = new DateTime(dateFrom.getTime());
-    	DateTime date = new DateTime(dateFrom, TimeZone.getDefault());
-        Events events = service.events().list("primary")
-            .setTimeMin(date)
-            .setOrderBy("startTime")
-            .setSingleEvents(true)
-            .execute();
-        List<Event> items = events.getItems();
-        ArrayList<CalendarEvent> requiredEvents = new ArrayList<CalendarEvent>();
-        
-        for(int i=0; i<n; i++){
-        	System.out.println(items.get(i).getStart());
-        	Date convertedStartDate = DateUtility.convertEventDateTimeToDate(items.get(i).getStart());
-        	Date convertedEndDate = DateUtility.convertEventDateTimeToDate(items.get(i).getEnd());
-        	CalendarEvent event = new CalendarEvent(items.get(i).getDescription(),
-        			convertedStartDate, convertedEndDate, items.get(i).getLocation(), items.get(i).getSummary());
-        	requiredEvents.add(event);
-        }
-        return requiredEvents;
+    	ArrayList<CalendarEvent> requiredEvents = new ArrayList<>();
+    	
+    	User user = App.getSelectedUser();
+    	
+		// check day - if day of week, get work/study
+		LocalDateTime notificationDate = DateFormatUtility.convertDateToLDT(dateFrom);
+		DayOfWeek dayOfWeek = notificationDate.getDayOfWeek();
+		
+		while(counter <10){
+
+    		if(dayOfWeek.equals(DayOfWeek.MONDAY) || dayOfWeek.equals(DayOfWeek.TUESDAY) ||
+    				dayOfWeek.equals(DayOfWeek.WEDNESDAY) || dayOfWeek.equals(DayOfWeek.THURSDAY) || 
+    						dayOfWeek.equals(DayOfWeek.FRIDAY)){
+    			if(counter < 10){
+    				addMorningEvent(user, notificationDate, greaterDate);
+    			} else break;
+    			if(counter < 10){
+    				addLunchEvent(user, notificationDate, greaterDate);
+    			} else break;
+    			if(counter < 10){
+    				addAfternoonEvent(user, notificationDate, greaterDate);
+    				System.out.println("added-------------");
+    			} else break;
+    		}
+    		ArrayList<PhDProject.FriendsFamily.Models.Event> events = User.getTodaysEvents(notificationDate, user);
+    		for(PhDProject.FriendsFamily.Models.Event event :events){
+    			if(counter<10){
+    				possibleEvents.add(event);
+    				counter++;
+    			}
+    		}
+    		notificationDate = notificationDate.plusDays(1);
+    		dayOfWeek = notificationDate.getDayOfWeek();
+    		greaterDate = true;
+    		System.out.println(notificationDate);
+    		System.out.println(dayOfWeek);
+    		System.out.println(counter);
+		}
+		
+		for(PhDProject.FriendsFamily.Models.Event event: possibleEvents){
+			CalendarEvent calEvent = new CalendarEvent();
+			calEvent.setDescription(event.getInferredDescription());
+			calEvent.setEndDate(DateFormatUtility.convertLDTToCalendarEventDate(event.getInferredEndDate()));
+			calEvent.setLocation("to be set");
+			calEvent.setStartDate(DateFormatUtility.convertLDTToCalendarEventDate(event.getInferredStartDate()));
+			calEvent.setSummary(event.getNameGT());
+			requiredEvents.add(calEvent);
+		}
+		
+		// if notification before 5 add 1-5 event increment counter
+		
+		// if notification before 1 add lunch event increment counter
+		
+		// if notification before 12 add morning event to possible events increment counter
+		
+		// get all other events for today. add counter for each.
+		
+		// check counter - repeat until 10 met.
+    	System.out.println("The size of requiredEvents-------"+requiredEvents.size());
+    	return requiredEvents;
+    }
+    
+    private static void addMorningEvent(User user, LocalDateTime notificationDate, boolean greaterDate){
+    	PhDProject.FriendsFamily.Models.Event newEvent = new PhDProject.FriendsFamily.Models.Event();
+		newEvent.setFixedEventMorning(user.isStudent(), notificationDate);
+		if(DateFormatUtility.checkBeforeHour(notificationDate, newEvent.getInferredEndDate())){
+			possibleEvents.add(newEvent);
+			counter++;
+		};
+    }
+    
+    private static void addLunchEvent(User user, LocalDateTime notificationDate, boolean greaterDate){
+    	PhDProject.FriendsFamily.Models.Event newEvent = new PhDProject.FriendsFamily.Models.Event();
+		newEvent.setFixedLunchEvent(user.isStudent(), notificationDate);
+		if(DateFormatUtility.checkBeforeHour(notificationDate, newEvent.getInferredEndDate()) || greaterDate){
+			possibleEvents.add(newEvent);
+			counter++;
+		};
+    }
+    
+    private static void addAfternoonEvent(User user, LocalDateTime notificationDate, boolean greaterDate){
+    	PhDProject.FriendsFamily.Models.Event newEvent = new PhDProject.FriendsFamily.Models.Event();
+		newEvent.setFixedAfternoonEvent(user.isStudent(), notificationDate);
+		if(DateFormatUtility.checkBeforeHour(notificationDate, newEvent.getInferredEndDate())){
+			possibleEvents.add(newEvent);
+			counter++;
+		};
     }
     
     /**
-     * Get the next event - to be used for the user context
+     * Get the next event - to be used for the user context - 
+     * now generated based on the inferred values from Friends & Family data-set
      * @param dateFrom
      * @return
      * @throws ParseException
@@ -157,7 +224,7 @@ public class GoogleCalendarData {
      */
    public static CalendarEvent getNextEvent(Date dateFrom)
 	   throws ParseException, IOException {
-   		com.google.api.services.calendar.Calendar service = getCalendarService();
+   		/*com.google.api.services.calendar.Calendar service = getCalendarService();
     	calendarIDS = new ArrayList<String>();
     	calendars = new ArrayList<Calendar>();
 
@@ -171,7 +238,8 @@ public class GoogleCalendarData {
     	Date convertedStartDate = DateUtility.convertEventDateTimeToDate(items.get(0).getStart());
     	Date convertedEndDate = DateUtility.convertEventDateTimeToDate(items.get(0).getEnd());
     	CalendarEvent event = new CalendarEvent(items.get(0).getDescription(),
-    			convertedStartDate, convertedEndDate, items.get(0).getLocation(), items.get(0).getSummary());
+    			convertedStartDate, convertedEndDate, items.get(0).getLocation(), items.get(0).getSummary());*/
+	   	CalendarEvent event = new CalendarEvent("Something", new Date(), new Date(), "Somewhere", "Summary");
         return event;
     }
     

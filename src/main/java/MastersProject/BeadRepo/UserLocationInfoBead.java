@@ -66,6 +66,10 @@ Runnable{
 		}
 	}
 
+	/**
+	 * Changed for NAbSim - get Next Event is drawn from the inferred events generated using
+	 * the friends & family data-set.
+	 */
 	@Override
 	public void getEvidence(String senderId, Date sentTime, Triplet inputData) {
 		System.out.println("Location");

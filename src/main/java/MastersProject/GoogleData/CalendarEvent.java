@@ -13,6 +13,8 @@ public class CalendarEvent implements Serializable{
 	private String location;
 	private String summary;
 	
+	public CalendarEvent(){};
+	
 	public CalendarEvent(String description, Date startDate, Date endDate, String location, String summary){
 		this.description = description;
 		this.startDate = startDate;

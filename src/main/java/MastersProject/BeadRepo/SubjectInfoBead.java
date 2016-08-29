@@ -82,19 +82,24 @@ Runnable{
 		System.out.println("Subject");
 		ObjectMapper mapper = new ObjectMapper();
 		try {
+
+			System.out.println("Getting the information item of the notifications");
 			notification = mapper.readValue(inputData.getInformationItem().getInformationValue(),
 					UpliftedNotification.class);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+			System.out.println("Stuck here");
 		}
 		
 		// get the calendar data for the next 10 events
 		try {
+			System.out.println("Getting the next n events");
 			events = GoogleCalendarData.getNextNEvents(10, notification.getDate());
 		} catch (IOException | ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			System.out.println("Stuck here 2");
 		}
 		
 		this.run();
