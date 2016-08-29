@@ -1,0 +1,1652 @@
+
+
+Event
+ Name: The Ghost Writer(movie) and dinner after that
+ With:  With local friends With my partner
+ Day: Sa
+ Event Type: 0
+ Start Date: 2010-03-08
+ End Date: 2010-03-14
+ Inferred Start Date: 2010-03-09T17:00
+ Inferred End Date: 2010-03-09T20:00
+ Inferred Description: family friend interest
+
+******************
+
+
+Event
+ Name: Watching movies at home on Sunday
+ With:  With my partner
+ Day: Su
+ Event Type: 1
+ Start Date: 2010-03-08
+ End Date: 2010-03-14
+ Inferred Start Date: 2010-03-09T17:00
+ Inferred End Date: 2010-03-09T19:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: The Ghost Writer
+ With:  With my partner
+ Day:  Sa
+ Event Type: 2
+ Start Date: 2010-03-08
+ End Date: 2010-03-14
+ Inferred Start Date: 2010-03-10T20:00
+ Inferred End Date: 2010-03-10T21:00
+ Inferred Description: family interest social
+
+******************
+
+
+Event
+ Name: Green Zone
+ With:  With local friends With my partner
+ Day: 
+ Event Type: 2
+ Start Date: 2010-03-08
+ End Date: 2010-03-14
+ Inferred Start Date: 2010-03-08T20:00
+ Inferred End Date: 2010-03-08T21:00
+ Inferred Description: family friend interest social
+
+******************
+
+
+Event
+ Name: Perfect Getaway
+ With:  With my partner
+ Day: 
+ Event Type: 3
+ Start Date: 2010-03-08
+ End Date: 2010-03-14
+ Inferred Start Date: 2010-03-08T21:00
+ Inferred End Date: 2010-03-08T22:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: A Time to Kill
+ With:  Alone
+ Day: 
+ Event Type: 3
+ Start Date: 2010-03-08
+ End Date: 2010-03-14
+ Inferred Start Date: 2010-03-10T21:00
+ Inferred End Date: 2010-03-10T22:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: The Big Bang Theory
+ With:  Alone
+ Day:  M
+ Event Type: 4
+ Start Date: 2010-03-08
+ End Date: 2010-03-14
+ Inferred Start Date: 2010-03-13T17:00
+ Inferred End Date: 2010-03-13T20:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: The Marriage Ref
+ With:  Alone
+ Day:  Th
+ Event Type: 4
+ Start Date: 2010-03-08
+ End Date: 2010-03-14
+ Inferred Start Date: 2010-03-10T17:00
+ Inferred End Date: 2010-03-10T20:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Ghost Whisperer
+ With:  Alone
+ Day:  False
+ Event Type: 4
+ Start Date: 2010-03-08
+ End Date: 2010-03-14
+ Inferred Start Date: 2010-03-08T17:00
+ Inferred End Date: 2010-03-08T20:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Subway
+ With:  With my partner
+ Day:  Th
+ Event Type: 5
+ Start Date: 2010-03-08
+ End Date: 2010-03-14
+ Inferred Start Date: 2010-03-08T19:00
+ Inferred End Date: 2010-03-08T21:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: The Gourmet Dumpling
+ With:  With local friends With my partner
+ Day: 
+ Event Type: 5
+ Start Date: 2010-03-08
+ End Date: 2010-03-14
+ Inferred Start Date: 2010-03-11T19:00
+ Inferred End Date: 2010-03-11T21:00
+ Inferred Description: family friend social
+
+******************
+
+
+Event
+ Name: Movie - The Girl with the Dragoon Tatoo and dinner at Hungry mother
+ With:  With my partner
+ Day: Su
+ Event Type: 0
+ Start Date: 2010-03-15
+ End Date: 2010-03-21
+ Inferred Start Date: 2010-03-15T17:00
+ Inferred End Date: 2010-03-15T20:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: Bike trip
+ With:  With my partner
+ Day: Sa
+ Event Type: 1
+ Start Date: 2010-03-15
+ End Date: 2010-03-21
+ Inferred Start Date: 2010-03-21T17:00
+ Inferred End Date: 2010-03-21T19:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: She's out of your League
+ With:  With local friends
+ Day:  Th
+ Event Type: 2
+ Start Date: 2010-03-15
+ End Date: 2010-03-21
+ Inferred Start Date: 2010-03-15T20:00
+ Inferred End Date: 2010-03-15T21:00
+ Inferred Description: friend interest social
+
+******************
+
+
+Event
+ Name: The Girl with the Dragon Tatoo
+ With:  With my partner
+ Day: 
+ Event Type: 2
+ Start Date: 2010-03-15
+ End Date: 2010-03-21
+ Inferred Start Date: 2010-03-17T20:00
+ Inferred End Date: 2010-03-17T21:00
+ Inferred Description: family interest social
+
+******************
+
+
+Event
+ Name: Post-Grad
+ With:  Alone
+ Day:  W
+ Event Type: 3
+ Start Date: 2010-03-15
+ End Date: 2010-03-21
+ Inferred Start Date: 2010-03-16T21:00
+ Inferred End Date: 2010-03-16T22:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Jennifer's Body
+ With:  With my partner
+ Day:  Sa
+ Event Type: 3
+ Start Date: 2010-03-15
+ End Date: 2010-03-21
+ Inferred Start Date: 2010-03-20T21:00
+ Inferred End Date: 2010-03-20T22:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: 24
+ With:  With my partner
+ Day:  M W
+ Event Type: 4
+ Start Date: 2010-03-15
+ End Date: 2010-03-21
+ Inferred Start Date: 2010-03-21T17:00
+ Inferred End Date: 2010-03-21T20:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: The Big Bang Theory
+ With:  With my partner
+ Day:  M
+ Event Type: 4
+ Start Date: 2010-03-15
+ End Date: 2010-03-21
+ Inferred Start Date: 2010-03-15T17:00
+ Inferred End Date: 2010-03-15T20:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: Marriage Ref
+ With:  Alone
+ Day:  False
+ Event Type: 4
+ Start Date: 2010-03-15
+ End Date: 2010-03-21
+ Inferred Start Date: 2010-03-18T17:00
+ Inferred End Date: 2010-03-18T20:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Hungry Mother
+ With:  With my partner
+ Day: 
+ Event Type: 5
+ Start Date: 2010-03-15
+ End Date: 2010-03-21
+ Inferred Start Date: 2010-03-21T19:00
+ Inferred End Date: 2010-03-21T21:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: Dinner @ Lexington
+ With:  With my partner
+ Day:  Sa
+ Event Type: 5
+ Start Date: 2010-03-15
+ End Date: 2010-03-21
+ Inferred Start Date: 2010-03-15T19:00
+ Inferred End Date: 2010-03-15T21:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: Washington DC trip
+ With:  With my partner
+ Day: Sa
+ Event Type: 0
+ Start Date: 2010-03-29
+ End Date: 2010-04-04
+ Inferred Start Date: 2010-03-30T17:00
+ Inferred End Date: 2010-03-30T20:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: Washington DC trip
+ With:  With my partner
+ Day: Sa
+ Event Type: 1
+ Start Date: 2010-03-29
+ End Date: 2010-04-04
+ Inferred Start Date: 2010-04-02T17:00
+ Inferred End Date: 2010-04-02T19:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: Clash of the Titans
+ With:  With local friends With my partner
+ Day:  False
+ Event Type: 2
+ Start Date: 2010-03-29
+ End Date: 2010-04-04
+ Inferred Start Date: 2010-03-30T20:00
+ Inferred End Date: 2010-03-30T21:00
+ Inferred Description: family friend interest social
+
+******************
+
+
+Event
+ Name: Oyamel
+ With:  With my partner
+ Day: 
+ Event Type: 5
+ Start Date: 2010-03-29
+ End Date: 2010-04-04
+ Inferred Start Date: 2010-04-01T19:00
+ Inferred End Date: 2010-04-01T21:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: Jaleo
+ With:  With my partner
+ Day:  Sa
+ Event Type: 5
+ Start Date: 2010-03-29
+ End Date: 2010-04-04
+ Inferred Start Date: 2010-04-04T19:00
+ Inferred End Date: 2010-04-04T21:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: Starbucks
+ With:  With my partner
+ Day:  Sa
+ Event Type: 5
+ Start Date: 2010-03-29
+ End Date: 2010-04-04
+ Inferred Start Date: 2010-03-30T19:00
+ Inferred End Date: 2010-03-30T21:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: Shoot (Work)
+ With:  With local friends With my partner
+ Day: Sa
+ Event Type: 0
+ Start Date: 2010-04-05
+ End Date: 2010-04-11
+ Inferred Start Date: 2010-04-09T17:00
+ Inferred End Date: 2010-04-09T20:00
+ Inferred Description: family friend interest
+
+******************
+
+
+Event
+ Name: Movie
+ With:  With local friends With my partner
+ Day: Su
+ Event Type: 1
+ Start Date: 2010-04-05
+ End Date: 2010-04-11
+ Inferred Start Date: 2010-04-07T17:00
+ Inferred End Date: 2010-04-07T19:00
+ Inferred Description: family friend social
+
+******************
+
+
+Event
+ Name: How to train your dragon
+ With:  With local friends With my partner
+ Day: 
+ Event Type: 2
+ Start Date: 2010-04-05
+ End Date: 2010-04-11
+ Inferred Start Date: 2010-04-08T20:00
+ Inferred End Date: 2010-04-08T21:00
+ Inferred Description: family friend interest social
+
+******************
+
+
+Event
+ Name: The Marriage Ref
+ With:  Alone
+ Day:  Th
+ Event Type: 4
+ Start Date: 2010-04-05
+ End Date: 2010-04-11
+ Inferred Start Date: 2010-04-11T17:00
+ Inferred End Date: 2010-04-11T20:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Dunkin Donuts
+ With:  With local friends With my partner
+ Day:  Sa
+ Event Type: 5
+ Start Date: 2010-04-05
+ End Date: 2010-04-11
+ Inferred Start Date: 2010-04-11T19:00
+ Inferred End Date: 2010-04-11T21:00
+ Inferred Description: family friend social
+
+******************
+
+
+Event
+ Name: Movies
+ With:  With my partner
+ Day: F
+ Event Type: 0
+ Start Date: 2010-04-12
+ End Date: 2010-04-18
+ Inferred Start Date: 2010-04-17T17:00
+ Inferred End Date: 2010-04-17T20:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: Movies
+ With:  With my partner
+ Day: F
+ Event Type: 1
+ Start Date: 2010-04-12
+ End Date: 2010-04-18
+ Inferred Start Date: 2010-04-14T17:00
+ Inferred End Date: 2010-04-14T19:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: The Secret in Their Eyes
+ With:  With my partner
+ Day:  False
+ Event Type: 2
+ Start Date: 2010-04-12
+ End Date: 2010-04-18
+ Inferred Start Date: 2010-04-15T20:00
+ Inferred End Date: 2010-04-15T21:00
+ Inferred Description: family interest social
+
+******************
+
+
+Event
+ Name: Payback
+ With:  With my partner
+ Day:  Sa
+ Event Type: 3
+ Start Date: 2010-04-12
+ End Date: 2010-04-18
+ Inferred Start Date: 2010-04-12T21:00
+ Inferred End Date: 2010-04-12T22:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: The Big Bang Theory
+ With:  Alone
+ Day:  M
+ Event Type: 4
+ Start Date: 2010-04-12
+ End Date: 2010-04-18
+ Inferred Start Date: 2010-04-12T17:00
+ Inferred End Date: 2010-04-12T20:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Hungry Mother
+ With:  With my partner
+ Day:  False
+ Event Type: 5
+ Start Date: 2010-04-12
+ End Date: 2010-04-18
+ Inferred Start Date: 2010-04-15T19:00
+ Inferred End Date: 2010-04-15T21:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: Dinner with Friends
+ With:  With local friends With guests from out of town With my partner
+ Day: Su
+ Event Type: 0
+ Start Date: 2010-04-19
+ End Date: 2010-04-25
+ Inferred Start Date: 2010-04-22T17:00
+ Inferred End Date: 2010-04-22T20:00
+ Inferred Description: family friend social interest
+
+******************
+
+
+Event
+ Name: Walking in Boston
+ With:  With local friends With guests from out of town With my partner
+ Day: Sa
+ Event Type: 1
+ Start Date: 2010-04-19
+ End Date: 2010-04-25
+ Inferred Start Date: 2010-04-23T17:00
+ Inferred End Date: 2010-04-23T19:00
+ Inferred Description: family friend social social
+
+******************
+
+
+Event
+ Name: Crazy Heart
+ With:  With local friends With guests from out of town With my partner
+ Day: 
+ Event Type: 3
+ Start Date: 2010-04-19
+ End Date: 2010-04-25
+ Inferred Start Date: 2010-04-20T21:00
+ Inferred End Date: 2010-04-20T22:00
+ Inferred Description: family friend social interest social
+
+******************
+
+
+Event
+ Name: Movies
+ With:  With local friends With my partner
+ Day: Th
+ Event Type: 0
+ Start Date: 2010-04-26
+ End Date: 2010-05-02
+ Inferred Start Date: 2010-04-28T17:00
+ Inferred End Date: 2010-04-28T20:00
+ Inferred Description: family friend interest
+
+******************
+
+
+Event
+ Name: Movies
+ With:  With local friends With my partner
+ Day: Th
+ Event Type: 1
+ Start Date: 2010-04-26
+ End Date: 2010-05-02
+ Inferred Start Date: 2010-04-29T17:00
+ Inferred End Date: 2010-04-29T19:00
+ Inferred Description: family friend social
+
+******************
+
+
+Event
+ Name: Kick Ass
+ With:  With local friends With my partner
+ Day:  Th
+ Event Type: 2
+ Start Date: 2010-04-26
+ End Date: 2010-05-02
+ Inferred Start Date: 2010-05-02T20:00
+ Inferred End Date: 2010-05-02T21:00
+ Inferred Description: family friend interest social
+
+******************
+
+
+Event
+ Name: The Fourth Kind
+ With:  With my partner
+ Day:  Sa
+ Event Type: 3
+ Start Date: 2010-04-26
+ End Date: 2010-05-02
+ Inferred Start Date: 2010-04-30T21:00
+ Inferred End Date: 2010-04-30T22:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: The Marriage Ref
+ With:  Alone
+ Day:  False
+ Event Type: 4
+ Start Date: 2010-04-26
+ End Date: 2010-05-02
+ Inferred Start Date: 2010-05-02T17:00
+ Inferred End Date: 2010-05-02T20:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Subway
+ With:  With my partner
+ Day:  Sa
+ Event Type: 5
+ Start Date: 2010-04-26
+ End Date: 2010-05-02
+ Inferred Start Date: 2010-05-01T19:00
+ Inferred End Date: 2010-05-01T21:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: Cosi
+ With:  With my partner
+ Day: 
+ Event Type: 5
+ Start Date: 2010-04-26
+ End Date: 2010-05-02
+ Inferred Start Date: 2010-04-28T19:00
+ Inferred End Date: 2010-04-28T21:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: Westgate BBQ
+ With:  With Westgate friends
+ Day: Sa
+ Event Type: 0
+ Start Date: 2010-05-03
+ End Date: 2010-05-09
+ Inferred Start Date: 2010-05-09T17:00
+ Inferred End Date: 2010-05-09T20:00
+ Inferred Description: friend interest
+
+******************
+
+
+Event
+ Name: BBQ Westgate
+ With:  With Westgate friends
+ Day: Sa
+ Event Type: 1
+ Start Date: 2010-05-03
+ End Date: 2010-05-09
+ Inferred Start Date: 2010-05-08T17:00
+ Inferred End Date: 2010-05-08T19:00
+ Inferred Description: friend social
+
+******************
+
+
+Event
+ Name: Sorority Row
+ With:  Alone
+ Day:  False
+ Event Type: 3
+ Start Date: 2010-05-03
+ End Date: 2010-05-09
+ Inferred Start Date: 2010-05-08T21:00
+ Inferred End Date: 2010-05-08T22:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: 27 Dresses
+ With:  Alone
+ Day:  Sa
+ Event Type: 3
+ Start Date: 2010-05-03
+ End Date: 2010-05-09
+ Inferred Start Date: 2010-05-06T21:00
+ Inferred End Date: 2010-05-06T22:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Gladiator
+ With:  Alone
+ Day: 
+ Event Type: 3
+ Start Date: 2010-05-03
+ End Date: 2010-05-09
+ Inferred Start Date: 2010-05-04T21:00
+ Inferred End Date: 2010-05-04T22:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: The Marriage Ref
+ With:  Alone
+ Day:  Th
+ Event Type: 4
+ Start Date: 2010-05-03
+ End Date: 2010-05-09
+ Inferred Start Date: 2010-05-04T17:00
+ Inferred End Date: 2010-05-04T20:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Ghost Whisperer
+ With:  Alone
+ Day:  False
+ Event Type: 4
+ Start Date: 2010-05-03
+ End Date: 2010-05-09
+ Inferred Start Date: 2010-05-05T17:00
+ Inferred End Date: 2010-05-05T20:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: My parents coming to town
+ With:  With guests from out of town With my partner
+ Day: F
+ Event Type: 0
+ Start Date: 2010-05-10
+ End Date: 2010-05-16
+ Inferred Start Date: 2010-05-13T17:00
+ Inferred End Date: 2010-05-13T20:00
+ Inferred Description: family friend social interest
+
+******************
+
+
+Event
+ Name: The MFA
+ With:  With guests from out of town With my partner
+ Day: Sa
+ Event Type: 1
+ Start Date: 2010-05-10
+ End Date: 2010-05-16
+ Inferred Start Date: 2010-05-11T17:00
+ Inferred End Date: 2010-05-11T19:00
+ Inferred Description: family friend social social
+
+******************
+
+
+Event
+ Name: Iron Man 2
+ With:  With guests from out of town With my partner
+ Day:  Sa
+ Event Type: 2
+ Start Date: 2010-05-10
+ End Date: 2010-05-16
+ Inferred Start Date: 2010-05-10T20:00
+ Inferred End Date: 2010-05-10T21:00
+ Inferred Description: family friend social interest social
+
+******************
+
+
+Event
+ Name: The Marriage Ref
+ With:  With guests from out of town With my partner
+ Day:  Th
+ Event Type: 4
+ Start Date: 2010-05-10
+ End Date: 2010-05-16
+ Inferred Start Date: 2010-05-11T17:00
+ Inferred End Date: 2010-05-11T20:00
+ Inferred Description: family friend social interest social
+
+******************
+
+
+Event
+ Name: Legal Sea Foods
+ With:  With guests from out of town With my partner
+ Day:  False
+ Event Type: 5
+ Start Date: 2010-05-10
+ End Date: 2010-05-16
+ Inferred Start Date: 2010-05-16T19:00
+ Inferred End Date: 2010-05-16T21:00
+ Inferred Description: family friend social social
+
+******************
+
+
+Event
+ Name: The Other Side
+ With:  With guests from out of town With my partner
+ Day:  Sa
+ Event Type: 5
+ Start Date: 2010-05-10
+ End Date: 2010-05-16
+ Inferred Start Date: 2010-05-12T19:00
+ Inferred End Date: 2010-05-12T21:00
+ Inferred Description: family friend social social
+
+******************
+
+
+Event
+ Name: Delicious
+ With:  With guests from out of town With my partner
+ Day: 
+ Event Type: 5
+ Start Date: 2010-05-10
+ End Date: 2010-05-16
+ Inferred Start Date: 2010-05-16T19:00
+ Inferred End Date: 2010-05-16T21:00
+ Inferred Description: family friend social social
+
+******************
+
+
+Event
+ Name: Bike trip
+ With:  With my partner
+ Day: Sa
+ Event Type: 0
+ Start Date: 2010-05-17
+ End Date: 2010-05-23
+ Inferred Start Date: 2010-05-22T17:00
+ Inferred End Date: 2010-05-22T20:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: Bike trip
+ With:  With my partner
+ Day: Sa
+ Event Type: 1
+ Start Date: 2010-05-17
+ End Date: 2010-05-23
+ Inferred Start Date: 2010-05-22T17:00
+ Inferred End Date: 2010-05-22T19:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: Shrek 4
+ With:  With local friends With my partner
+ Day: 
+ Event Type: 2
+ Start Date: 2010-05-17
+ End Date: 2010-05-23
+ Inferred Start Date: 2010-05-23T20:00
+ Inferred End Date: 2010-05-23T21:00
+ Inferred Description: family friend interest social
+
+******************
+
+
+Event
+ Name: Trainspotting
+ With:  With local friends With my partner
+ Day:  False
+ Event Type: 3
+ Start Date: 2010-05-17
+ End Date: 2010-05-23
+ Inferred Start Date: 2010-05-21T21:00
+ Inferred End Date: 2010-05-21T22:00
+ Inferred Description: family friend interest social
+
+******************
+
+
+Event
+ Name: Payback
+ With:  With my partner
+ Day: 
+ Event Type: 3
+ Start Date: 2010-05-17
+ End Date: 2010-05-23
+ Inferred Start Date: 2010-05-21T21:00
+ Inferred End Date: 2010-05-21T22:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: Whiteout
+ With:  With my partner
+ Day:  Sa
+ Event Type: 3
+ Start Date: 2010-05-17
+ End Date: 2010-05-23
+ Inferred Start Date: 2010-05-22T21:00
+ Inferred End Date: 2010-05-22T22:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: The Marriage Ref
+ With:  Alone
+ Day:  Th
+ Event Type: 4
+ Start Date: 2010-05-17
+ End Date: 2010-05-23
+ Inferred Start Date: 2010-05-20T17:00
+ Inferred End Date: 2010-05-20T20:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Tango
+ With:  With my partner
+ Day:  Sa
+ Event Type: 5
+ Start Date: 2010-05-17
+ End Date: 2010-05-23
+ Inferred Start Date: 2010-05-19T19:00
+ Inferred End Date: 2010-05-19T21:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: Au Bon Pain
+ With:  With my partner
+ Day: 
+ Event Type: 5
+ Start Date: 2010-05-17
+ End Date: 2010-05-23
+ Inferred Start Date: 2010-05-23T19:00
+ Inferred End Date: 2010-05-23T21:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: Bike trip
+ With:  With local friends With my partner
+ Day: Su
+ Event Type: 0
+ Start Date: 2010-05-24
+ End Date: 2010-05-30
+ Inferred Start Date: 2010-05-26T17:00
+ Inferred End Date: 2010-05-26T20:00
+ Inferred Description: family friend interest
+
+******************
+
+
+Event
+ Name: Bike trip
+ With:  With local friends With my partner
+ Day: Su
+ Event Type: 1
+ Start Date: 2010-05-24
+ End Date: 2010-05-30
+ Inferred Start Date: 2010-05-27T17:00
+ Inferred End Date: 2010-05-27T19:00
+ Inferred Description: family friend social
+
+******************
+
+
+Event
+ Name: It's complicated
+ With:  With my partner
+ Day:  Sa
+ Event Type: 3
+ Start Date: 2010-05-24
+ End Date: 2010-05-30
+ Inferred Start Date: 2010-05-29T21:00
+ Inferred End Date: 2010-05-29T22:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: Mission Impossible 3
+ With:  With my partner
+ Day: 
+ Event Type: 3
+ Start Date: 2010-05-24
+ End Date: 2010-05-30
+ Inferred Start Date: 2010-05-24T21:00
+ Inferred End Date: 2010-05-24T22:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: Ocean's 13
+ With:  With my partner
+ Day: 
+ Event Type: 3
+ Start Date: 2010-05-24
+ End Date: 2010-05-30
+ Inferred Start Date: 2010-05-28T21:00
+ Inferred End Date: 2010-05-28T22:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: Cambridge 1
+ With:  With local friends With guests from out of town With my partner
+ Day: 
+ Event Type: 5
+ Start Date: 2010-05-24
+ End Date: 2010-05-30
+ Inferred Start Date: 2010-05-28T19:00
+ Inferred End Date: 2010-05-28T21:00
+ Inferred Description: family friend social social
+
+******************
+
+
+Event
+ Name: Friday Movie night
+ With:  With local friends With my partner
+ Day: F
+ Event Type: 0
+ Start Date: 2010-06-07
+ End Date: 2010-06-13
+ Inferred Start Date: 2010-06-11T17:00
+ Inferred End Date: 2010-06-11T20:00
+ Inferred Description: family friend interest
+
+******************
+
+
+Event
+ Name: Sunday NBA game
+ With:  With local friends With my partner
+ Day: Su
+ Event Type: 1
+ Start Date: 2010-06-07
+ End Date: 2010-06-13
+ Inferred Start Date: 2010-06-12T17:00
+ Inferred End Date: 2010-06-12T19:00
+ Inferred Description: family friend social
+
+******************
+
+
+Event
+ Name: Splice
+ With:  With local friends With my partner
+ Day:  False
+ Event Type: 2
+ Start Date: 2010-06-07
+ End Date: 2010-06-13
+ Inferred Start Date: 2010-06-10T20:00
+ Inferred End Date: 2010-06-10T21:00
+ Inferred Description: family friend interest social
+
+******************
+
+
+Event
+ Name: Get him to the Greek
+ With:  With local friends With my partner
+ Day:  Sa
+ Event Type: 2
+ Start Date: 2010-06-07
+ End Date: 2010-06-13
+ Inferred Start Date: 2010-06-11T20:00
+ Inferred End Date: 2010-06-11T21:00
+ Inferred Description: family friend interest social
+
+******************
+
+
+Event
+ Name: The Daybreakers
+ With:  With my partner
+ Day: 
+ Event Type: 3
+ Start Date: 2010-06-07
+ End Date: 2010-06-13
+ Inferred Start Date: 2010-06-12T21:00
+ Inferred End Date: 2010-06-12T22:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: The Relic
+ With:  With my partner
+ Day: 
+ Event Type: 3
+ Start Date: 2010-06-07
+ End Date: 2010-06-13
+ Inferred Start Date: 2010-06-08T21:00
+ Inferred End Date: 2010-06-08T22:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: Justified
+ With:  With my partner
+ Day: 
+ Event Type: 4
+ Start Date: 2010-06-07
+ End Date: 2010-06-13
+ Inferred Start Date: 2010-06-11T17:00
+ Inferred End Date: 2010-06-11T20:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: MTV Movie Awards
+ With:  With my partner
+ Day:  Su
+ Event Type: 4
+ Start Date: 2010-06-07
+ End Date: 2010-06-13
+ Inferred Start Date: 2010-06-13T17:00
+ Inferred End Date: 2010-06-13T20:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: The View
+ With:  Alone
+ Day:  M
+ Event Type: 4
+ Start Date: 2010-06-07
+ End Date: 2010-06-13
+ Inferred Start Date: 2010-06-11T17:00
+ Inferred End Date: 2010-06-11T20:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Thaitation
+ With:  With local friends With my partner
+ Day:  False
+ Event Type: 5
+ Start Date: 2010-06-07
+ End Date: 2010-06-13
+ Inferred Start Date: 2010-06-10T19:00
+ Inferred End Date: 2010-06-10T21:00
+ Inferred Description: family friend social
+
+******************
+
+
+Event
+ Name: The Helmond
+ With:  With guests from out of town With my partner
+ Day:  W
+ Event Type: 5
+ Start Date: 2010-06-07
+ End Date: 2010-06-13
+ Inferred Start Date: 2010-06-08T19:00
+ Inferred End Date: 2010-06-08T21:00
+ Inferred Description: family friend social social
+
+******************
+
+
+Event
+ Name: Regina Pizzeria
+ With:  With local friends With my partner
+ Day:  M
+ Event Type: 5
+ Start Date: 2010-06-07
+ End Date: 2010-06-13
+ Inferred Start Date: 2010-06-07T19:00
+ Inferred End Date: 2010-06-07T21:00
+ Inferred Description: family friend social
+
+******************
+
+
+Event
+ Name: 4th of July
+ With:  With local friends With my partner
+ Day: Su
+ Event Type: 0
+ Start Date: 2010-06-28
+ End Date: 2010-07-04
+ Inferred Start Date: 2010-07-01T17:00
+ Inferred End Date: 2010-07-01T20:00
+ Inferred Description: family friend interest
+
+******************
+
+
+Event
+ Name: 4th of July
+ With:  With local friends With my partner
+ Day: Su
+ Event Type: 1
+ Start Date: 2010-06-28
+ End Date: 2010-07-04
+ Inferred Start Date: 2010-07-04T17:00
+ Inferred End Date: 2010-07-04T19:00
+ Inferred Description: family friend social
+
+******************
+
+
+Event
+ Name: The View
+ With:  Alone
+ Day:  M False
+ Event Type: 4
+ Start Date: 2010-06-28
+ End Date: 2010-07-04
+ Inferred Start Date: 2010-07-01T17:00
+ Inferred End Date: 2010-07-01T20:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Movies
+ With:  With my partner
+ Day: F
+ Event Type: 0
+ Start Date: 2010-07-05
+ End Date: 2010-07-11
+ Inferred Start Date: 2010-07-05T17:00
+ Inferred End Date: 2010-07-05T20:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: Despicable Me
+ With:  With local friends With my partner
+ Day: W
+ Event Type: 1
+ Start Date: 2010-07-05
+ End Date: 2010-07-11
+ Inferred Start Date: 2010-07-08T17:00
+ Inferred End Date: 2010-07-08T19:00
+ Inferred Description: family friend social
+
+******************
+
+
+Event
+ Name: Despicable Me
+ With:  With local friends With my partner
+ Day:  W
+ Event Type: 2
+ Start Date: 2010-07-05
+ End Date: 2010-07-11
+ Inferred Start Date: 2010-07-09T20:00
+ Inferred End Date: 2010-07-09T21:00
+ Inferred Description: family friend interest social
+
+******************
+
+
+Event
+ Name: Predators
+ With:  With local friends With my partner
+ Day:  False
+ Event Type: 2
+ Start Date: 2010-07-05
+ End Date: 2010-07-11
+ Inferred Start Date: 2010-07-06T20:00
+ Inferred End Date: 2010-07-06T21:00
+ Inferred Description: family friend interest social
+
+******************
+
+
+Event
+ Name: The View
+ With:  Alone
+ Day:  M False
+ Event Type: 4
+ Start Date: 2010-07-05
+ End Date: 2010-07-11
+ Inferred Start Date: 2010-07-09T17:00
+ Inferred End Date: 2010-07-09T20:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: The Gourmet Dumpling
+ With:  With local friends With my partner
+ Day: 
+ Event Type: 5
+ Start Date: 2010-07-05
+ End Date: 2010-07-11
+ Inferred Start Date: 2010-07-08T19:00
+ Inferred End Date: 2010-07-08T21:00
+ Inferred Description: family friend social
+
+******************
+
+
+Event
+ Name: ICA Museum
+ With:  With my partner
+ Day: Su
+ Event Type: 0
+ Start Date: 2010-07-12
+ End Date: 2010-07-18
+ Inferred Start Date: 2010-07-12T17:00
+ Inferred End Date: 2010-07-12T20:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: Bike ride
+ With:  With my partner
+ Day: Su
+ Event Type: 1
+ Start Date: 2010-07-12
+ End Date: 2010-07-18
+ Inferred Start Date: 2010-07-16T17:00
+ Inferred End Date: 2010-07-16T19:00
+ Inferred Description: family social
+
+******************
+
+
+Event
+ Name: Inception
+ With:  With local friends With my partner
+ Day:  False
+ Event Type: 2
+ Start Date: 2010-07-12
+ End Date: 2010-07-18
+ Inferred Start Date: 2010-07-13T20:00
+ Inferred End Date: 2010-07-13T21:00
+ Inferred Description: family friend interest social
+
+******************
+
+
+Event
+ Name: The Girl Who Played with Fire
+ With:  With my partner
+ Day: 
+ Event Type: 2
+ Start Date: 2010-07-12
+ End Date: 2010-07-18
+ Inferred Start Date: 2010-07-15T20:00
+ Inferred End Date: 2010-07-15T21:00
+ Inferred Description: family interest social
+
+******************
+
+
+Event
+ Name: The View
+ With:  Alone
+ Day:  M False
+ Event Type: 4
+ Start Date: 2010-07-12
+ End Date: 2010-07-18
+ Inferred Start Date: 2010-07-12T17:00
+ Inferred End Date: 2010-07-12T20:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Hungry Mother
+ With:  With local friends With my partner
+ Day:  False
+ Event Type: 5
+ Start Date: 2010-07-12
+ End Date: 2010-07-18
+ Inferred Start Date: 2010-07-12T19:00
+ Inferred End Date: 2010-07-12T21:00
+ Inferred Description: family friend social
+
+******************
+
+
+Event
+ Name: Movies on Friday
+ With:  With local friends With my partner
+ Day: F
+ Event Type: 0
+ Start Date: 2010-07-26
+ End Date: 2010-08-01
+ Inferred Start Date: 2010-08-01T17:00
+ Inferred End Date: 2010-08-01T20:00
+ Inferred Description: family friend interest
+
+******************
+
+
+Event
+ Name: Dinner out
+ With:  With local friends With my partner
+ Day: F
+ Event Type: 1
+ Start Date: 2010-07-26
+ End Date: 2010-08-01
+ Inferred Start Date: 2010-08-01T17:00
+ Inferred End Date: 2010-08-01T19:00
+ Inferred Description: family friend social
+
+******************
+
+
+Event
+ Name: Salt
+ With:  With local friends With my partner
+ Day:  False
+ Event Type: 2
+ Start Date: 2010-07-26
+ End Date: 2010-08-01
+ Inferred Start Date: 2010-07-26T20:00
+ Inferred End Date: 2010-07-26T21:00
+ Inferred Description: family friend interest social
+
+******************
+
+
+Event
+ Name: Brooklyn Heights
+ With:  With my partner
+ Day:  Sa
+ Event Type: 3
+ Start Date: 2010-07-26
+ End Date: 2010-08-01
+ Inferred Start Date: 2010-07-26T21:00
+ Inferred End Date: 2010-07-26T22:00
+ Inferred Description: family interest
+
+******************
+
+
+Event
+ Name: Hungry Mother
+ With:  With local friends With my partner
+ Day:  False
+ Event Type: 5
+ Start Date: 2010-07-26
+ End Date: 2010-08-01
+ Inferred Start Date: 2010-07-26T19:00
+ Inferred End Date: 2010-07-26T21:00
+ Inferred Description: family friend social
+
+******************
+
+
+Event
+ Name: The Expendables Screening
+ With:  With guests from out of town
+ Day: M
+ Event Type: 0
+ Start Date: 2010-08-09
+ End Date: 2010-08-15
+ Inferred Start Date: 2010-08-11T17:00
+ Inferred End Date: 2010-08-11T20:00
+ Inferred Description: friend social interest
+
+******************
+
+
+Event
+ Name: The Expendables Screening
+ With:  With guests from out of town
+ Day: M
+ Event Type: 1
+ Start Date: 2010-08-09
+ End Date: 2010-08-15
+ Inferred Start Date: 2010-08-10T17:00
+ Inferred End Date: 2010-08-10T19:00
+ Inferred Description: friend social social
+
+******************
+
+
+Event
+ Name: The Expendables
+ With:  With guests from out of town
+ Day:  M
+ Event Type: 2
+ Start Date: 2010-08-09
+ End Date: 2010-08-15
+ Inferred Start Date: 2010-08-11T20:00
+ Inferred End Date: 2010-08-11T21:00
+ Inferred Description: friend social interest social
+
+******************
+
+
+Event
+ Name: X-Men 2
+ With:  Alone
+ Day:  Th
+ Event Type: 3
+ Start Date: 2010-08-09
+ End Date: 2010-08-15
+ Inferred Start Date: 2010-08-10T21:00
+ Inferred End Date: 2010-08-10T22:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Lying to be Perfect
+ With:  Alone
+ Day:  Sa
+ Event Type: 3
+ Start Date: 2010-08-09
+ End Date: 2010-08-15
+ Inferred Start Date: 2010-08-13T21:00
+ Inferred End Date: 2010-08-13T22:00
+ Inferred Description: interest
+
+******************
+
+
+Event
+ Name: Wagamama
+ With:  With guests from out of town
+ Day:  M
+ Event Type: 5
+ Start Date: 2010-08-09
+ End Date: 2010-08-15
+ Inferred Start Date: 2010-08-15T19:00
+ Inferred End Date: 2010-08-15T21:00
+ Inferred Description: friend social social
+
+******************
+
+
+Event
+ Name: The gourmet dumpling
+ With:  With guests from out of town
+ Day:  W
+ Event Type: 5
+ Start Date: 2010-08-09
+ End Date: 2010-08-15
+ Inferred Start Date: 2010-08-11T19:00
+ Inferred End Date: 2010-08-11T21:00
+ Inferred Description: friend social social
+
+******************
+
+
+Event
+ Name: The Paramount
+ With:  With guests from out of town
+ Day:  Th
+ Event Type: 5
+ Start Date: 2010-08-09
+ End Date: 2010-08-15
+ Inferred Start Date: 2010-08-12T19:00
+ Inferred End Date: 2010-08-12T21:00
+ Inferred Description: friend social social
+
+******************

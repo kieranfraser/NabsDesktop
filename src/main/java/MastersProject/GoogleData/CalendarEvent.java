@@ -58,6 +58,11 @@ public class CalendarEvent implements Serializable{
 
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+
+	@Override
+	public String toString() {
+		return "Calendar Event: "+this.summary+"\n Start Date:"+startDate+"\n End Date: "+endDate+"\n"; 
 	}	
 	
 }

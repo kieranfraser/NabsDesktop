@@ -162,7 +162,6 @@ public class EventInference {
 		if(getAllUnfinishedEvents(event, notification)){
 			LocalDateTime eventStartDate = DateUtility.dateToLocalDateTime(event.getStartDate());
 			long eventStartTimeDiff = DateUtility.getDifferenceBetweenDatesInMinutes(notificationDate, eventStartDate);
-			System.out.println(event.getSummary());
 			if(applyRating(event, maxStartTimeDiff, eventStartTimeDiff) == 1){
 				String location =  event.getLocation();
 				String summary = event.getSummary();

@@ -25,6 +25,7 @@ import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Calendar;
 
 import MastersProject.Nabs.App;
+import PhDProject.FriendsFamily.Models.Event;
 import PhDProject.FriendsFamily.Models.User;
 import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
 
@@ -146,7 +147,6 @@ public class GoogleCalendarData {
     			} else break;
     			if(counter < 10){
     				addAfternoonEvent(user, notificationDate, greaterDate);
-    				System.out.println("added-------------");
     			} else break;
     		}
     		ArrayList<PhDProject.FriendsFamily.Models.Event> events = User.getTodaysEvents(notificationDate, user);
@@ -157,11 +157,12 @@ public class GoogleCalendarData {
     			}
     		}
     		notificationDate = notificationDate.plusDays(1);
+    		notificationDate = notificationDate.withHour(0);
+    		notificationDate = notificationDate.withMinute(0);
+    		notificationDate = notificationDate.withMinute(0);
+    		user.printEvents();
     		dayOfWeek = notificationDate.getDayOfWeek();
     		greaterDate = true;
-    		System.out.println(notificationDate);
-    		System.out.println(dayOfWeek);
-    		System.out.println(counter);
 		}
 		
 		for(PhDProject.FriendsFamily.Models.Event event: possibleEvents){
@@ -183,7 +184,20 @@ public class GoogleCalendarData {
 		// get all other events for today. add counter for each.
 		
 		// check counter - repeat until 10 met.
-    	System.out.println("The size of requiredEvents-------"+requiredEvents.size());
+    	
+    	Thread t = new Thread(new Runnable(){
+    	    @Override
+    	    public void run() {
+    	    	try {
+					Event.printListEvents(requiredEvents);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    	    }
+    	});
+    	t.start();
+    	
     	return requiredEvents;
     }
     

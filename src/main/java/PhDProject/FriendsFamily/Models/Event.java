@@ -1,8 +1,12 @@
 package PhDProject.FriendsFamily.Models;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.persistence.Entity;
@@ -10,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import MastersProject.GoogleData.CalendarEvent;
 import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
 
 @Entity
@@ -313,5 +318,17 @@ public class Event implements Serializable{
 			this.inferredEndDate = this.inferredEndDate.withSecond(0);
 			this.inferredDescription = this.withGT+" "+Subject.WORK;	
 		}
+	}
+	
+	public static void printListEvents(ArrayList<CalendarEvent> events) throws IOException{
+		System.out.println("printing events...");
+		String content = "";
+		for(CalendarEvent event : events){
+			content = content+"\n\n"+event.toString();
+		}
+		FileWriter fileWriter = new FileWriter("events.txt");
+	    PrintWriter printWriter = new PrintWriter(fileWriter);
+	    printWriter.print(content);
+	    printWriter.close();
 	}
 }

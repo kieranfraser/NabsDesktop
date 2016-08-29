@@ -274,7 +274,7 @@ public class User implements Serializable{
 		for(Event event : this.events){
 			content = content+"\n\n"+event.toString();
 		}
-		FileWriter fileWriter = new FileWriter("events.txt");
+		FileWriter fileWriter = new FileWriter("events_User.txt");
 	    PrintWriter printWriter = new PrintWriter(fileWriter);
 	    printWriter.print(content);
 	    printWriter.close();
