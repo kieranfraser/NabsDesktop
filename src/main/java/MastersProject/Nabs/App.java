@@ -22,11 +22,9 @@ import MastersProject.BeadRepo.UserLocationInfoBead;
 import MastersProject.Constants.ActivationType;
 import MastersProject.Constants.BeadType;
 import MastersProject.Constants.ConnectionType;
-import MastersProject.DBHelper.ImportUplift;
 import MastersProject.Models.InformationBead;
 import MastersProject.Models.UpliftedNotification;
-import PhDProject.FriendsFamily.FriendsAndFamily;
-import PhDProject.FriendsFamily.Models.MobileApp;
+import MastersProject.Utilities.ResultCallback;
 import PhDProject.FriendsFamily.Models.Notification;
 import PhDProject.FriendsFamily.Models.User;
 import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
@@ -72,6 +70,8 @@ public class App extends Application
 	private static ArrayList<User> users;
 	
 	private static User selectedUser;
+	
+	public static ResultCallback resultCallback;
 
 	public static void main( String[] args ) throws SQLException, ParseException, IOException
     {
@@ -84,8 +84,23 @@ public class App extends Application
     	//ArrayList<User> users = ff.getUsers();
     	
     	users = User.getAllUsers(em);
+    	
     	selectedUser = getUserFromId("sp10-01-05");
-
+    	
+    	System.out.println("The total number of users: "+users.size());
+    	int countNotifications = 0;
+    	int countEvents = 0;
+    	int countUsersWithoutNotifications = 0;
+    	for(User user: users){
+    		countNotifications += user.getNotifications().size();
+    		countEvents += user.getEvents().size();
+    		if(user.getNotifications().size() == 0)
+    			countUsersWithoutNotifications++;
+    	}
+    	System.out.println("The total number of notifications: "+countNotifications);
+    	System.out.println("The total number of events: "+countEvents);
+    	System.out.println("The total number of events: "+countUsersWithoutNotifications);
+    	
     	launch(args);
     }
 
@@ -212,10 +227,12 @@ public class App extends Application
      * .xlsx files. - all analysis can be done here. 
      * @return
      */
-    private static ArrayList<UpliftedNotification> readNotifications(){
+    public static ArrayList<UpliftedNotification> readNotifications(){
     	ArrayList<UpliftedNotification> notifications = new ArrayList<>();
+    	int id = 0;
     	for(Notification notification: selectedUser.getNotifications()){
         	UpliftedNotification n = new UpliftedNotification();
+        	n.setNotificationId(id);
         	n.setApp(notification.getApp().getName());
         	n.setAppRank(notification.getAppRank());
         	if(notification.getSender() == null){
@@ -235,6 +252,7 @@ public class App extends Application
         	n.setBodyRank(0);
         	n.setDateImportance("not significant");
         	notifications.add(n);
+        	id++;
     	}
     	
     	return notifications;
@@ -356,6 +374,7 @@ public class App extends Application
 		 * result.	
 		 */
 		while(result == null){}
+		resultCallback.resultCallback(new ArrayList<String>());
 		return result;
 	}
 
@@ -439,6 +458,23 @@ public class App extends Application
 	 */
 	public static User getSelectedUser(){
 		return selectedUser;
+	}
+	
+	public static ArrayList<String> getUserStringList(){
+		ArrayList<String> userStringList = new ArrayList<>();
+		for(User user: users){
+			//userStringList.add(user.getId()+"---"+user.getNotifications().size()+"---"+user.getEvents().size());
+			userStringList.add(user.getId());
+		}
+		return userStringList;
+	}
+	
+	public static void setSelectedUser(String userId){
+		for(User user: users){
+			if(user.getId().equals(userId)){
+				selectedUser = user;
+			}
+		}
 	}
 	
 }

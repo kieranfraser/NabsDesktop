@@ -7,17 +7,14 @@ package MastersProject.Controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.apache.poi.ss.usermodel.DateUtil;
-
+import MastersProject.GUI.DeliveryTableContent;
+import MastersProject.GUI.DeliveryTableResultContent;
+import MastersProject.GUI.DetailTableContent;
 import MastersProject.GUI.UpliftTableContent;
 import MastersProject.GoogleData.CalendarEvent;
 import MastersProject.GoogleData.GoogleCalendarData;
@@ -30,7 +27,14 @@ import MastersProject.Models.UpliftValues.SenderUplift;
 import MastersProject.Models.UpliftValues.SubjectUplift;
 import MastersProject.Nabs.App;
 import MastersProject.Utilities.DateUtility;
-import javafx.beans.property.BooleanProperty;
+import MastersProject.Utilities.ResultCallback;
+import PhDProject.FriendsFamily.Models.Notification;
+import PhDProject.FriendsFamily.Models.User;
+import javafx.application.Platform;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -41,6 +45,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -198,6 +204,9 @@ public class NabsDesktopController implements Initializable{
     @FXML // fx:id="notificationTracker"
     private Text notificationTracker; // Value injected by FXMLLoader
     
+    @FXML // fx:id="simulateButton"
+    private Button simulateButton; // Value injected by FXMLLoader
+        
     private int senderRows;
     private int subjectRows;
     private int bodyRows;
@@ -209,6 +218,41 @@ public class NabsDesktopController implements Initializable{
     private int appRank;
     private int bodyRank;
     private int dateRank;
+    
+
+    /**
+     * NAbSim variables
+     */
+    @FXML
+    private ListView<String> userListView;
+    private ArrayList<String> userList = new ArrayList<>();
+    private ListProperty<String> listProperty = new SimpleListProperty<>();
+    
+    @FXML // fx:id="deliveryTableView"
+    private TableView<DeliveryTableContent> deliveryTableView;
+    @FXML // fx:id="deliveryTable_id"
+    private TableColumn<DeliveryTableContent, Integer> deliveryTable_id;
+    
+    @FXML // fx:id="detailTableView"
+    private TableView<DetailTableContent> detailTableView;
+    @FXML // fx:id="detailTable_id"
+    private TableColumn<DetailTableContent, Integer> detailTable_id;
+    @FXML // fx:id="detailTable_sender"
+    private TableColumn<DetailTableContent, String> detailTable_sender;
+    @FXML // fx:id="detailTable_subject"
+    private TableColumn<DetailTableContent, String> detailTable_subject;
+    @FXML // fx:id="detailTable_app"
+    private TableColumn<DetailTableContent, String> detailTable_app;
+    
+    @FXML // fx:id="tableScrollbar"
+    private ScrollBar tableScrollbar;
+    
+    @FXML
+    private TableView<UpliftTableContent> rankingTableView;
+    
+    private int selectedNotificationId;
+    
+    private int numberDeliveryColumns;
     
 
     @FXML
@@ -249,6 +293,52 @@ public class NabsDesktopController implements Initializable{
 		}
 		this.upliftTable.setItems(data);
 		setNotificationTracker();
+		
+		// NAbSim functionality
+		
+		userList = App.getUserStringList();
+		userListView.itemsProperty().bind(listProperty);
+        listProperty.set(FXCollections.observableArrayList(userList));
+
+        userListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        userListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
+        {            
+			@Override
+			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+				System.out.println(arg2);
+				newUserSelected(arg2);
+			}
+		});
+        
+        deliveryTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        deliveryTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<DeliveryTableContent>(){
+
+			@Override
+			public void changed(ObservableValue<? extends DeliveryTableContent> observable,
+					DeliveryTableContent oldValue, DeliveryTableContent newValue) {
+				Platform.runLater(new Runnable() {
+				    @Override public void run() {
+						detailTableView.getSelectionModel().select(newValue.getNotificationId());
+						selectedNotificationId = newValue.getNotificationId();
+				}});
+			}
+        });
+        
+        detailTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        detailTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<DetailTableContent>(){
+
+			@Override
+			public void changed(ObservableValue<? extends DetailTableContent> observable,
+					DetailTableContent oldValue, DetailTableContent newValue) {
+				Platform.runLater(new Runnable() {
+				    @Override public void run() {
+						deliveryTableView.getSelectionModel().select(newValue.getNotificationId());
+						selectedNotificationId = newValue.getNotificationId();
+				}});
+			}
+        });
+        
+        numberDeliveryColumns = 1;
     }
     
     private void setNotificationTracker(){
@@ -438,6 +528,15 @@ public class NabsDesktopController implements Initializable{
     	App.setUserLocation(this.locationInput.getText());
     	App.setUserEvent(this.eventInput.getText());
     	
+		App.resultCallback = new ResultCallback() {
+			
+			@Override
+			public void resultCallback(ArrayList<String> result) {
+				System.out.println("Kieran callback");
+				
+			}
+		};
+    	
     	if(this.nabbedRB.isSelected()){
         	String result = App.fireNotification(notification, "Nabbed");
         	consoleTextArea.setText(result);
@@ -538,4 +637,122 @@ public class NabsDesktopController implements Initializable{
     void nextPressed(KeyEvent event) {
     	this.loadNextNotification(new ActionEvent());
     }
+    
+    /**
+     * NAbSim functions
+     */
+    
+    /**
+     * New user selected - want to load the associated notifications.
+     * @param user
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	private void newUserSelected(String userId){
+    	App.setSelectedUser(userId);
+    	User user = App.getSelectedUser();
+
+		System.out.println("selected user "+user.toString());
+		    
+		
+		this.deliveryTable_id.setCellValueFactory(new PropertyValueFactory<DeliveryTableContent, Integer>("notificationId"));
+		this.detailTable_id.setCellValueFactory(new PropertyValueFactory<DetailTableContent, Integer>("notificationId"));
+		this.detailTable_sender.setCellValueFactory(new PropertyValueFactory<DetailTableContent, String>("sender"));
+		this.detailTable_subject.setCellValueFactory(new PropertyValueFactory<DetailTableContent, String>("subject"));
+		this.detailTable_app.setCellValueFactory(new PropertyValueFactory<DetailTableContent, String>("app"));
+    	
+    	List<Notification> notificationList = user.getNotifications();		
+		List<UpliftedNotification> upliftedNotificationList = App.readNotifications();
+		
+		
+		ObservableList<DeliveryTableContent> dataDelivery =FXCollections.observableArrayList ();
+		ObservableList<DetailTableContent> dataDetail =FXCollections.observableArrayList ();
+		
+		int id=0;
+		for(Notification notification: notificationList){
+			
+			DeliveryTableContent deliveryContent = new DeliveryTableContent(id);
+			DetailTableContent detailContent = new DetailTableContent(id, upliftedNotificationList.get(id).getSender(), 
+					upliftedNotificationList.get(id).getSubject(), upliftedNotificationList.get(id).getApp());
+			
+			dataDelivery.add(deliveryContent);
+			dataDetail.add(detailContent);
+			id++;
+		}
+		this.deliveryTableView.setItems(dataDelivery);
+		this.detailTableView.setItems(dataDetail);
+		
+		this.tableScrollbar.setMax(dataDetail.size()); //make sure the max is equal to the size of the table row data.
+		this.tableScrollbar.setMin(0); 
+		this.tableScrollbar.valueProperty().addListener(new ChangeListener(){
+
+			@Override
+			public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+				
+				Number value = (Number) arg2;
+				deliveryTableView.scrollTo(value.intValue()); 
+				detailTableView.scrollTo(value.intValue());
+			}
+
+		});
+    	
+    }
+    
+    @FXML
+    void simulateButtonPress(ActionEvent event) {
+    	List<UpliftedNotification> upliftedNotificationList = App.readNotifications();
+    	
+    	App.setUserLocation(this.locationInput.getText());
+    	App.setUserEvent(this.eventInput.getText());
+    	
+    	for(UpliftedNotification notification: upliftedNotificationList){
+    		if(notification.getNotificationId() == selectedNotificationId){
+	        	String result = App.fireNotification(notification, "Nabbed");
+	        	consoleTextArea.setText(result);
+	        	System.out.println(result);
+    		}
+    	}
+
+    	/*for (int i = 0; i < columnNames.size(); i++) {
+    	    final int finalIdx = i;
+    	    TableColumn<ObservableList<String>, String> column = new TableColumn<>(
+    	            columnNames.get(i)
+    	    );
+    	    column.setCellValueFactory(param ->
+    	            new ReadOnlyObjectWrapper<>(param.getValue().get(finalIdx))
+    	    );
+    	    tableView.getColumns().add(column);
+    	}*/
+    	
+    	TableColumn<DeliveryTableResultContent, String> deliveryCol = new TableColumn<>("Delivery "+numberDeliveryColumns);
+    	
+    	deliveryCol.setCellValueFactory(new PropertyValueFactory<DeliveryTableResultContent, String>("result"));
+    	
+    	App.resultCallback = new ResultCallback() {
+			
+			@Override
+			public void resultCallback(ArrayList<String> result) {
+				System.out.println("Kieran callback");
+				
+			}
+		};
+    	/*List<String> resultList = App.getResultList();		
+		
+		
+		ObservableList<DeliveryTableContent> dataDelivery =FXCollections.observableArrayList ();
+		ObservableList<DetailTableContent> dataDetail =FXCollections.observableArrayList ();
+		
+		int id=0;
+		for(Notification notification: notificationList){
+			
+			DeliveryTableContent deliveryContent = new DeliveryTableContent(id);
+			DetailTableContent detailContent = new DetailTableContent(id, upliftedNotificationList.get(id).getSender(), 
+					upliftedNotificationList.get(id).getSubject(), upliftedNotificationList.get(id).getApp());
+			
+			dataDelivery.add(deliveryContent);
+			dataDetail.add(detailContent);
+			id++;
+		}
+		this.deliveryTableView.setItems(dataDelivery);*/
+    }
+    
 }

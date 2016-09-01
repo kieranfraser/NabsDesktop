@@ -321,4 +321,11 @@ public class User implements Serializable{
 		}
 		return todaysEvents;
 	}
+
+	@Override
+	public String toString() {
+		return "User id: "+this.id;
+	}
+	
+	
 }

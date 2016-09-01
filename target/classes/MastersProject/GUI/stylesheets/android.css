@@ -3,3 +3,40 @@
     -fx-font-size: 32px;
     -fx-border-style: solid;
 }
+
+/* The main scrollbar **track** CSS class  */
+
+.detailTableView .deliveryTableView .scroll-bar:vertical .track{
+        -fx-padding:0px;
+	-fx-background-color:transparent;
+	-fx-border-color:transparent;
+	-fx-background-radius: 0em;
+	-fx-border-radius:2em;
+
+}
+
+/* The increment and decrement button CSS class of scrollbar */
+
+.detailTableView .deliveryTableView .scroll-bar:vertical .increment-button ,
+.detailTableView .deliveryTableView .scroll-bar:vertical .decrement-button {
+
+    -fx-background-color:transparent;
+	-fx-background-radius: 0em;
+	-fx-padding:0 0 0 0;
+}
+
+.detailTableView .deliveryTableView  .scroll-bar:vertical .increment-arrow,
+.detailTableView .deliveryTableView  .scroll-bar:vertical  .decrement-arrow
+{
+	-fx-shape: " ";	
+	-fx-padding:0;        
+}
+
+/* The main scrollbar **thumb** CSS class which we drag every time (movable) */
+.detailTableView .deliveryTableView .scroll-bar:vertical .thumb {
+    -fx-background-color:transparent;
+	-fx-background-insets: 0, 0, 0;
+	-fx-background-radius: 2em;
+    -fx-padding:0px;
+
+}

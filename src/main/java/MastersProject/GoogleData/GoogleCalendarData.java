@@ -169,7 +169,7 @@ public class GoogleCalendarData {
 			CalendarEvent calEvent = new CalendarEvent();
 			calEvent.setDescription(event.getInferredDescription());
 			calEvent.setEndDate(DateFormatUtility.convertLDTToCalendarEventDate(event.getInferredEndDate()));
-			calEvent.setLocation("to be set");
+			calEvent.setLocation("unknown");
 			calEvent.setStartDate(DateFormatUtility.convertLDTToCalendarEventDate(event.getInferredStartDate()));
 			calEvent.setSummary(event.getNameGT());
 			requiredEvents.add(calEvent);
@@ -253,8 +253,9 @@ public class GoogleCalendarData {
     	Date convertedEndDate = DateUtility.convertEventDateTimeToDate(items.get(0).getEnd());
     	CalendarEvent event = new CalendarEvent(items.get(0).getDescription(),
     			convertedStartDate, convertedEndDate, items.get(0).getLocation(), items.get(0).getSummary());*/
-	   	CalendarEvent event = new CalendarEvent("Something", new Date(), new Date(), "Somewhere", "Summary");
-        return event;
+	    ArrayList<CalendarEvent> events = getNextNEvents(10, dateFrom);
+	    CalendarEvent nextEvent = events.get(0);
+        return nextEvent;
     }
     
       
