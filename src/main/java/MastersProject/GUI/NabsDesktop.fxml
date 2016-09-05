@@ -221,6 +221,17 @@
                         <TableView fx:id="deliveryTableView" layoutX="296.0" layoutY="11.0" prefHeight="450.0" prefWidth="1209.0" styleClass=".mytableview" stylesheets="@stylesheets/android.css">
                           <columns>
                               <TableColumn fx:id="deliveryTable_id" prefWidth="75.0" text="id" />
+                              <TableColumn fx:id="result1" prefWidth="75.0" text="result 1" />
+                              <TableColumn fx:id="result2" prefWidth="75.0" text="result 2" />
+                              <TableColumn fx:id="result3" prefWidth="75.0" text="result 3" />
+                              <TableColumn fx:id="result4" prefWidth="75.0" text="result 4" />
+                              <TableColumn fx:id="result5" prefWidth="75.0" text="result 5" />
+                              <TableColumn prefWidth="75.0" text="result 6" />
+                              <TableColumn prefWidth="75.0" text="result 7" />
+                              <TableColumn prefWidth="75.0" text="result 8" />
+                              <TableColumn prefWidth="75.0" text="result 9" />
+                              <TableColumn prefWidth="75.0" text="result 10" />
+                              <TableColumn prefWidth="75.0" text="result 11" />
                           </columns>
                         </TableView>
                         <TableView fx:id="rankingTableView" layoutX="20.0" layoutY="537.0" prefHeight="398.0" prefWidth="238.0">
@@ -235,10 +246,19 @@
                             <TableColumn fx:id="detailTable_sender" prefWidth="75.0" text="Sender" />
                               <TableColumn fx:id="detailTable_subject" prefWidth="75.0" text="Subject" />
                               <TableColumn fx:id="detailTable_app" prefWidth="75.0" text="App" />
+                              <TableColumn fx:id="detailTable_date" prefWidth="75.0" text="Date" />
                           </columns>
                         </TableView>
                         <ScrollBar fx:id="tableScrollbar" layoutX="1536.0" layoutY="14.0" orientation="VERTICAL" prefHeight="448.0" prefWidth="18.0" />
                         <Button fx:id="simulateButton" layoutX="1491.0" layoutY="899.0" mnemonicParsing="false" onAction="#simulateButtonPress" text="Simulate" />
+                        <TableView fx:id="calendarTableView" layoutX="899.0" layoutY="485.0" prefHeight="449.0" prefWidth="586.0">
+                          <columns>
+                            <TableColumn fx:id="calendarStart" prefWidth="163.0" text="Start" />
+                            <TableColumn fx:id="calendarEnd" prefWidth="162.0" text="End" />
+                              <TableColumn fx:id="calendarName" prefWidth="132.3333740234375" text="Name" />
+                              <TableColumn fx:id="calendarDescription" prefWidth="136.6666259765625" text="Description" />
+                          </columns>
+                        </TableView>
                      </children>
                   </AnchorPane>
             </content>

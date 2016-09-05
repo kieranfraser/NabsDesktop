@@ -160,7 +160,6 @@ public class GoogleCalendarData {
     		notificationDate = notificationDate.withHour(0);
     		notificationDate = notificationDate.withMinute(0);
     		notificationDate = notificationDate.withMinute(0);
-    		user.printEvents();
     		dayOfWeek = notificationDate.getDayOfWeek();
     		greaterDate = true;
 		}
@@ -185,7 +184,7 @@ public class GoogleCalendarData {
 		
 		// check counter - repeat until 10 met.
     	
-    	Thread t = new Thread(new Runnable(){
+    	/*Thread t = new Thread(new Runnable(){
     	    @Override
     	    public void run() {
     	    	try {
@@ -196,7 +195,7 @@ public class GoogleCalendarData {
 				}
     	    }
     	});
-    	t.start();
+    	t.start();*/
     	
     	return requiredEvents;
     }

@@ -98,8 +98,8 @@ Runnable{
 		else{
 			result = result + "Notify Much Later - next contextual relevant event - "+App.getNextContextRelevant()+" - "+"\n";
 		}
-		System.out.println(result);
-		App.result = result;
+		//System.out.println(result);
+		App.resultCallback.resultCallback(Integer.valueOf(this.getPartNumber()), result);
 	}
 
 	@Override

@@ -235,6 +235,7 @@ public class App extends Application
         	n.setNotificationId(id);
         	n.setApp(notification.getApp().getName());
         	n.setAppRank(notification.getAppRank());
+        	
         	if(notification.getSender() == null){
         		n.setSender("kieran");
         	}
@@ -245,6 +246,7 @@ public class App extends Application
         	try {
 				n.setDate(DateFormatUtility.stringToUpliftedNotificationDate(notification.getDate()));
 			} catch (ParseException e) {}
+        	
         	n.setDateRank(notification.getDateRank());
         	n.setSubject(notification.getSubject().getSubject());
         	n.setSubjectRank(notification.getSubjectRank());
@@ -349,7 +351,7 @@ public class App extends Application
 	 * @param type
 	 * @return
 	 */
-	public static String fireNotification(UpliftedNotification customNotification, String type){
+	public static void fireNotification(UpliftedNotification customNotification, String type){
 		
 		result = null;
 		switch(type){
@@ -373,9 +375,7 @@ public class App extends Application
 		 * Must wait for the process to finish before alerting the receiving phone of the 
 		 * result.	
 		 */
-		while(result == null){}
-		resultCallback.resultCallback(new ArrayList<String>());
-		return result;
+		//while(result == null){}
 	}
 
 	private static User getUserFromId(String id){

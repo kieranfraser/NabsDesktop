@@ -39,19 +39,11 @@ public class EventInference {
 		rankingValue.add(0.0);
 		int i = 1;
 		for(CalendarEvent event : unfinishedEvents){
-			System.out.println("----------------------------------------------------------");
-			System.out.println(event.getSummary());
-			System.out.println(event.getDescription());
-			System.out.println(notification.getSender());
-			System.out.println(attribute);
-			System.out.println(hasContextMatch(event.getDescription(), notification, attribute));
-			System.out.println("_________________________________________");
 			if(hasContextMatch(event.getDescription(), notification, attribute)){
 				
 				LocalDateTime eventStartDate = DateUtility.dateToLocalDateTime(event.getStartDate());
 				long eventStartTimeDiff = DateUtility.getDifferenceBetweenDatesInMinutes(notificationDate, eventStartDate);
-				System.out.println(unfinishedEvents.size());
-				System.out.println(event.getSummary());
+				
 				rankingValue.add(applyRating(event, maxStartTimeDiff, eventStartTimeDiff));
 				eventContext.put(event, applyRating(event, maxStartTimeDiff, eventStartTimeDiff));
 			}
@@ -62,10 +54,7 @@ public class EventInference {
 					LocalDateTime startNextEvent = DateUtility.dateToLocalDateTime(unfinishedEvents.get(i).getStartDate());
 					long diff = DateUtility.getDifferenceBetweenDatesInMinutes(endThisEvent, startNextEvent);
 					if(diff>15){
-						System.out.println("free period");
-						System.out.println(event.getSummary());
-						System.out.println(event.getStartDate());
-						System.out.println(event.getEndDate());
+						
 						App.setNextFreePeriod(event.getEndDate());
 						freePeriodSet = true;
 					}
@@ -143,7 +132,6 @@ public class EventInference {
 			incomingTimeDiff = 0;
 		}
 		double result = (double) (maxTimeDiff - incomingTimeDiff)/maxTimeDiff;
-		System.out.println("**Result**"+result);
 		return result;
 	}
 	

@@ -32,6 +32,7 @@ import PhDProject.FriendsFamily.Models.Notification;
 import PhDProject.FriendsFamily.Models.User;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -244,6 +245,9 @@ public class NabsDesktopController implements Initializable{
     @FXML // fx:id="detailTable_app"
     private TableColumn<DetailTableContent, String> detailTable_app;
     
+    @FXML // fx:id="detailTable_date"
+    private TableColumn<DetailTableContent, Date> detailTable_date; 
+    
     @FXML // fx:id="tableScrollbar"
     private ScrollBar tableScrollbar;
     
@@ -253,6 +257,40 @@ public class NabsDesktopController implements Initializable{
     private int selectedNotificationId;
     
     private int numberDeliveryColumns;
+    
+    private List<UpliftedNotification> upliftedNotificationList;
+    
+    private ArrayList<String> deliveryList = new ArrayList<>();
+    
+    @FXML // fx:id="result1"
+    private TableColumn<DeliveryTableContent, String> result1;
+
+    @FXML // fx:id="result2"
+    private TableColumn<DeliveryTableContent, String> result2;
+
+    @FXML // fx:id="result3"
+    private TableColumn<DeliveryTableContent, String> result3;
+
+    @FXML // fx:id="result4"
+    private TableColumn<DeliveryTableContent, String> result4;
+
+    @FXML // fx:id="result5"
+    private TableColumn<DeliveryTableContent, String> result5;
+    
+    @FXML // fx:id="calendarTableView"
+    private TableView<CalendarEvent> calendarTableView; // Value injected by FXMLLoader
+
+    @FXML // fx:id="calendarStart"
+    private TableColumn<CalendarEvent, Date> calendarStart; // Value injected by FXMLLoader
+
+    @FXML // fx:id="calendarEnd"
+    private TableColumn<CalendarEvent, Date> calendarEnd; // Value injected by FXMLLoader
+
+    @FXML // fx:id="calendarName"
+    private TableColumn<CalendarEvent, String> calendarName; // Value injected by FXMLLoader
+
+    @FXML // fx:id="calendarDescription"
+    private TableColumn<CalendarEvent, String> calendarDescription; // Value injected by FXMLLoader
     
 
     @FXML
@@ -284,14 +322,14 @@ public class NabsDesktopController implements Initializable{
     		    }
     		);
 		
-		List<SenderUplift> senderList = SenderUplift.getUpliftValues();
+		/*List<SenderUplift> senderList = SenderUplift.getUpliftValues();
 		this.senderRows = senderList.size();
 		ObservableList<UpliftTableContent> data =FXCollections.observableArrayList ();
 		for(SenderUplift uplift : senderList){
 			UpliftTableContent content = new UpliftTableContent(uplift.getValue(), uplift.getRank());
 			data.add(content);
 		}
-		this.upliftTable.setItems(data);
+		this.upliftTable.setItems(data);*/
 		setNotificationTracker();
 		
 		// NAbSim functionality
@@ -305,7 +343,6 @@ public class NabsDesktopController implements Initializable{
         {            
 			@Override
 			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
-				System.out.println(arg2);
 				newUserSelected(arg2);
 			}
 		});
@@ -320,6 +357,7 @@ public class NabsDesktopController implements Initializable{
 				    @Override public void run() {
 						detailTableView.getSelectionModel().select(newValue.getNotificationId());
 						selectedNotificationId = newValue.getNotificationId();
+						updateCalendar();
 				}});
 			}
         });
@@ -334,6 +372,7 @@ public class NabsDesktopController implements Initializable{
 				    @Override public void run() {
 						deliveryTableView.getSelectionModel().select(newValue.getNotificationId());
 						selectedNotificationId = newValue.getNotificationId();
+						updateCalendar();
 				}});
 			}
         });
@@ -528,23 +567,14 @@ public class NabsDesktopController implements Initializable{
     	App.setUserLocation(this.locationInput.getText());
     	App.setUserEvent(this.eventInput.getText());
     	
-		App.resultCallback = new ResultCallback() {
-			
-			@Override
-			public void resultCallback(ArrayList<String> result) {
-				System.out.println("Kieran callback");
-				
-			}
-		};
-    	
     	if(this.nabbedRB.isSelected()){
-        	String result = App.fireNotification(notification, "Nabbed");
-        	consoleTextArea.setText(result);
+        	//String result = App.fireNotification(notification, "Nabbed");
+        	//consoleTextArea.setText(result);
     	}
     	if(this.customRB.isSelected()){
-    		String result = App.fireNotification(notification, "Custom");
+    		//String result = App.fireNotification(notification, "Custom");
     		String oldMessage = this.consoleTextArea.getText();
-        	consoleTextArea.setText(oldMessage+ "\n"+result);
+        	//consoleTextArea.setText(oldMessage+ "\n"+result);
     	}
     }
     
@@ -552,7 +582,6 @@ public class NabsDesktopController implements Initializable{
     	
     	// Sender Phone
     	UpliftedNotification notification = App.getNotification(); 
-    	System.out.println(notification.getDate());
 		this.senderInput.setText(notification.getSender());
 		this.senderRank = notification.getSenderRank();
 		this.senderInput.setEditable(false);
@@ -655,13 +684,20 @@ public class NabsDesktopController implements Initializable{
 		    
 		
 		this.deliveryTable_id.setCellValueFactory(new PropertyValueFactory<DeliveryTableContent, Integer>("notificationId"));
+		this.result1.setCellValueFactory(new PropertyValueFactory<DeliveryTableContent, String>("result1"));
+		this.result2.setCellValueFactory(new PropertyValueFactory<DeliveryTableContent, String>("result2"));
+		this.result3.setCellValueFactory(new PropertyValueFactory<DeliveryTableContent, String>("result3"));
+		this.result4.setCellValueFactory(new PropertyValueFactory<DeliveryTableContent, String>("result4"));
+		this.result5.setCellValueFactory(new PropertyValueFactory<DeliveryTableContent, String>("result5"));
+		
 		this.detailTable_id.setCellValueFactory(new PropertyValueFactory<DetailTableContent, Integer>("notificationId"));
 		this.detailTable_sender.setCellValueFactory(new PropertyValueFactory<DetailTableContent, String>("sender"));
 		this.detailTable_subject.setCellValueFactory(new PropertyValueFactory<DetailTableContent, String>("subject"));
 		this.detailTable_app.setCellValueFactory(new PropertyValueFactory<DetailTableContent, String>("app"));
+		this.detailTable_date.setCellValueFactory(new PropertyValueFactory<DetailTableContent, Date>("date"));
     	
     	List<Notification> notificationList = user.getNotifications();		
-		List<UpliftedNotification> upliftedNotificationList = App.readNotifications();
+		upliftedNotificationList = App.readNotifications();
 		
 		
 		ObservableList<DeliveryTableContent> dataDelivery =FXCollections.observableArrayList ();
@@ -672,7 +708,7 @@ public class NabsDesktopController implements Initializable{
 			
 			DeliveryTableContent deliveryContent = new DeliveryTableContent(id);
 			DetailTableContent detailContent = new DetailTableContent(id, upliftedNotificationList.get(id).getSender(), 
-					upliftedNotificationList.get(id).getSubject(), upliftedNotificationList.get(id).getApp());
+					upliftedNotificationList.get(id).getSubject(), upliftedNotificationList.get(id).getApp(), upliftedNotificationList.get(id).getDate());
 			
 			dataDelivery.add(deliveryContent);
 			dataDetail.add(detailContent);
@@ -699,60 +735,80 @@ public class NabsDesktopController implements Initializable{
     
     @FXML
     void simulateButtonPress(ActionEvent event) {
-    	List<UpliftedNotification> upliftedNotificationList = App.readNotifications();
+    	final List<UpliftedNotification> upliftedNotificationList = App.readNotifications();
     	
     	App.setUserLocation(this.locationInput.getText());
     	App.setUserEvent(this.eventInput.getText());
+    	deliveryList = new ArrayList<>();
+    	
+    	TableColumn<DeliveryTableResultContent, String> deliveryCol = new TableColumn<>("Delivery "+numberDeliveryColumns);
+
+		ObservableList<DeliveryTableContent> result1  =FXCollections.observableArrayList ();
+    	
+    	App.resultCallback = new ResultCallback() {
+			@Override
+			public void resultCallback(int id, String result) {
+				System.out.println("Callback result: \n"+result);
+				try{
+					deliveryList.set(id, result);
+					DeliveryTableContent deliveryContent = new DeliveryTableContent(id);
+					deliveryContent.setResult1(result);
+					result1.set(id, deliveryContent);
+				}catch(Exception e){
+					deliveryList.add(id, result);
+					DeliveryTableContent deliveryContent = new DeliveryTableContent(id);
+					deliveryContent.setResult1(result);
+					result1.add(id, deliveryContent);
+				}
+				
+				deliveryTableView.setItems(result1);
+			}
+		};
+		for(UpliftedNotification notification: upliftedNotificationList){
+        	System.out.println("*************************************************************"+notification.getNotificationId());
+			App.fireNotification(notification, "Custom");
+		}
+		
+		
+		System.out.println("function called");
+		System.out.println(deliveryList.size());
+		
+				
+    }
+    
+    private void updateCalendar(){
+    	
+    	// get notification using selected id
+
+    	User user = App.getSelectedUser();
+    	UpliftedNotification selectedNotification = null;
     	
     	for(UpliftedNotification notification: upliftedNotificationList){
     		if(notification.getNotificationId() == selectedNotificationId){
-	        	String result = App.fireNotification(notification, "Nabbed");
-	        	consoleTextArea.setText(result);
-	        	System.out.println(result);
+    			selectedNotification = notification;
     		}
     	}
-
-    	/*for (int i = 0; i < columnNames.size(); i++) {
-    	    final int finalIdx = i;
-    	    TableColumn<ObservableList<String>, String> column = new TableColumn<>(
-    	            columnNames.get(i)
-    	    );
-    	    column.setCellValueFactory(param ->
-    	            new ReadOnlyObjectWrapper<>(param.getValue().get(finalIdx))
-    	    );
-    	    tableView.getColumns().add(column);
-    	}*/
     	
-    	TableColumn<DeliveryTableResultContent, String> deliveryCol = new TableColumn<>("Delivery "+numberDeliveryColumns);
-    	
-    	deliveryCol.setCellValueFactory(new PropertyValueFactory<DeliveryTableResultContent, String>("result"));
-    	
-    	App.resultCallback = new ResultCallback() {
-			
-			@Override
-			public void resultCallback(ArrayList<String> result) {
-				System.out.println("Kieran callback");
-				
-			}
-		};
-    	/*List<String> resultList = App.getResultList();		
-		
-		
-		ObservableList<DeliveryTableContent> dataDelivery =FXCollections.observableArrayList ();
-		ObservableList<DetailTableContent> dataDetail =FXCollections.observableArrayList ();
-		
-		int id=0;
-		for(Notification notification: notificationList){
-			
-			DeliveryTableContent deliveryContent = new DeliveryTableContent(id);
-			DetailTableContent detailContent = new DetailTableContent(id, upliftedNotificationList.get(id).getSender(), 
-					upliftedNotificationList.get(id).getSubject(), upliftedNotificationList.get(id).getApp());
-			
-			dataDelivery.add(deliveryContent);
-			dataDetail.add(detailContent);
-			id++;
+    	// use notification time to get list of Calendar events using getnextnevents()
+    	ArrayList<CalendarEvent> events = null;
+    	try {
+    		events = GoogleCalendarData.getNextNEvents(selectedNotificationId, selectedNotification.getDate());
+		} catch (ParseException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		this.deliveryTableView.setItems(dataDelivery);*/
+    	calendarStart.setCellValueFactory(new PropertyValueFactory<CalendarEvent, Date>("startDate"));
+    	calendarEnd.setCellValueFactory(new PropertyValueFactory<CalendarEvent, Date>("endDate"));
+    	calendarDescription.setCellValueFactory(new PropertyValueFactory<CalendarEvent, String>("description"));
+    	calendarName.setCellValueFactory(new PropertyValueFactory<CalendarEvent, String>("summary"));
+    	
+    	// update calendarTableView with the list of calendarEvents
+    	ObservableList<CalendarEvent> eventList  =FXCollections.observableArrayList ();
+    	for(CalendarEvent event: events){
+    		eventList.add(event);
+    	}
+    	calendarTableView.setItems(eventList);
     }
+     
     
 }
