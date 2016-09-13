@@ -60,14 +60,17 @@ Runnable{
 		AlertFuzzy alertFuzzy = new AlertFuzzy();
 		double inferredValue = alertFuzzy.processalert(senderInput, subjectInput, appInput);
 		System.out.println("Inferred minutes: "+inferredValue);
-		String result = "Receive Notification "+this.getPartNumber()+" in: "+DateUtility.cleanMinutes(inferredValue)+"\n";
+		//String result = "Receive Notification "+this.getPartNumber()+" in: "+DateUtility.cleanMinutes(inferredValue)+"\n";
+		
+		String result = "Receive Notification "+this.getPartNumber()+" at: \n";
+		
 		
 		// now - interrupt
-		if(inferredValue<6.0){ 
+		if(inferredValue<5.0){ 
 			result = result + "Notify now "+this.getPartNumber()+"\n";
 		
 		// verysoon - next break
-		}else if(inferredValue<60){ 
+		}else if(inferredValue<15){ 
 			
 			if(userLocation == 1.0){ // if there's an event on
 				result = result + "at next break - "+App.getNextBreak()+" - "+this.getPartNumber()+"\n";
@@ -78,7 +81,7 @@ Runnable{
 			}
 		
 		// soon - next free period
-		}else if(inferredValue<90){ 
+		}else if(inferredValue<40){ 
 			
 			
 			if(userLocation == 1.0){
@@ -89,8 +92,11 @@ Runnable{
 			}
 			
 		// Later & Much Later	
-		}else{ 
-			result = result + "Notify next contextual relevant event - "+App.getNextContextRelevant()+" - "+"\n";
+		}else if(inferredValue<60){ 
+			result = result + "Notify  Later-  next contextual relevant event - "+App.getNextContextRelevant()+" - "+"\n";
+		}
+		else{
+			result = result + "Notify Much Later - next contextual relevant event - "+App.getNextContextRelevant()+" - "+"\n";
 		}
 		System.out.println(result);
 		App.result = result;

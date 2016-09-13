@@ -20,15 +20,15 @@ public class EventInference {
 		ArrayList<CalendarEvent> unfinishedEvents = new ArrayList<>();
 		
 		LocalDateTime notificationDate = DateUtility.dateToLocalDateTime(notification.getDate());
-		long maxStartTimeDiff = 4320;
+		long maxStartTimeDiff = 720;
 		
 		for(CalendarEvent event : events){
 			if(getAllUnfinishedEvents(event, notification)){
 				unfinishedEvents.add(event);
 				LocalDateTime eventStartDate = DateUtility.dateToLocalDateTime(event.getStartDate());
 				long eventStartTimeDiff = DateUtility.getDifferenceBetweenDatesInMinutes(notificationDate, eventStartDate);
-				/*if(eventStartTimeDiff >= maxStartTimeDiff ){  			can be put back in for calendars that don't have sparse events 
-					maxStartTimeDiff = eventStartTimeDiff;					spread out over a number of days (scews the context relevance of event)
+				/*if(eventStartTimeDiff >= maxStartTimeDiff ){  			//can be put back in for calendars that don't have sparse events 
+					maxStartTimeDiff = eventStartTimeDiff;					//spread out over a number of days (scews the context relevance of event)
 				}*/
 			}
 		}
@@ -39,11 +39,18 @@ public class EventInference {
 		rankingValue.add(0.0);
 		int i = 1;
 		for(CalendarEvent event : unfinishedEvents){
-			
-			if(hasContextMatch(event.getDescription(), notification.getSubject(), attribute)){
+			System.out.println("----------------------------------------------------------");
+			System.out.println(event.getSummary());
+			System.out.println(event.getDescription());
+			System.out.println(notification.getSender());
+			System.out.println(attribute);
+			System.out.println(hasContextMatch(event.getDescription(), notification, attribute));
+			System.out.println("_________________________________________");
+			if(hasContextMatch(event.getDescription(), notification, attribute)){
 				
 				LocalDateTime eventStartDate = DateUtility.dateToLocalDateTime(event.getStartDate());
 				long eventStartTimeDiff = DateUtility.getDifferenceBetweenDatesInMinutes(notificationDate, eventStartDate);
+				System.out.println(unfinishedEvents.size());
 				System.out.println(event.getSummary());
 				rankingValue.add(applyRating(event, maxStartTimeDiff, eventStartTimeDiff));
 				eventContext.put(event, applyRating(event, maxStartTimeDiff, eventStartTimeDiff));
@@ -108,11 +115,26 @@ public class EventInference {
 		}
 	}
 		
-	private static boolean hasContextMatch(String calendarDescr, String notification, String attribute){
-		if(calendarDescr.contains(notification)){
-			return true;
+	private static boolean hasContextMatch(String calendarDescr, UpliftedNotification notification, String attribute){
+		boolean contextMatch = false;
+		switch(attribute){
+			case "Subject":
+				if(calendarDescr.contains(notification.getSubject())){
+					contextMatch = true;
+				}
+				else contextMatch = false;
+				break;
+			case "Sender" :
+				if(calendarDescr.contains(notification.getSender())){
+					contextMatch = true;
+				}
+				else contextMatch = false;
+				break;
+			default:
+				break;
 		}
-		else return false;
+		return contextMatch;			
+		
 	}
 
 	private static double applyRating(CalendarEvent event, 

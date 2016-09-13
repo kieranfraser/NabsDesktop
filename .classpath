@@ -22,7 +22,8 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/kfraser/Downloads/sqlite-jdbc-3.8.11.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kfraser/workspaceMars/sqlite-jdbc-3.8.11.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/kfraser/workspaceMars/firebase-client-jvm-2.5.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

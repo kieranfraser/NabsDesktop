@@ -9,6 +9,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
 import MastersProject.BeadRepo.AlertInfoBead;
 import MastersProject.BeadRepo.AppInfoBead;
 import MastersProject.BeadRepo.BodyInfoBead;
@@ -67,6 +72,15 @@ public class App extends Application
 
         factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     	em = factory.createEntityManager();
+    	
+    	/*Firebase myFirebaseRef = new Firebase("https://nabs-79ba2.firebaseio.com/");
+    	myFirebaseRef.child("test").addValueEventListener(new ValueEventListener() {
+    		  @Override
+    		  public void onDataChange(DataSnapshot snapshot) {
+    		    System.out.println(snapshot.getValue());  //prints "Do you have data? You'll love Firebase."
+    		  }
+    		  @Override public void onCancelled(FirebaseError error) { }
+    		});*/
     	
     	launch(args);
     }

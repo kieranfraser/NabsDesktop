@@ -392,7 +392,7 @@ public class NabsDesktopController implements Initializable{
 		App.setNextFreePeriod(new Date());
 		App.setNextContextRelevant(new Date());
 		
-    	this.consoleTextArea.setText("");
+    	this.consoleTextArea.setText("Nabs");
     	UpliftedNotification notification = new UpliftedNotification();
     	
     	notification.setNotificationId(12345);
