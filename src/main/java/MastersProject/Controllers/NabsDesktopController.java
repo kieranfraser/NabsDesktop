@@ -760,7 +760,6 @@ public class NabsDesktopController implements Initializable{
 					deliveryContent.setResult1(result);
 					result1.add(id, deliveryContent);
 				}
-				
 				deliveryTableView.setItems(result1);
 			}
 		};
