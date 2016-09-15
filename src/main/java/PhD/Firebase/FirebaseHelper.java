@@ -41,7 +41,7 @@ public class FirebaseHelper {
 	
 	public static String convertNotificationToString(UpliftedNotification n) throws IOException{
 		String result = null;
-		
+		System.out.println("subject convert to string:" + n.getSubject());
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ObjectOutput out = null;
 		byte[] array = null;
@@ -93,7 +93,7 @@ public class FirebaseHelper {
 		    // ignore close exception
 		  }
 		}
-		
+		System.out.println("subject convert from string:" + result.getSubject());
 		return result;
 	}
 }
