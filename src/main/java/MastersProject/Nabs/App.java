@@ -187,14 +187,6 @@ public class App extends Application
     	notificationInfoBead.setOutputInterface("output");
     	notificationInfoBead.setVersion("1");
     	
-    	notificationInfoBead.addListener(subjectInfoBead);
-    	notificationInfoBead.addListener(senderInfoBead);
-    	notificationInfoBead.addListener(appInfoBead);
-    	notificationInfoBead.addListener(dateInfoBead);
-    	notificationInfoBead.addListener(bodyInfoBead);
-    	notificationInfoBead.addListener(userLocationInfoBead);
-    	
-    	senderInfoBead.addListener(alertInfoBead);
     	subjectInfoBead.addListener(alertInfoBead);
     	appInfoBead.addListener(alertInfoBead);
     	dateInfoBead.addListener(alertInfoBead);

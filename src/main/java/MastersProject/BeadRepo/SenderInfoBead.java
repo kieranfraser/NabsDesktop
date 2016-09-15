@@ -14,6 +14,7 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gdata.util.ServiceException;
 
+import MastersProject.Constants.BeadType;
 import MastersProject.FuzzyLogic.SenderFuzzy;
 import MastersProject.GoogleData.CalendarEvent;
 import MastersProject.GoogleData.GoogleCalendarData;
@@ -36,33 +37,14 @@ Runnable{
 	@Transient
 	ArrayList<CalendarEvent> events;
 	
-	private List<BeadInputInterface> senderListeners = new ArrayList<BeadInputInterface>();
 	private UpliftedNotification  notification;
-
-	/**
-	 * Add a bead which will listen for push requests.
-	 * @param addListener
-	 */
-	public void addListener(BeadInputInterface bead){
-		this.senderListeners.add(bead);
-	}
-	
-	/**
-	 * Remove a bead from the listening list.
-	 * @param bead
-	 */
-	public void removeListener(BeadInputInterface bead){
-		this.senderListeners.remove(bead);
-	}
 
 	/**
 	 * Called when updates need to be pushed to other beads.
 	 */
 	@Override
 	public void sendToConsumer(String senderId, Date sentTime, Triplet outputData) {
-		for(BeadInputInterface listener : senderListeners){
-			listener.getEvidence(senderId, sentTime, outputData);
-		}
+		
 	}
 
 	/**
@@ -73,29 +55,46 @@ Runnable{
 	 */
 	@Override
 	public void getEvidence(String senderId, Date sentTime, Triplet inputData) {
-		System.out.println("Sender");
+		this.setAttributeValueType(BeadType.SENDER);
 		
-		/**
-		 * Storing the upliftedNotification in the Triplet as a json string.
-		 */
-		ObjectMapper mapper = new ObjectMapper();
+		final ObjectMapper mapper = new ObjectMapper();		
+
 		try {
-			notification = mapper.readValue(inputData.getInformationItem().getInformationValue(),
-					UpliftedNotification.class);
+			notificationId = mapper.readValue(inputData.getId(),
+					String.class);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		// get the calendar data for the next 10 events
-		try {
-			events = GoogleCalendarData.getNextNEvents(10, notification.getDate());
-		} catch (IOException |  ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		this.run();
+    	
+    	FirebaseHelper.getDatabase().child("InfoBead/"+
+				notificationId+"/"+
+				"NOTIFICATION/operational/informationItem/informationValue/").addValueEventListener(new ValueEventListener() {
+	  		  @Override
+	  		  public void onDataChange(DataSnapshot snapshot) {
+	  			System.out.println("kieran "+snapshot.getValue(String.class));
+	  			try {
+					notification = FirebaseHelper.convertStringToNotification((String) snapshot.getValue());
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	  		    
+	  		// get the calendar data for the next 10 events
+	  			try {
+	  				events = GoogleCalendarData.getNextNEvents(10, notification.getDate());
+	  			} catch (IOException |  ParseException e) {
+	  				// TODO Auto-generated catch block
+	  				e.printStackTrace();
+	  			}
+	  			
+	  			run();
+	  		  }
+	  		  @Override public void onCancelled(FirebaseError error) { }
+  		});
 	}
 	
 	/**
