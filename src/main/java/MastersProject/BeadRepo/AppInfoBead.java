@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import MastersProject.Constants.BeadType;
 import MastersProject.FuzzyLogic.SubjectFuzzy;
 import MastersProject.GoogleData.CalendarEvent;
 import MastersProject.GoogleData.GoogleCalendarData;
@@ -67,6 +68,9 @@ BeadOutputInterface, Runnable{
 	@Override
 	public void getEvidence(String senderId, Date sentTime, Triplet inputData) {
 		System.out.println("App");
+
+    	this.setAttributeValueType(BeadType.APPLICATION);
+    	
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			notification = mapper.readValue(inputData.getInformationItem().getInformationValue(),

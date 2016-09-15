@@ -12,8 +12,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.gdata.util.ServiceException;
 
+import MastersProject.Constants.BeadType;
 import MastersProject.FuzzyLogic.SenderFuzzy;
 import MastersProject.GoogleData.CalendarEvent;
 import MastersProject.GoogleData.GoogleCalendarData;
@@ -25,6 +29,7 @@ import MastersProject.Models.InformationBead;
 import MastersProject.Models.Triplet;
 import MastersProject.Models.UpliftedNotification;
 import MastersProject.Nabs.App;
+import PhD.Firebase.FirebaseHelper;
 
 @Entity
 @DiscriminatorValue("Sender")
@@ -38,6 +43,9 @@ Runnable{
 	
 	private List<BeadInputInterface> senderListeners = new ArrayList<BeadInputInterface>();
 	private UpliftedNotification  notification;
+	
+	@Transient
+	private String notificationId;
 
 	/**
 	 * Add a bead which will listen for push requests.
@@ -60,9 +68,10 @@ Runnable{
 	 */
 	@Override
 	public void sendToConsumer(String senderId, Date sentTime, Triplet outputData) {
-		for(BeadInputInterface listener : senderListeners){
+		/*for(BeadInputInterface listener : senderListeners){
 			listener.getEvidence(senderId, sentTime, outputData);
-		}
+		}*/
+		
 	}
 
 	/**
@@ -75,27 +84,51 @@ Runnable{
 	public void getEvidence(String senderId, Date sentTime, Triplet inputData) {
 		System.out.println("Sender");
 		
+		
+    	this.setAttributeValueType(BeadType.SENDER);
 		/**
 		 * Storing the upliftedNotification in the Triplet as a json string.
 		 */
-		ObjectMapper mapper = new ObjectMapper();
+		final ObjectMapper mapper = new ObjectMapper();		
+
 		try {
-			notification = mapper.readValue(inputData.getInformationItem().getInformationValue(),
-					UpliftedNotification.class);
+			notificationId = mapper.readValue(inputData.getId(),
+					String.class);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+    	
+    	FirebaseHelper.getDatabase().child("InfoBead/"+
+				notificationId+"/"+
+				"NOTIFICATION/operational/informationItem/informationValue/").addValueEventListener(new ValueEventListener() {
+	  		  @Override
+	  		  public void onDataChange(DataSnapshot snapshot) {
+	  			System.out.println("kieran "+snapshot.getValue(String.class));
+	  			try {
+					notification = FirebaseHelper.convertStringToNotification((String) snapshot.getValue());
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	  		    
+	  		// get the calendar data for the next 10 events
+	  			try {
+	  				events = GoogleCalendarData.getNextNEvents(10, notification.getDate());
+	  			} catch (IOException |  ParseException e) {
+	  				// TODO Auto-generated catch block
+	  				e.printStackTrace();
+	  			}
+	  			
+	  			run();
+	  		  }
+	  		  @Override public void onCancelled(FirebaseError error) { }
+  		});
+    	
 		
-		// get the calendar data for the next 10 events
-		try {
-			events = GoogleCalendarData.getNextNEvents(10, notification.getDate());
-		} catch (IOException |  ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		this.run();
 	}
 	
 	/**
@@ -130,10 +163,13 @@ Runnable{
 
 	@Override
 	public void storeInfoBeadAttr() {
-		EntityManager em = App.getEntityManager();
+		/*EntityManager em = App.getEntityManager();
     	em.getTransaction().begin();
     	em.persist(this);
-		em.getTransaction().commit();
+		em.getTransaction().commit();*/
+		FirebaseHelper.getDatabase().child("InfoBead/"+
+				notificationId+"/"+
+				this.getAttributeValueType()+"/").setValue((InformationBead) this);
 	}
 
 	/**
@@ -143,6 +179,7 @@ Runnable{
 	public void run() {		
 		this.activate();		
 		inferInfoBeadAttr();
+		this.getAttributeValueType().toString();
 		sendToConsumer(this.getAttributeValueType().toString(), new Date(), this.getOperational());
 		storeInfoBeadAttr();
 	}

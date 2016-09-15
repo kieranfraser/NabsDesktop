@@ -5,6 +5,7 @@
 package MastersProject.Controllers;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.text.ParseException;
 import java.time.Instant;
@@ -385,7 +386,7 @@ public class NabsDesktopController implements Initializable{
 	}
     
     @FXML
-    void sendNotification(ActionEvent event) {
+    void sendNotification(ActionEvent event) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException, InstantiationException, IOException {
 
 		// temp - reset the context aware variables
 		App.setNextBreak(new Date());

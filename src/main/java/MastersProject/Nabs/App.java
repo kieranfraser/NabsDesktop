@@ -1,13 +1,19 @@
 package MastersProject.Nabs;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
+import org.mortbay.log.Log;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -27,6 +33,7 @@ import MastersProject.Constants.BeadType;
 import MastersProject.Constants.ConnectionType;
 import MastersProject.DBHelper.ImportUplift;
 import MastersProject.Models.InformationBead;
+import MastersProject.Models.Triplet;
 import MastersProject.Models.UpliftedNotification;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -66,21 +73,13 @@ public class App extends Application
 	private static Date nextContextRelevant = new Date();
 	
 	public static String result;
-
+	
+	
 	public static void main( String[] args )
     {
 
         factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     	em = factory.createEntityManager();
-    	
-    	/*Firebase myFirebaseRef = new Firebase("https://nabs-79ba2.firebaseio.com/");
-    	myFirebaseRef.child("test").addValueEventListener(new ValueEventListener() {
-    		  @Override
-    		  public void onDataChange(DataSnapshot snapshot) {
-    		    System.out.println(snapshot.getValue());  //prints "Do you have data? You'll love Firebase."
-    		  }
-    		  @Override public void onCancelled(FirebaseError error) { }
-    		});*/
     	
     	launch(args);
     }
@@ -293,8 +292,16 @@ public class App extends Application
 	 * @param customNotification
 	 * @param type
 	 * @return
+	 * @throws InstantiationException 
+	 * @throws ClassNotFoundException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws IOException 
 	 */
-	public static String fireNotification(UpliftedNotification customNotification, String type){
+	public static String fireNotification(UpliftedNotification customNotification, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException, InstantiationException, IOException{
 		
 		result = null;
 		switch(type){

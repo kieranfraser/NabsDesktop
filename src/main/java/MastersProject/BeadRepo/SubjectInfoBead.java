@@ -16,6 +16,7 @@ import org.eclipse.persistence.annotations.Multitenant;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gdata.util.ServiceException;
 
+import MastersProject.Constants.BeadType;
 import MastersProject.FuzzyLogic.SenderFuzzy;
 import MastersProject.FuzzyLogic.SubjectFuzzy;
 import MastersProject.GoogleData.CalendarEvent;
@@ -80,6 +81,8 @@ Runnable{
 	@Override
 	public void getEvidence(String senderId, Date sentTime, Triplet inputData) {
 		System.out.println("Subject");
+    	this.setAttributeValueType(BeadType.SUBJECT);
+    	
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			notification = mapper.readValue(inputData.getInformationItem().getInformationValue(),
