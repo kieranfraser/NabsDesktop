@@ -1,5 +1,6 @@
 package MastersProject.BeadRepo;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,33 +24,32 @@ import MastersProject.Utilities.FirebaseManager;
 
 @Entity
 @DiscriminatorValue("Notification")
-public class NotificationInfoBead extends InformationBead implements BeadInputInterface, BeadOutputInterface{
+public class NotificationInfoBead extends InformationBead implements BeadOutputInterface{
 
 	private static final long serialVersionUID = -8451356944207798106L;
 	
-	private int notificationId;
+	@Transient
+	private UpliftedNotification notification;
 	
 	public void notificationReceived(UpliftedNotification notification){
 		
 		this.activate();
-
-		// Might not be unique accross different user notification data-sets (use username + id?)
-		notificationId = notification.getNotificationId();
+		this.notification = notification;
 		
-		createInfoBeadTriplet();
+		inferInfoBeadAttr();
 		
 		// Update the bead in database
 		storeInfoBeadAttr();
 		
 		// push triplet to listening beads - sender, subject
-		sendToConsumer(this.getId(), new Date(), createTripletToSend());
+		sendToConsumer(this.getAttributeValueType().toString(), new Date(), createTripletToSend());
 	}
 
 	
 	@Override
 	public void storeInfoBeadAttr() {
 		FirebaseManager.getDatabase().child("InfoBead/"+
-				this.getOperational().getId()+"/"+
+				this.notification.getNotificationId()+"/"+
 				this.getAttributeValueType()+"/").setValue((InformationBead) this);
 	}
 
@@ -61,6 +62,7 @@ public class NotificationInfoBead extends InformationBead implements BeadInputIn
 		consumerBeadList.add("SenderInfoBead");
 		consumerBeadList.add("SubjectInfoBead");
 		consumerBeadList.add("AppInfoBead");
+		consumerBeadList.add("UserLocationInfoBead");
 		for(String bead: consumerBeadList){
 				try{
 					Constructor<?> constructor = Class.forName("MastersProject.BeadRepo."+bead).getConstructor();
@@ -72,21 +74,20 @@ public class NotificationInfoBead extends InformationBead implements BeadInputIn
 					System.out.println("NotificationInfoBead - sendToConsumer - error");
 				}
 		}
-	}
-
-	/**
-	 * Called to get sensor evidence or push events.
-	 */
-	@Override
-	public void getEvidence(String senderId, Date sentTime, Triplet inputData) {}
+	}	
 	
-	private void createInfoBeadTriplet(){
+	@Override
+	public void inferInfoBeadAttr() {
 		
 		Date receivedNotificationDate = new Date();
 		Triplet operational = new Triplet();
 		operational.setDetectionTime(receivedNotificationDate);
 		InfoItemFields information = new InfoItemFields();
-		information.setInformationValue(String.valueOf(notificationId));
+		try {
+			information.setInformationValue(FirebaseManager.convertNotificationToString(notification));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		information.setInfoAccuracy(100.0);
 		information.setInfoConfidenceLevel(100.0);
 		information.setInfoValidFrom(receivedNotificationDate);
@@ -96,7 +97,9 @@ public class NotificationInfoBead extends InformationBead implements BeadInputIn
 	
 	private Triplet createTripletToSend(){
 		Triplet triplet = new Triplet();
-		
+		InfoItemFields information = new InfoItemFields();
+		information.setInformationValue(String.valueOf(notification.getNotificationId()));
+		triplet.setInformationItem(information);
 		return triplet;
 	}
 

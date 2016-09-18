@@ -11,6 +11,7 @@ import java.util.Base64;
 
 import com.firebase.client.Firebase;
 
+import MastersProject.Models.AlertOutput;
 import MastersProject.Models.UpliftedNotification;
 
 public class FirebaseManager {
@@ -22,7 +23,6 @@ private static Firebase database;
 			database = new Firebase("https://nabs-79ba2.firebaseio.com/");
 		}
 	}
-	
 	
 	/**
 	 * Return an active connection to Firebase.
@@ -78,6 +78,62 @@ private static Firebase database;
 		try {
 		  in = new ObjectInputStream(bis);
 		  result = (UpliftedNotification) in.readObject(); 
+		} finally {
+		  try {
+		    bis.close();
+		  } catch (IOException ex) {
+		    // ignore close exception
+		  }
+		  try {
+		    if (in != null) {
+		      in.close();
+		    }
+		  } catch (IOException ex) {
+		    // ignore close exception
+		  }
+		}
+		return result;
+	}
+	
+	public static String convertAlertOutputToString(AlertOutput output) throws IOException{
+		String result = null;
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutput out = null;
+		byte[] array = null;
+		try {
+		  out = new ObjectOutputStream(bos);   
+		  out.writeObject(output);
+		  array = bos.toByteArray();
+		} finally {
+		  try {
+		    if (out != null) {
+		      out.close();
+		    }
+		  } catch (IOException ex) {
+		    // ignore close exception
+		  }
+		  try {
+		    bos.close();
+		  } catch (IOException ex) {
+		    // ignore close exception
+		  }
+		}
+		
+		result = Base64.getEncoder().encodeToString(array);
+		
+		return result;
+	}
+	
+	public static AlertOutput convertStringToAlertOutput(String base64String) throws IOException, ClassNotFoundException{
+		AlertOutput result = null;
+		
+		byte[] array = Base64.getDecoder().decode(base64String);
+		
+		ByteArrayInputStream bis = new ByteArrayInputStream(array);
+		ObjectInput in = null;
+		try {
+		  in = new ObjectInputStream(bis);
+		  result = (AlertOutput) in.readObject(); 
 		} finally {
 		  try {
 		    bis.close();

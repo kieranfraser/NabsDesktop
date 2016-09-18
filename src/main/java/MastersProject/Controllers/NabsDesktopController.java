@@ -522,7 +522,7 @@ public class NabsDesktopController implements Initializable{
     
     @FXML
     void sendNotification(ActionEvent event) {
-
+    	System.out.print("Sending notification");
 		// temp - reset the context aware variables
 		App.setNextBreak(new Date());
 		App.setNextFreePeriod(new Date());
@@ -568,12 +568,12 @@ public class NabsDesktopController implements Initializable{
     	App.setUserEvent(this.eventInput.getText());
     	
     	if(this.nabbedRB.isSelected()){
-        	//String result = App.fireNotification(notification, "Nabbed");
+        	App.fireNotification(notification, "Nabbed");
         	//consoleTextArea.setText(result);
     	}
     	if(this.customRB.isSelected()){
-    		//String result = App.fireNotification(notification, "Custom");
-    		String oldMessage = this.consoleTextArea.getText();
+    		App.fireNotification(notification, "Custom");
+    		//String oldMessage = this.consoleTextArea.getText();
         	//consoleTextArea.setText(oldMessage+ "\n"+result);
     	}
     }

@@ -11,6 +11,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
 import MastersProject.BeadRepo.AlertInfoBead;
 import MastersProject.BeadRepo.AppInfoBead;
 import MastersProject.BeadRepo.BodyInfoBead;
@@ -22,9 +26,13 @@ import MastersProject.BeadRepo.UserLocationInfoBead;
 import MastersProject.Constants.ActivationType;
 import MastersProject.Constants.BeadType;
 import MastersProject.Constants.ConnectionType;
+import MastersProject.GoogleData.GoogleCalendarData;
+import MastersProject.Models.AlertOutput;
 import MastersProject.Models.InformationBead;
 import MastersProject.Models.UpliftedNotification;
+import MastersProject.Utilities.FirebaseManager;
 import MastersProject.Utilities.ResultCallback;
+import PhDProject.FriendsFamily.FriendsAndFamily;
 import PhDProject.FriendsFamily.Models.Notification;
 import PhDProject.FriendsFamily.Models.User;
 import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
@@ -79,9 +87,9 @@ public class App extends Application
         factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     	em = factory.createEntityManager();
     	
-    	//FriendsAndFamily ff = new FriendsAndFamily();
-    	//ff.saveUserList();
-    	//ArrayList<User> users = ff.getUsers();
+    	/*FriendsAndFamily ff = new FriendsAndFamily();
+    	ff.saveUserList();
+    	ArrayList<User> users = ff.getUsers();*/
     	
     	users = User.getAllUsers(em);
     	
@@ -108,75 +116,7 @@ public class App extends Application
 	 * Init the bead repo
 	 */
     private static void initBeadRepoForNotification(UpliftedNotification notification){
-    	
-    	alertInfoBead = new AlertInfoBead();
-    	alertInfoBead.setAttributeValueType(BeadType.ALERT);
-    	alertInfoBead.setComMode(ConnectionType.PUSH);
-		alertInfoBead.setOnOff(ActivationType.ON);
-		alertInfoBead.setAuthorizationToSendToID(new ArrayList<String>());
-		alertInfoBead.setInfoBeadName("Alert Info Bead");
-		alertInfoBead.setInputInterfaces(new ArrayList<String>());
-		alertInfoBead.setOutputInterface("output");
-		alertInfoBead.setVersion("1");
-		
-    	senderInfoBead = new SenderInfoBead();
-    	senderInfoBead.setAttributeValueType(BeadType.SENDER);
-    	senderInfoBead.setComMode(ConnectionType.PUSH);
-    	senderInfoBead.setOnOff(ActivationType.ON);
-    	senderInfoBead.setAuthorizationToSendToID(new ArrayList<String>());
-    	senderInfoBead.setInfoBeadName("Sender Info Bead");
-    	senderInfoBead.setInputInterfaces(new ArrayList<String>());
-    	senderInfoBead.setOutputInterface("output");
-    	senderInfoBead.setVersion("1");
-    	
-    	subjectInfoBead = new SubjectInfoBead();
-    	subjectInfoBead.setAttributeValueType(BeadType.SUBJECT);
-    	subjectInfoBead.setComMode(ConnectionType.PUSH);
-    	subjectInfoBead.setOnOff(ActivationType.ON);
-    	subjectInfoBead.setAuthorizationToSendToID(new ArrayList<String>());
-    	subjectInfoBead.setInfoBeadName("Subject Info Bead");
-    	subjectInfoBead.setInputInterfaces(new ArrayList<String>());
-    	subjectInfoBead.setOutputInterface("output");
-    	subjectInfoBead.setVersion("1");
-    	
-    	appInfoBead = new AppInfoBead();
-    	appInfoBead.setAttributeValueType(BeadType.APPLICATION);
-    	appInfoBead.setComMode(ConnectionType.PUSH);
-    	appInfoBead.setOnOff(ActivationType.ON);
-    	appInfoBead.setAuthorizationToSendToID(new ArrayList<String>());
-    	appInfoBead.setInfoBeadName("Application Info Bead");
-    	appInfoBead.setInputInterfaces(new ArrayList<String>());
-    	appInfoBead.setOutputInterface("output");
-    	appInfoBead.setVersion("1");
-    	
-    	bodyInfoBead = new BodyInfoBead();
-    	bodyInfoBead.setAttributeValueType(BeadType.BODY);
-    	bodyInfoBead.setComMode(ConnectionType.PUSH);
-    	bodyInfoBead.setOnOff(ActivationType.ON);
-    	bodyInfoBead.setInfoBeadName("Body Info Bead");
-    	bodyInfoBead.setInputInterfaces(new ArrayList<String>());
-    	bodyInfoBead.setOutputInterface("output");
-    	bodyInfoBead.setVersion("1");
-    	
-    	dateInfoBead = new DateInfoBead();
-    	dateInfoBead.setAttributeValueType(BeadType.DATE);
-    	dateInfoBead.setComMode(ConnectionType.PUSH);
-    	dateInfoBead.setOnOff(ActivationType.ON);
-    	dateInfoBead.setInfoBeadName("Date Info Bead");
-    	dateInfoBead.setInputInterfaces(new ArrayList<String>());
-    	dateInfoBead.setOutputInterface("output");
-    	dateInfoBead.setVersion("1");    	
-    	
-    	userLocationInfoBead = new UserLocationInfoBead();
-    	userLocationInfoBead.setAttributeValueType(BeadType.LOCATION);
-    	userLocationInfoBead.setComMode(ConnectionType.PUSH);
-    	userLocationInfoBead.setOnOff(ActivationType.ON);
-    	userLocationInfoBead.setAuthorizationToSendToID(new ArrayList<String>());
-    	userLocationInfoBead.setInfoBeadName("User Location Info Bead");
-    	userLocationInfoBead.setInputInterfaces(new ArrayList<String>());
-    	userLocationInfoBead.setOutputInterface("output");
-    	userLocationInfoBead.setVersion("1");  
-		
+    			
     	notificationInfoBead = new NotificationInfoBead();
     	notificationInfoBead.setAttributeValueType(BeadType.NOTIFICATION);
     	notificationInfoBead.setComMode(ConnectionType.PUSH);
@@ -186,17 +126,6 @@ public class App extends Application
     	notificationInfoBead.setInputInterfaces(new ArrayList<String>());
     	notificationInfoBead.setOutputInterface("output");
     	notificationInfoBead.setVersion("1");
-    	
-    	subjectInfoBead.addListener(alertInfoBead);
-    	appInfoBead.addListener(alertInfoBead);
-    	dateInfoBead.addListener(alertInfoBead);
-    	bodyInfoBead.addListener(alertInfoBead);
-    	userLocationInfoBead.addListener(alertInfoBead);
-    	
-    	saveBead(alertInfoBead, notification.getNotificationId());
-    	saveBead(notificationInfoBead, notification.getNotificationId());
-    	saveBead(senderInfoBead, notification.getNotificationId());
-    	saveBead(subjectInfoBead, notification.getNotificationId());
     	
     }
     
@@ -344,30 +273,60 @@ public class App extends Application
 	 * @return
 	 */
 	public static void fireNotification(UpliftedNotification customNotification, String type){
-		
+		System.out.println("fired notification");
 		result = null;
 		switch(type){
 		case "Nabbed":
 			/**
 			 * For a given notification create a bead group
 			 */
+			notification.setNotificationId(1);
 			initBeadRepoForNotification(notification);
 			notificationInfoBead.notificationReceived(notification);
+			subscribeToAlert(notification.getNotificationId());
 			break;
 		case "Custom":
 			/**
 			 * For a given notification create a bead group
 			 */
+			customNotification.setNotificationId(1);
 			initBeadRepoForNotification(customNotification);
 			notificationInfoBead.notificationReceived(customNotification);
+			subscribeToAlert(customNotification.getNotificationId());
 			break;
 		}
-		
-		/**
-		 * Must wait for the process to finish before alerting the receiving phone of the 
-		 * result.	
-		 */
-		//while(result == null){}
+	}
+	
+	private static void subscribeToAlert(int notificationId){
+		FirebaseManager.getDatabase().child("InfoBead/"+
+				1+"/"+
+				"ALERT/operational/informationItem/informationValue/").addValueEventListener(new ValueEventListener() {
+	  		  @Override
+	  		  public void onDataChange(DataSnapshot snapshot) {
+	  			 if(snapshot.getValue()!=null){
+		  				AlertOutput alert = null;
+			  			try {
+			  				alert = FirebaseManager.convertStringToAlertOutput((String) snapshot.getValue());
+						} catch (ClassNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+			  		    
+			  			if(alert != null){
+			  				System.out.println("********************** Alert Output *****************************\n"+alert.getSenderInput()+"\n"+
+				  					alert.getSubjectInput()+"\n"+alert.getAppInput()+"\n"+alert.getUserLocation()+"\n"+alert.getDeliveryResult()+"\n***********************");
+			  			}
+			  			else{
+			  				System.out.println("********************** Alert Output *****************************\nAlert is null");
+			  			}
+		  		}	  			
+	  			
+	  		  }
+	  		  @Override public void onCancelled(FirebaseError error) { }
+  		});
 	}
 
 	private static User getUserFromId(String id){

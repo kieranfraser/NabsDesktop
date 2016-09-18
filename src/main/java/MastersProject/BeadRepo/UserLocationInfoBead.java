@@ -1,18 +1,21 @@
 package MastersProject.BeadRepo;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
+import MastersProject.Constants.BeadType;
 import MastersProject.GoogleData.CalendarEvent;
 import MastersProject.GoogleData.GoogleCalendarData;
 import MastersProject.Inference.EventInference;
@@ -23,6 +26,7 @@ import MastersProject.Models.InformationBead;
 import MastersProject.Models.Triplet;
 import MastersProject.Models.UpliftedNotification;
 import MastersProject.Nabs.App;
+import MastersProject.Utilities.FirebaseManager;
 
 @Entity
 @DiscriminatorValue("UserLocation")
@@ -37,32 +41,24 @@ Runnable{
 	@Transient
 	private String userLocation;
 	private String calendarLocation;
-		
-	private List<BeadInputInterface> locationListeners = new ArrayList<BeadInputInterface>();
-
-	/**
-	 * Add a bead which will listen for push requests.
-	 * @param addListener
-	 */
-	public void addListener(BeadInputInterface bead){
-		this.locationListeners.add(bead);
-	}
 	
-	/**
-	 * Remove a bead from the listening list.
-	 * @param bead
-	 */
-	public void removeListener(BeadInputInterface bead){
-		this.locationListeners.remove(bead);
-	}
-
 	/**
 	 * Called when updates need to be pushed to other beads.
 	 */
 	@Override
 	public void sendToConsumer(String senderId, Date sentTime, Triplet outputData) {
-		for(BeadInputInterface listener : locationListeners){
-			listener.getEvidence(senderId, sentTime, outputData);
+		ArrayList<String> consumerBeadList = new ArrayList<String>();
+		consumerBeadList.add("AlertInfoBead");
+		for(String bead: consumerBeadList){
+				try{
+					Constructor<?> constructor = Class.forName("MastersProject.BeadRepo."+bead).getConstructor();
+					Object myObj = (InformationBead) constructor.newInstance();
+					
+					Method myObjMethod = myObj.getClass().getMethod("getEvidence", String.class, Date.class, Triplet.class);
+					myObjMethod.invoke(myObj, senderId, sentTime, outputData); 
+				} catch(Exception e){
+					System.out.println("UserLocationInfoBead - sendToConsumer - error");
+				}
 		}
 	}
 
@@ -72,30 +68,46 @@ Runnable{
 	 */
 	@Override
 	public void getEvidence(String senderId, Date sentTime, Triplet inputData) {
-		System.out.println("Location");
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			notification = mapper.readValue(inputData.getInformationItem().getInformationValue(),
-					UpliftedNotification.class);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		// Get the location data
-		userLocation = App.getUserLocation();
+		this.setAttributeValueType(BeadType.LOCATION);
 		
-		CalendarEvent event = null;
-		try {
-			event = GoogleCalendarData.getNextEvent(notification.getDate());
-		} catch (ParseException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		int notificationId = Integer.valueOf(inputData.getInformationItem().getInformationValue());
 		
-		ArrayList<String> userDetails = EventInference.getCurrentLocationAndEventName(event, notification);
-		calendarLocation = userDetails.get(1);
-				
-		this.run();
+		FirebaseManager.getDatabase().child("InfoBead/"+
+				notificationId+"/"+
+				senderId+"/operational/informationItem/informationValue/").addValueEventListener(new ValueEventListener() {
+	  		  @Override
+	  		  public void onDataChange(DataSnapshot snapshot) {
+	  			System.out.println("kieran "+snapshot.getValue(String.class));
+	  			try {
+					notification = FirebaseManager.convertStringToNotification((String) snapshot.getValue());
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+	  		    
+	  			// Get the location data
+	  			userLocation = App.getUserLocation();
+	  			
+	  			CalendarEvent event = null;
+	  			try {
+	  				event = GoogleCalendarData.getNextEvent(notification.getDate());
+	  			} catch (ParseException | IOException e) {
+	  				// TODO Auto-generated catch block
+	  				e.printStackTrace();
+	  			}
+	  			
+	  			ArrayList<String> userDetails = EventInference.getCurrentLocationAndEventName(event, notification);
+	  			calendarLocation = userDetails.get(1);
+	  					
+	  			run();
+	  		  }
+	  		  @Override public void onCancelled(FirebaseError error) { }
+  		});
+		
+		
 	}
 	
 	@Override
@@ -120,18 +132,26 @@ Runnable{
 
 	@Override
 	public void storeInfoBeadAttr() {
-		EntityManager em = App.getEntityManager();
-    	em.getTransaction().begin();
-    	em.persist(this);
-		em.getTransaction().commit();
+		FirebaseManager.getDatabase().child("InfoBead/"+
+				this.notification.getNotificationId()+"/"+
+				this.getAttributeValueType()+"/").setValue((InformationBead) this);
 	}
 
 	@Override
 	public void run() {
 		this.activate();		
 		inferInfoBeadAttr();
-		sendToConsumer(this.getAttributeValueType().toString(), new Date(), this.getOperational());
 		storeInfoBeadAttr();
+		sendToConsumer(this.getAttributeValueType().toString(), new Date(), createTripletToSend());
+	}
+	
+	private Triplet createTripletToSend(){
+		Triplet triplet = new Triplet();
+		InfoItemFields information = new InfoItemFields();
+		information.setEvidenceSource(String.valueOf(notification.getNotificationId()));
+		information.setInformationValue(String.valueOf(notification.getNotificationId()));
+		triplet.setInformationItem(information);
+		return triplet;
 	}
 
 }

@@ -1,18 +1,19 @@
 package MastersProject.BeadRepo;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gdata.util.ServiceException;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import MastersProject.Constants.BeadType;
 import MastersProject.FuzzyLogic.SenderFuzzy;
@@ -25,7 +26,7 @@ import MastersProject.Models.InfoItemFields;
 import MastersProject.Models.InformationBead;
 import MastersProject.Models.Triplet;
 import MastersProject.Models.UpliftedNotification;
-import MastersProject.Nabs.App;
+import MastersProject.Utilities.FirebaseManager;
 
 @Entity
 @DiscriminatorValue("Sender")
@@ -44,7 +45,19 @@ Runnable{
 	 */
 	@Override
 	public void sendToConsumer(String senderId, Date sentTime, Triplet outputData) {
-		
+		ArrayList<String> consumerBeadList = new ArrayList<String>();
+		consumerBeadList.add("AlertInfoBead");
+		for(String bead: consumerBeadList){
+  				try{
+					Constructor<?> constructor = Class.forName("MastersProject.BeadRepo."+bead).getConstructor();
+					Object myObj = (InformationBead) constructor.newInstance();
+					
+					Method myObjMethod = myObj.getClass().getMethod("getEvidence", String.class, Date.class, Triplet.class);
+					myObjMethod.invoke(myObj, senderId, sentTime, outputData); 
+				} catch(Exception e){
+					System.out.println("SenderInfoBead - sendToConsumer - error");
+				}			
+		}
 	}
 
 	/**
@@ -57,24 +70,16 @@ Runnable{
 	public void getEvidence(String senderId, Date sentTime, Triplet inputData) {
 		this.setAttributeValueType(BeadType.SENDER);
 		
-		final ObjectMapper mapper = new ObjectMapper();		
-
-		try {
-			notificationId = mapper.readValue(inputData.getId(),
-					String.class);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-    	
-    	FirebaseHelper.getDatabase().child("InfoBead/"+
+		int notificationId = Integer.valueOf(inputData.getInformationItem().getInformationValue());
+		
+		FirebaseManager.getDatabase().child("InfoBead/"+
 				notificationId+"/"+
-				"NOTIFICATION/operational/informationItem/informationValue/").addValueEventListener(new ValueEventListener() {
+				senderId+"/operational/informationItem/informationValue/").addValueEventListener(new ValueEventListener() {
 	  		  @Override
 	  		  public void onDataChange(DataSnapshot snapshot) {
 	  			System.out.println("kieran "+snapshot.getValue(String.class));
 	  			try {
-					notification = FirebaseHelper.convertStringToNotification((String) snapshot.getValue());
+					notification = FirebaseManager.convertStringToNotification((String) snapshot.getValue());
 				} catch (ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -83,7 +88,7 @@ Runnable{
 					e1.printStackTrace();
 				}
 	  		    
-	  		// get the calendar data for the next 10 events
+	  			// get the calendar data for the next 10 events
 	  			try {
 	  				events = GoogleCalendarData.getNextNEvents(10, notification.getDate());
 	  			} catch (IOException |  ParseException e) {
@@ -129,10 +134,9 @@ Runnable{
 
 	@Override
 	public void storeInfoBeadAttr() {
-		EntityManager em = App.getEntityManager();
-    	em.getTransaction().begin();
-    	em.persist(this);
-		em.getTransaction().commit();
+		FirebaseManager.getDatabase().child("InfoBead/"+
+				this.notification.getNotificationId()+"/"+
+				this.getAttributeValueType()+"/").setValue((InformationBead) this);
 	}
 
 	/**
@@ -142,8 +146,17 @@ Runnable{
 	public void run() {		
 		this.activate();		
 		inferInfoBeadAttr();
-		sendToConsumer(this.getAttributeValueType().toString(), new Date(), this.getOperational());
 		storeInfoBeadAttr();
+		sendToConsumer(this.getAttributeValueType().toString(), new Date(), createTripletToSend());
+	}
+	
+	private Triplet createTripletToSend(){
+		Triplet triplet = new Triplet();
+		InfoItemFields information = new InfoItemFields();
+		information.setEvidenceSource(String.valueOf(notification.getNotificationId()));
+		information.setInformationValue(String.valueOf(notification.getNotificationId()));
+		triplet.setInformationItem(information);
+		return triplet;
 	}
 
 }
