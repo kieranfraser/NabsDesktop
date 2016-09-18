@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.reflections.Reflections;
 
+import MastersProject.BeadRepo.NotificationInfoBead;
 import MastersProject.Constants.ActivationType;
 import MastersProject.Constants.BeadType;
 import MastersProject.Interface.BeadInputInterface;
@@ -122,5 +123,12 @@ public class BeadRepoManager {
 						beadType.toString()+"/").setValue((InformationBead) bead);
 			}
 		});		
+	}
+	
+	public void activateNotificationListener(){
+		if(activeBeadObjects.get(NotificationInfoBead.NAME)!=null){
+			NotificationInfoBead bead = (NotificationInfoBead) activeBeadObjects.get(NotificationInfoBead.NAME);
+			bead.notificationReceived();
+		}
 	}
 }

@@ -568,13 +568,10 @@ public class NabsDesktopController implements Initializable{
     	App.setUserEvent(this.eventInput.getText());
     	
     	if(this.nabbedRB.isSelected()){
-        	//String result = App.fireNotification(notification, "Nabbed");
-        	//consoleTextArea.setText(result);
+        	App.fireNotification(notification, "Nabbed");
     	}
     	if(this.customRB.isSelected()){
-    		//String result = App.fireNotification(notification, "Custom");
-    		String oldMessage = this.consoleTextArea.getText();
-        	//consoleTextArea.setText(oldMessage+ "\n"+result);
+    		App.fireNotification(notification, "Custom");
     	}
     }
     

@@ -9,6 +9,7 @@ import javax.persistence.Transient;
 import MastersProject.FuzzyLogic.AlertFuzzy;
 import MastersProject.Interface.BeadInputInterface;
 import MastersProject.Interface.BeadOutputInterface;
+import MastersProject.Models.InfoItemFields;
 import MastersProject.Models.InformationBead;
 import MastersProject.Models.Triplet;
 import MastersProject.Nabs.App;
@@ -97,7 +98,12 @@ Runnable{
 			result = result + "Notify Much Later - next contextual relevant event - "+App.getNextContextRelevant()+" - "+"\n";
 		}
 		//System.out.println(result);
-		App.resultCallback.resultCallback(Integer.valueOf(this.getPartNumber()), result);
+		//App.resultCallback.resultCallback(Integer.valueOf(this.getPartNumber()), result);
+		Triplet triplet = new Triplet();
+		InfoItemFields infoItem = new InfoItemFields();
+		infoItem.setInformationValue(result);
+		triplet.setInformationItem(infoItem);
+		setOperational(triplet);
 	}
 
 	@Override

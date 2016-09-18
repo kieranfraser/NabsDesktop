@@ -25,6 +25,7 @@ import PhDProject.Managers.FirebaseManager;
 @DiscriminatorValue("Notification")
 public class NotificationInfoBead extends InformationBead implements BeadInputInterface, BeadOutputInterface{
 
+	public static final String NAME = "NotificationInfoBead";
 	private static final long serialVersionUID = -8451356944207798106L;
 	
 	private List<BeadInputInterface> listeners = new ArrayList<BeadInputInterface>();
@@ -42,6 +43,7 @@ public class NotificationInfoBead extends InformationBead implements BeadInputIn
 		FirebaseManager.getDatabase().child("CurrentNotification/").addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot snapshot) {
+				System.out.println("Subscribe to current notification");
 				if(snapshot.getValue()!=null){
 					UpliftedNotification notification = snapshot.getValue(UpliftedNotification.class);
 					Date receivedNotificationDate = new Date();

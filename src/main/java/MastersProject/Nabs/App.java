@@ -19,16 +19,13 @@ import MastersProject.BeadRepo.NotificationInfoBead;
 import MastersProject.BeadRepo.SenderInfoBead;
 import MastersProject.BeadRepo.SubjectInfoBead;
 import MastersProject.BeadRepo.UserLocationInfoBead;
-import MastersProject.Constants.ActivationType;
-import MastersProject.Constants.BeadType;
-import MastersProject.Constants.ConnectionType;
-import MastersProject.Models.InformationBead;
 import MastersProject.Models.UpliftedNotification;
 import MastersProject.Utilities.ResultCallback;
 import PhDProject.FriendsFamily.Models.Notification;
 import PhDProject.FriendsFamily.Models.User;
 import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
 import PhDProject.Managers.BeadRepoManager;
+import PhDProject.Managers.FirebaseManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -88,7 +85,7 @@ public class App extends Application
     	
     	selectedUser = getUserFromId("sp10-01-05");
     	
-    	System.out.println("The total number of users: "+users.size());
+    	/*System.out.println("The total number of users: "+users.size());
     	int countNotifications = 0;
     	int countEvents = 0;
     	int countUsersWithoutNotifications = 0;
@@ -100,137 +97,20 @@ public class App extends Application
     	}
     	System.out.println("The total number of notifications: "+countNotifications);
     	System.out.println("The total number of events: "+countEvents);
-    	System.out.println("The total number of events: "+countUsersWithoutNotifications);
+    	System.out.println("The total number of events: "+countUsersWithoutNotifications);*/
     	
     	BeadRepoManager repo = new BeadRepoManager();
     	repo.activateBead("SenderInfoBead");
     	repo.activateBead("SubjectInfoBead");
     	repo.activateBead("AlertInfoBead");
+    	repo.activateBead("UserLocationInfoBead");
     	repo.activateBead("NotificationInfoBead");
+    	repo.activateBead("AppInfoBead");
     	repo.initialize();
     	repo.saveRepoInstance();
+    	repo.activateNotificationListener();
     	
-    	//launch(args);
-    }
-
-	/**
-	 * Init the bead repo
-	 */
-    private static void initBeadRepoForNotification(UpliftedNotification notification){
-    	
-    	
-    	
-    	alertInfoBead = new AlertInfoBead();
-    	alertInfoBead.setAttributeValueType(BeadType.ALERT);
-    	alertInfoBead.setComMode(ConnectionType.PUSH);
-		alertInfoBead.setOnOff(ActivationType.ON);
-		alertInfoBead.setAuthorizationToSendToID(new ArrayList<String>());
-		alertInfoBead.setInfoBeadName("Alert Info Bead");
-		alertInfoBead.setInputInterfaces(new ArrayList<String>());
-		alertInfoBead.setOutputInterface("output");
-		alertInfoBead.setVersion("1");
-		
-    	senderInfoBead = new SenderInfoBead();
-    	senderInfoBead.setAttributeValueType(BeadType.SENDER);
-    	senderInfoBead.setComMode(ConnectionType.PUSH);
-    	senderInfoBead.setOnOff(ActivationType.ON);
-    	senderInfoBead.setAuthorizationToSendToID(new ArrayList<String>());
-    	senderInfoBead.setInfoBeadName("Sender Info Bead");
-    	senderInfoBead.setInputInterfaces(new ArrayList<String>());
-    	senderInfoBead.setOutputInterface("output");
-    	senderInfoBead.setVersion("1");
-    	
-    	subjectInfoBead = new SubjectInfoBead();
-    	subjectInfoBead.setAttributeValueType(BeadType.SUBJECT);
-    	subjectInfoBead.setComMode(ConnectionType.PUSH);
-    	subjectInfoBead.setOnOff(ActivationType.ON);
-    	subjectInfoBead.setAuthorizationToSendToID(new ArrayList<String>());
-    	subjectInfoBead.setInfoBeadName("Subject Info Bead");
-    	subjectInfoBead.setInputInterfaces(new ArrayList<String>());
-    	subjectInfoBead.setOutputInterface("output");
-    	subjectInfoBead.setVersion("1");
-    	
-    	appInfoBead = new AppInfoBead();
-    	appInfoBead.setAttributeValueType(BeadType.APPLICATION);
-    	appInfoBead.setComMode(ConnectionType.PUSH);
-    	appInfoBead.setOnOff(ActivationType.ON);
-    	appInfoBead.setAuthorizationToSendToID(new ArrayList<String>());
-    	appInfoBead.setInfoBeadName("Application Info Bead");
-    	appInfoBead.setInputInterfaces(new ArrayList<String>());
-    	appInfoBead.setOutputInterface("output");
-    	appInfoBead.setVersion("1");
-    	
-    	bodyInfoBead = new BodyInfoBead();
-    	bodyInfoBead.setAttributeValueType(BeadType.BODY);
-    	bodyInfoBead.setComMode(ConnectionType.PUSH);
-    	bodyInfoBead.setOnOff(ActivationType.ON);
-    	bodyInfoBead.setInfoBeadName("Body Info Bead");
-    	bodyInfoBead.setInputInterfaces(new ArrayList<String>());
-    	bodyInfoBead.setOutputInterface("output");
-    	bodyInfoBead.setVersion("1");
-    	
-    	dateInfoBead = new DateInfoBead();
-    	dateInfoBead.setAttributeValueType(BeadType.DATE);
-    	dateInfoBead.setComMode(ConnectionType.PUSH);
-    	dateInfoBead.setOnOff(ActivationType.ON);
-    	dateInfoBead.setInfoBeadName("Date Info Bead");
-    	dateInfoBead.setInputInterfaces(new ArrayList<String>());
-    	dateInfoBead.setOutputInterface("output");
-    	dateInfoBead.setVersion("1");    	
-    	
-    	userLocationInfoBead = new UserLocationInfoBead();
-    	userLocationInfoBead.setAttributeValueType(BeadType.LOCATION);
-    	userLocationInfoBead.setComMode(ConnectionType.PUSH);
-    	userLocationInfoBead.setOnOff(ActivationType.ON);
-    	userLocationInfoBead.setAuthorizationToSendToID(new ArrayList<String>());
-    	userLocationInfoBead.setInfoBeadName("User Location Info Bead");
-    	userLocationInfoBead.setInputInterfaces(new ArrayList<String>());
-    	userLocationInfoBead.setOutputInterface("output");
-    	userLocationInfoBead.setVersion("1");  
-		
-    	notificationInfoBead = new NotificationInfoBead();
-    	notificationInfoBead.setAttributeValueType(BeadType.NOTIFICATION);
-    	notificationInfoBead.setComMode(ConnectionType.PUSH);
-    	notificationInfoBead.setOnOff(ActivationType.ON);
-    	notificationInfoBead.setAuthorizationToSendToID(new ArrayList<String>());
-    	notificationInfoBead.setInfoBeadName("Notification Info Bead");
-    	notificationInfoBead.setInputInterfaces(new ArrayList<String>());
-    	notificationInfoBead.setOutputInterface("output");
-    	notificationInfoBead.setVersion("1");
-    	
-    	notificationInfoBead.addListener(subjectInfoBead);
-    	notificationInfoBead.addListener(senderInfoBead);
-    	notificationInfoBead.addListener(appInfoBead);
-    	notificationInfoBead.addListener(dateInfoBead);
-    	notificationInfoBead.addListener(bodyInfoBead);
-    	notificationInfoBead.addListener(userLocationInfoBead);
-    	
-    	senderInfoBead.addListener(alertInfoBead);
-    	subjectInfoBead.addListener(alertInfoBead);
-    	appInfoBead.addListener(alertInfoBead);
-    	dateInfoBead.addListener(alertInfoBead);
-    	bodyInfoBead.addListener(alertInfoBead);
-    	userLocationInfoBead.addListener(alertInfoBead);
-    	
-    	saveBead(alertInfoBead, notification.getNotificationId());
-    	saveBead(notificationInfoBead, notification.getNotificationId());
-    	saveBead(senderInfoBead, notification.getNotificationId());
-    	saveBead(subjectInfoBead, notification.getNotificationId());
-    	
-    }
-    
-    /**
-     * Init beads and save in database (needed for generation of id) 
-     * Note: info bead part number refers to the bead group
-     * associated with (one group per notification)
-     * @param inputBead
-     */
-    private static void saveBead(Object inputBead,int id){
-    	em.getTransaction().begin();
-    	InformationBead bead = (InformationBead) inputBead;
-    	bead.setPartNumber(String.valueOf(id));
-    	em.persist(bead);
-		em.getTransaction().commit();
+    	launch(args);
     }
     
     /**
@@ -370,23 +250,19 @@ public class App extends Application
 			/**
 			 * For a given notification create a bead group
 			 */
-			initBeadRepoForNotification(notification);
-			notificationInfoBead.notificationReceived(notification);
+			setNewNotification(notification);
 			break;
 		case "Custom":
 			/**
 			 * For a given notification create a bead group
 			 */
-			initBeadRepoForNotification(customNotification);
-			notificationInfoBead.notificationReceived(customNotification);
+			setNewNotification(customNotification);
 			break;
 		}
-		
-		/**
-		 * Must wait for the process to finish before alerting the receiving phone of the 
-		 * result.	
-		 */
-		//while(result == null){}
+	}
+	
+	private static void setNewNotification(UpliftedNotification notification){
+		FirebaseManager.getDatabase().child("CurrentNotification/").setValue(notification);
 	}
 
 	private static User getUserFromId(String id){
