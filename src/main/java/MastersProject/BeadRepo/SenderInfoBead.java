@@ -8,11 +8,9 @@ import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gdata.util.ServiceException;
 
 import MastersProject.FuzzyLogic.SenderFuzzy;
 import MastersProject.GoogleData.CalendarEvent;
@@ -24,7 +22,7 @@ import MastersProject.Models.InfoItemFields;
 import MastersProject.Models.InformationBead;
 import MastersProject.Models.Triplet;
 import MastersProject.Models.UpliftedNotification;
-import MastersProject.Nabs.App;
+import PhDProject.Managers.FirebaseManager;
 
 @Entity
 @DiscriminatorValue("Sender")
@@ -38,6 +36,12 @@ Runnable{
 	
 	private List<BeadInputInterface> senderListeners = new ArrayList<BeadInputInterface>();
 	private UpliftedNotification  notification;
+	
+	public SenderInfoBead(){
+		ArrayList<String> sendToList = new ArrayList<String>();
+		sendToList.add("AlertInfoBead");
+		this.setAuthorizationToSendToID(sendToList);
+	}
 
 	/**
 	 * Add a bead which will listen for push requests.
@@ -130,10 +134,8 @@ Runnable{
 
 	@Override
 	public void storeInfoBeadAttr() {
-		EntityManager em = App.getEntityManager();
-    	em.getTransaction().begin();
-    	em.persist(this);
-		em.getTransaction().commit();
+		FirebaseManager.getDatabase().child("BeadRepo/"+
+				this.getAttributeValueType()+"/").setValue((InformationBead) this);
 	}
 
 	/**

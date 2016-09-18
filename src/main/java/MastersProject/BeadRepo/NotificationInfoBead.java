@@ -6,12 +6,12 @@ import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import MastersProject.Interface.BeadInputInterface;
 import MastersProject.Interface.BeadOutputInterface;
@@ -19,7 +19,7 @@ import MastersProject.Models.InfoItemFields;
 import MastersProject.Models.InformationBead;
 import MastersProject.Models.Triplet;
 import MastersProject.Models.UpliftedNotification;
-import MastersProject.Nabs.App;
+import PhDProject.Managers.FirebaseManager;
 
 @Entity
 @DiscriminatorValue("Notification")
@@ -29,45 +29,59 @@ public class NotificationInfoBead extends InformationBead implements BeadInputIn
 	
 	private List<BeadInputInterface> listeners = new ArrayList<BeadInputInterface>();
 	
-	public void notificationReceived(UpliftedNotification notification){
-		
-		Date receivedNotificationDate = new Date();
-		this.activate();
-		Triplet operational = new Triplet();
-		operational.setDetectionTime(receivedNotificationDate);
-		
-		InfoItemFields information = new InfoItemFields();
-		ObjectMapper mapper = new ObjectMapper();
-		String notificationString = null;
-		try {
-			 notificationString = mapper.writeValueAsString(notification);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		information.setInformationValue(notificationString);
-		information.setInfoAccuracy(100.0);
-		information.setInfoConfidenceLevel(100.0);
-		information.setInfoValidFrom(receivedNotificationDate);
-		
-		operational.setInformationItem(information);
-		this.setOperational(operational);
-		
-		// Update the bead in database
-		storeInfoBeadAttr();
-		
-		// push triplet to listening beads - sender, subject
-		sendToConsumer(this.getId(), receivedNotificationDate, operational);
+	public NotificationInfoBead(){
+		ArrayList<String> sendToList = new ArrayList<String>();
+		sendToList.add("SenderInfoBead");
+		sendToList.add("SubjectInfoBead");
+		sendToList.add("AppInfoBead");
+		sendToList.add("UserLocationInfoBead");
+		this.setAuthorizationToSendToID(sendToList);
+	}
+	
+	public void notificationReceived(){
+		FirebaseManager.getDatabase().child("CurrentNotification/").addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot snapshot) {
+				if(snapshot.getValue()!=null){
+					UpliftedNotification notification = snapshot.getValue(UpliftedNotification.class);
+					Date receivedNotificationDate = new Date();
+					activate();
+					Triplet operational = new Triplet();
+					operational.setDetectionTime(receivedNotificationDate);
+					
+					InfoItemFields information = new InfoItemFields();
+					ObjectMapper mapper = new ObjectMapper();
+					String notificationString = null;
+					try {
+						 notificationString = mapper.writeValueAsString(notification);
+					} catch (JsonProcessingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					information.setInformationValue(notificationString);
+					information.setInfoAccuracy(100.0);
+					information.setInfoConfidenceLevel(100.0);
+					information.setInfoValidFrom(receivedNotificationDate);
+					
+					operational.setInformationItem(information);
+					setOperational(operational);
+					
+					// Update the bead in database
+					storeInfoBeadAttr();
+					
+					// push triplet to listening beads - sender, subject
+					sendToConsumer(getId(), receivedNotificationDate, operational);
+				}	  			
+			}
+			@Override public void onCancelled(FirebaseError error) { }
+  		});
 	}
 
 	
 	@Override
 	public void storeInfoBeadAttr() {
-		super.storeInfoBeadAttr();
-		EntityManager em = App.getEntityManager();
-    	em.getTransaction().begin();
-    	em.persist(this);
-		em.getTransaction().commit();
+		FirebaseManager.getDatabase().child("BeadRepo/"+
+				this.getAttributeValueType()+"/").setValue((InformationBead) this);
 	}
 
 	/**

@@ -28,6 +28,7 @@ import MastersProject.Utilities.ResultCallback;
 import PhDProject.FriendsFamily.Models.Notification;
 import PhDProject.FriendsFamily.Models.User;
 import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
+import PhDProject.Managers.BeadRepoManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -101,7 +102,15 @@ public class App extends Application
     	System.out.println("The total number of events: "+countEvents);
     	System.out.println("The total number of events: "+countUsersWithoutNotifications);
     	
-    	launch(args);
+    	BeadRepoManager repo = new BeadRepoManager();
+    	repo.activateBead("SenderInfoBead");
+    	repo.activateBead("SubjectInfoBead");
+    	repo.activateBead("AlertInfoBead");
+    	repo.activateBead("NotificationInfoBead");
+    	repo.initialize();
+    	repo.saveRepoInstance();
+    	
+    	//launch(args);
     }
 
 	/**

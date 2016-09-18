@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
 import javax.persistence.Transient;
 
 import MastersProject.FuzzyLogic.AlertFuzzy;
@@ -13,6 +12,7 @@ import MastersProject.Interface.BeadOutputInterface;
 import MastersProject.Models.InformationBead;
 import MastersProject.Models.Triplet;
 import MastersProject.Nabs.App;
+import PhDProject.Managers.FirebaseManager;
 
 @Entity
 @DiscriminatorValue("Alert")
@@ -130,12 +130,8 @@ Runnable{
 	 */
 	@Override
 	public void storeInfoBeadAttr() {
-		// TODO Auto-generated method stub
-		super.storeInfoBeadAttr();
-		EntityManager em = App.getEntityManager();
-    	em.getTransaction().begin();
-    	em.persist(this);
-		em.getTransaction().commit();
+		FirebaseManager.getDatabase().child("BeadRepo/"+
+				this.getAttributeValueType()+"/").setValue((InformationBead) this);
 	}
 
 	@Override

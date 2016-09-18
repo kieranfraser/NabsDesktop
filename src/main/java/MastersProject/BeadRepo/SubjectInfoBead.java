@@ -8,15 +8,10 @@ import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
 import javax.persistence.Transient;
 
-import org.eclipse.persistence.annotations.Multitenant;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gdata.util.ServiceException;
 
-import MastersProject.FuzzyLogic.SenderFuzzy;
 import MastersProject.FuzzyLogic.SubjectFuzzy;
 import MastersProject.GoogleData.CalendarEvent;
 import MastersProject.GoogleData.GoogleCalendarData;
@@ -27,8 +22,7 @@ import MastersProject.Models.InfoItemFields;
 import MastersProject.Models.InformationBead;
 import MastersProject.Models.Triplet;
 import MastersProject.Models.UpliftedNotification;
-import MastersProject.Nabs.App;
-import MastersProject.Utilities.DateUtility;
+import PhDProject.Managers.FirebaseManager;
 
 @Entity
 @DiscriminatorValue("Subject")
@@ -44,6 +38,12 @@ Runnable{
 	ArrayList<CalendarEvent> events;
 	private List<BeadInputInterface> subjectListeners = new ArrayList<BeadInputInterface>();
 	private UpliftedNotification  notification;
+	
+	public SubjectInfoBead(){
+		ArrayList<String> sendToList = new ArrayList<String>();
+		sendToList.add("AlertInfoBead");
+		this.setAuthorizationToSendToID(sendToList);
+	}
 
 	/**
 	 * Add a bead which will listen for push requests.
@@ -131,10 +131,8 @@ Runnable{
 
 	@Override
 	public void storeInfoBeadAttr() {
-		EntityManager em = App.getEntityManager();
-    	em.getTransaction().begin();
-    	em.persist(this);
-		em.getTransaction().commit();
+		FirebaseManager.getDatabase().child("BeadRepo/"+
+				this.getAttributeValueType()+"/").setValue((InformationBead) this);
 	}
 
 	/**

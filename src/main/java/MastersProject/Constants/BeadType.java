@@ -35,4 +35,29 @@ public enum BeadType {
 			return null;
 		}
 	}
+	
+	public static BeadType classNameToType(String string){
+		switch(string){
+		case "AlertInfoBead":
+			return BeadType.ALERT;
+		case "SenderInfoBead":
+			return BeadType.SENDER;
+		case "SubjectInfoBead":
+			return BeadType.SUBJECT;
+		case "UserInfoBead":
+			return BeadType.USER;
+		case "NotificationInfoBead":
+			return BeadType.NOTIFICATION;
+		case "UserLocationInfoBead":
+			return BeadType.LOCATION;
+		case "AppInfoBead":
+			return BeadType.APPLICATION;
+		case "BodyInfoBead":
+			return BeadType.BODY;
+		case "DateInfoBead":
+			return BeadType.DATE;
+		default:
+			return null;
+		}
+	}
 }

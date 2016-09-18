@@ -16,6 +16,7 @@ import MastersProject.Interface.BeadOutputInterface;
 import MastersProject.Models.InformationBead;
 import MastersProject.Models.Triplet;
 import MastersProject.Models.UpliftedNotification;
+import PhDProject.Managers.FirebaseManager;
 
 @Entity
 @DiscriminatorValue("Date")
@@ -84,8 +85,8 @@ BeadOutputInterface, Runnable{
 
 	@Override
 	public void storeInfoBeadAttr() {
-		// TODO Auto-generated method stub
-		super.storeInfoBeadAttr();
+		FirebaseManager.getDatabase().child("BeadRepo/"+
+				this.getAttributeValueType()+"/").setValue((InformationBead) this);
 	}
 
 }
