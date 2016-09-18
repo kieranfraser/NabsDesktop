@@ -7,14 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.Transient;
 
-import MastersProject.Controllers.NabsDesktopController;
 import MastersProject.FuzzyLogic.AlertFuzzy;
 import MastersProject.Interface.BeadInputInterface;
 import MastersProject.Interface.BeadOutputInterface;
 import MastersProject.Models.InformationBead;
 import MastersProject.Models.Triplet;
 import MastersProject.Nabs.App;
-import MastersProject.Utilities.DateUtility;
 
 @Entity
 @DiscriminatorValue("Alert")
@@ -37,7 +35,7 @@ Runnable{
 	
 	@Transient
 	private double userLocation;
-	
+
 	/**
 	 * Must be initialized to ~0 for fuzzy controller.
 	 */

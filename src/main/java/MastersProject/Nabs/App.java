@@ -109,6 +109,8 @@ public class App extends Application
 	 */
     private static void initBeadRepoForNotification(UpliftedNotification notification){
     	
+    	
+    	
     	alertInfoBead = new AlertInfoBead();
     	alertInfoBead.setAttributeValueType(BeadType.ALERT);
     	alertInfoBead.setComMode(ConnectionType.PUSH);
