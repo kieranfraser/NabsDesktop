@@ -6,10 +6,16 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import MastersProject.BeadRepo.AlertInfoBead;
 import MastersProject.BeadRepo.AppInfoBead;
@@ -21,6 +27,7 @@ import MastersProject.BeadRepo.SubjectInfoBead;
 import MastersProject.BeadRepo.UserLocationInfoBead;
 import MastersProject.Models.UpliftedNotification;
 import MastersProject.Utilities.ResultCallback;
+import PhDProject.FriendsFamily.FriendsAndFamily;
 import PhDProject.FriendsFamily.Models.Notification;
 import PhDProject.FriendsFamily.Models.User;
 import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
@@ -77,40 +84,64 @@ public class App extends Application
         factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     	em = factory.createEntityManager();
     	
-    	//FriendsAndFamily ff = new FriendsAndFamily();
-    	//ff.saveUserList();
-    	//ArrayList<User> users = ff.getUsers();
-    	
-    	users = User.getAllUsers(em);
-    	
+    	/*FriendsAndFamily ff = new FriendsAndFamily();
+    	ff.saveUserList();
+    	users = ff.getUsers();
     	selectedUser = getUserFromId("sp10-01-05");
+    	System.out.println(selectedUser.getId());*/
+    	//FirebaseManager.getDatabase().child("FriendsFamily/users/").setValue(selectedUser);
     	
-    	/*System.out.println("The total number of users: "+users.size());
-    	int countNotifications = 0;
-    	int countEvents = 0;
-    	int countUsersWithoutNotifications = 0;
-    	for(User user: users){
-    		countNotifications += user.getNotifications().size();
-    		countEvents += user.getEvents().size();
-    		if(user.getNotifications().size() == 0)
-    			countUsersWithoutNotifications++;
-    	}
-    	System.out.println("The total number of notifications: "+countNotifications);
-    	System.out.println("The total number of events: "+countEvents);
-    	System.out.println("The total number of events: "+countUsersWithoutNotifications);*/
-    	
-    	BeadRepoManager repo = new BeadRepoManager();
-    	repo.activateBead("SenderInfoBead");
-    	repo.activateBead("SubjectInfoBead");
-    	repo.activateBead("AlertInfoBead");
-    	repo.activateBead("UserLocationInfoBead");
-    	repo.activateBead("NotificationInfoBead");
-    	repo.activateBead("AppInfoBead");
-    	repo.initialize();
-    	repo.saveRepoInstance();
-    	repo.activateNotificationListener();
-    	
-    	launch(args);
+    	FirebaseManager.getDatabase().child("Friends&Family/users/").addValueEventListener(new ValueEventListener() {
+	  		  @Override
+	  		  public void onDataChange(DataSnapshot snapshot) {
+	  			  users = new ArrayList<>();
+	  			Map<String, String> result = snapshot.getValue(HashMap.class);
+	  			for (Map.Entry<String, String> entry : result.entrySet())
+	  			{
+	  			    try {
+						User user = FirebaseManager.convertStringToUser(entry.getValue());
+						if(user!=null){
+							users.add(user);
+						}
+					} catch (ClassNotFoundException | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	  			}
+	  			
+	  			selectedUser = getUserFromId("sp10-01-05");
+	  	    	
+	  	    	System.out.println("The total number of users: "+users.size());
+	  	    	int countNotifications = 0;
+	  	    	int countEvents = 0;
+	  	    	int countUsersWithoutNotifications = 0;
+	  	    	for(User user: users){
+	  	    		countNotifications += user.getNotifications().size();
+	  	    		countEvents += user.getEvents().size();
+	  	    		if(user.getNotifications().size() == 0)
+	  	    			countUsersWithoutNotifications++;
+	  	    	}
+	  	    	System.out.println("The total number of notifications: "+countNotifications);
+	  	    	System.out.println("The total number of events: "+countEvents);
+	  	    	System.out.println("The total number of events: "+countUsersWithoutNotifications);
+	  	    	
+	  	    	BeadRepoManager repo = new BeadRepoManager();
+	  	    	repo.activateBead("SenderInfoBead");
+	  	    	repo.activateBead("SubjectInfoBead");
+	  	    	repo.activateBead("AlertInfoBead");
+	  	    	repo.activateBead("UserLocationInfoBead");
+	  	    	repo.activateBead("NotificationInfoBead");
+	  	    	repo.activateBead("AppInfoBead");
+	  	    	repo.initialize();
+	  	    	repo.saveRepoInstance();
+	  	    	repo.activateNotificationListener();
+	  	    	
+	  	    	//launch(args);
+	  	    	javafx.application.Application.launch(App.class);
+	  		  }
+	  		  @Override public void onCancelled(FirebaseError error) { }
+  		});
+    	//users = User.getAllUsers(em);
     }
     
     /**

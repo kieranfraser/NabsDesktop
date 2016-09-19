@@ -19,7 +19,6 @@ import javax.persistence.Id;
 @Entity
 public class Personality implements Serializable{
 	
-	private static final long serialVersionUID = 7747304420054930589L;
 	
 	private int extraversion;
 	private int agreeableness;
@@ -72,6 +71,14 @@ public class Personality implements Serializable{
 		
 		return personality;
 	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	
 	
 	
 }

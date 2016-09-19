@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -23,6 +22,7 @@ import javax.persistence.TypedQuery;
 
 import MastersProject.Nabs.App;
 import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
+import PhDProject.FriendsFamily.Utilities.RandomUtility;
 
 /**
  * User class which contains information on the receiver of the 
@@ -39,7 +39,6 @@ import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
 @Entity
 public class User implements Serializable{
 	
-	private static final long serialVersionUID = -1123854112534962383L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -56,9 +55,7 @@ public class User implements Serializable{
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	private ArrayList<Subject> randomChoice;
-	
-    private Random randomGenerator;
-    
+	    
     // Individual Detail
     private boolean student;
     private boolean stranger;
@@ -79,8 +76,6 @@ public class User implements Serializable{
 		randomChoice = new ArrayList<Subject>();
 		activities = new ArrayList<Subject>();
 		stranger = false;
-		
-        randomGenerator = new Random();
 	}
 		
 	public boolean isStranger() {
@@ -124,7 +119,7 @@ public class User implements Serializable{
 		populateList(senderIdentity);
 		
 		if(!randomChoice.isEmpty()){
-			int index = randomGenerator.nextInt(randomChoice.size());
+			int index = RandomUtility.getRandomGenerator().nextInt(randomChoice.size());
 	        chosenSubject = randomChoice.get(0);
 		}
 		else{
@@ -326,6 +321,16 @@ public class User implements Serializable{
 	public String toString() {
 		return "User id: "+this.id;
 	}
+
+	public ArrayList<Subject> getRandomChoice() {
+		return randomChoice;
+	}
+
+	public void setRandomChoice(ArrayList<Subject> randomChoice) {
+		this.randomChoice = randomChoice;
+	}
+	
+	
 	
 	
 }

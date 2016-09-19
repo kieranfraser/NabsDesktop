@@ -120,5 +120,11 @@ public class Notification implements Serializable{
 				+"Subject: "+this.subject+"\n"
 				+"App: "+this.app+"\n"
 				+"Date: "+this.date+"\n\n********************************\n";
+	}
+	public String getDbId() {
+		return dbId;
+	}
+	public void setDbId(String dbId) {
+		this.dbId = dbId;
 	}	
 }

@@ -19,9 +19,7 @@ import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
 
 @Entity
 public class Event implements Serializable{
-	
-	private static final long serialVersionUID = 6850049329570669037L;
-	
+		
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private String id;
@@ -331,4 +329,13 @@ public class Event implements Serializable{
 	    printWriter.print(content);
 	    printWriter.close();
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 }

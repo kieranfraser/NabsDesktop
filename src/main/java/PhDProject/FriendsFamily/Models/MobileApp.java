@@ -16,8 +16,6 @@ import javax.persistence.Id;
 @Entity
 public class MobileApp implements Serializable{
 	
-	private static final long serialVersionUID = 8221787023554314446L;
-	
 	public final static String GAMES = "Games";
 	public final static String NEWS_AND_WEATHER = "News and weather";
 	public final static String ENTERTAINMENT = "Entertainment";
@@ -60,6 +58,10 @@ public class MobileApp implements Serializable{
 	public String toString() {
 		return "\n Name: "+this.name+"\n Cat: "+this.category+"\n Rank: "+this.rank+"\n";
 	}
-	
-	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 }

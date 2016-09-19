@@ -17,8 +17,6 @@ import javax.persistence.Id;
 @Entity
 public class Subject implements Serializable{
 	
-	private static final long serialVersionUID = 3465057190443401403L;
-	
 	public final static String WORK = "work";
 	public final static String SOCIAL = "social";
 	public final static String INTEREST = "interest";
@@ -53,5 +51,25 @@ public class Subject implements Serializable{
 	@Override
 	public String toString() {
 		return "\n\n Ground Truth: "+this.ground_truth+"\n Subject: "+this.subject+"\n Data-set: "+this.dataset+"\n";
-	}	
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public static String getWork() {
+		return WORK;
+	}
+	public static String getSocial() {
+		return SOCIAL;
+	}
+	public static String getInterest() {
+		return INTEREST;
+	}
+	public static String getFamily() {
+		return FAMILY;
+	}
+	
+	
 }

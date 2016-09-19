@@ -107,7 +107,13 @@ Runnable{
 	@Override
 	public void inferInfoBeadAttr() {	
 		double inferredValue = -1.0;
-		System.out.println(userLocation);
+		System.out.println("userLocation "+userLocation);
+		if(userLocation == null){
+			userLocation = "unknown";
+		}
+		if(calendarLocation == null){
+			calendarLocation = "unknown";
+		}
 		System.out.println(calendarLocation);
 		if(calendarLocation.contains(userLocation) && !userLocation.contains("unknown")){ // if there's an event occurring and the user is attending it
 			inferredValue = 1.0;

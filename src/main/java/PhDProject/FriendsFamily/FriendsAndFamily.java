@@ -7,7 +7,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-import PhDProject.FriendsFamily.Models.Event;
+import com.firebase.client.Firebase;
+
 import PhDProject.FriendsFamily.Models.Notification;
 import PhDProject.FriendsFamily.Models.User;
 import PhDProject.FriendsFamily.QueryHelpers.AppQueryHelper;
@@ -18,6 +19,7 @@ import PhDProject.FriendsFamily.QueryHelpers.EventQueryHelper;
 import PhDProject.FriendsFamily.QueryHelpers.QueryActivitySubjects;
 import PhDProject.FriendsFamily.QueryHelpers.TitleTimeQueryHelper;
 import PhDProject.FriendsFamily.QueryHelpers.UniqueSendersQueryHelper;
+import PhDProject.Managers.FirebaseManager;
 
 public class FriendsAndFamily {
 	
@@ -72,8 +74,48 @@ public class FriendsAndFamily {
 	}
 
 	public void saveUserList(){
+		/*ArrayList<String> userStrings = new ArrayList<>();
 		for(User user: users){
-			user.saveUser();
+			try {
+				userStrings.add(FirebaseManager.convertUserToString(user));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		for(String userString: userStrings){
+			Firebase ref = FirebaseManager.getDatabase().child("Friends&Family/users/").push();
+			ref.setValue(userString);
+		}*/
+		
+		for(User user: users){
+			String baseRef = "FriendsFamily/"+user.getId()+"/";
+			FirebaseManager.getDatabase().child(baseRef+"favoriteApps/").setValue(user.getFavoriteApps());
+			FirebaseManager.getDatabase().child(baseRef+"activities/").setValue(user.getActivities());
+			FirebaseManager.getDatabase().child(baseRef+"events/").setValue(user.getEvents());
+			FirebaseManager.getDatabase().child(baseRef+"randomChoice/").setValue(user.getRandomChoice());
+			FirebaseManager.getDatabase().child(baseRef+"student/").setValue(user.isStudent());
+			FirebaseManager.getDatabase().child(baseRef+"stranger/").setValue(user.isStranger());
+			FirebaseManager.getDatabase().child(baseRef+"personality/").setValue(user.getPersonality());
+			FirebaseManager.getDatabase().child(baseRef+"percentageHome/").setValue(user.getPercentageHome());
+			FirebaseManager.getDatabase().child(baseRef+"percentageWork/").setValue(user.getPercentageWork());
+			FirebaseManager.getDatabase().child(baseRef+"percentageSocial/").setValue(user.getPercentageSocial());
+			FirebaseManager.getDatabase().child(baseRef+"sendingUserIds/").setValue(user.getSendingUserIds());
+			String notificationBaseRef = baseRef+"notifications/";
+			int id = 0;
+			for(Notification n: user.getNotifications()){
+				FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"sender").setValue(n.getSender());
+				FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"subject").setValue(n.getSubject());
+				FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"app").setValue(n.getApp());
+				FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"body").setValue(n.getBody());
+				FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"date").setValue(n.getDate());
+				FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"senderRank").setValue(n.getSenderRank());
+				FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"subjectRank").setValue(n.getSubjectRank());
+				FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"appRank").setValue(n.getAppRank());
+				FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"bodyRank").setValue(n.getBodyRank());
+				FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"dateRank").setValue(n.getDateRank());
+				id++;
+			}			
 		}
 	}
 
