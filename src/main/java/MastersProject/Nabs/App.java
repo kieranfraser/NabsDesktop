@@ -90,8 +90,14 @@ public class App extends Application
     	selectedUser = getUserFromId("sp10-01-05");
     	System.out.println(selectedUser.getId());*/
     	//FirebaseManager.getDatabase().child("FriendsFamily/users/").setValue(selectedUser);
+    	    	
+    	initNabsServer();
     	
-    	FirebaseManager.getDatabase().child("Friends&Family/users/").addValueEventListener(new ValueEventListener() {
+    	//users = User.getAllUsers(em);
+    }
+	
+	private static void initNabsServer(){
+		FirebaseManager.getDatabase().child("Friends&Family/users/").addValueEventListener(new ValueEventListener() {
 	  		  @Override
 	  		  public void onDataChange(DataSnapshot snapshot) {
 	  			  users = new ArrayList<>();
@@ -108,6 +114,8 @@ public class App extends Application
 						e.printStackTrace();
 					}
 	  			}
+	  			
+	  			setWebUserList(users);
 	  			
 	  			selectedUser = getUserFromId("sp10-01-05");
 	  	    	
@@ -140,9 +148,16 @@ public class App extends Application
 	  	    	javafx.application.Application.launch(App.class);
 	  		  }
 	  		  @Override public void onCancelled(FirebaseError error) { }
-  		});
-    	//users = User.getAllUsers(em);
-    }
+		});
+	}
+	
+	private static void setWebUserList(ArrayList<User> userObjects){
+		ArrayList<String> users = new ArrayList<String>();
+		for(User user: userObjects){
+			users.add(user.getId());
+		}
+		FirebaseManager.getDatabase().child("web/userStrings").setValue(users);
+	}
     
     /**
      * For Nabsim we are getting this information from the friends and family database as opposed 
