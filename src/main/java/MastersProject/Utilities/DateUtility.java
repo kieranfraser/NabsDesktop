@@ -16,11 +16,23 @@ import com.google.api.services.calendar.model.EventDateTime;
 
 public class DateUtility {
 
-	public String dateToString(Date date){
+	public static String dateToString(Date date){
     	SimpleDateFormat sdf = new SimpleDateFormat();
     	sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     	sdf.applyPattern("dd/MM/yyyy HH:mm:ss");
     	return sdf.format(date);
+	}
+	
+	public static Date stringToDate(String date){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
+		try {
+			return sdf.parse(date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
 	}
 	
 	public static String cleanMinutes(double mins){
