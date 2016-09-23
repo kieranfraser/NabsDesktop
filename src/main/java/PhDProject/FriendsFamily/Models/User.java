@@ -255,7 +255,7 @@ public class User implements Serializable{
 		System.out.println("printing notifications...");
 		String content = "";
 		for(Notification notification : this.notifications){
-			content = content+"\n\n"+notification.toString();
+			content = content+"\n\n"+notification.getDate().toString();
 		}
 		FileWriter fileWriter = new FileWriter("notifications.txt");
 	    PrintWriter printWriter = new PrintWriter(fileWriter);
@@ -267,7 +267,7 @@ public class User implements Serializable{
 		System.out.println("printing events...");
 		String content = "";
 		for(Event event : this.events){
-			content = content+"\n\n"+event.toString();
+			content = content+"\n\n"+event.getStartDate().toString();
 		}
 		FileWriter fileWriter = new FileWriter("events_User.txt");
 	    PrintWriter printWriter = new PrintWriter(fileWriter);

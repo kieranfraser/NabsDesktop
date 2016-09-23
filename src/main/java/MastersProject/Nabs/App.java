@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -31,8 +30,9 @@ import MastersProject.GoogleData.GoogleCalendarData;
 import MastersProject.Models.UpliftedNotification;
 import MastersProject.Utilities.DateUtility;
 import MastersProject.Utilities.ResultCallback;
-import PhDProject.FriendsFamily.FriendsAndFamily;
+import PhDProject.FriendsFamily.Models.MobileApp;
 import PhDProject.FriendsFamily.Models.Notification;
+import PhDProject.FriendsFamily.Models.Subject;
 import PhDProject.FriendsFamily.Models.User;
 import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
 import PhDProject.Managers.BeadRepoManager;
@@ -122,7 +122,15 @@ public class App extends Application
 	  			//setWebUserList(users);
 	  			subscribeToWebEvents();
 	  			
-	  			selectedUser = getUserFromId("sp10-01-05");
+	  			selectedUser = getUserFromId("sp10-01-19");
+	  			
+	  			try {
+					selectedUser.printEvents();
+		  			selectedUser.printNotifications();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	  	    	
 	  	    	System.out.println("The total number of users: "+users.size());
 	  	    	int countNotifications = 0;
@@ -137,6 +145,8 @@ public class App extends Application
 	  	    	System.out.println("The total number of notifications: "+countNotifications);
 	  	    	System.out.println("The total number of events: "+countEvents);
 	  	    	System.out.println("The total number of events: "+countUsersWithoutNotifications);
+	  	    	
+	  	    	
 	  	    	
 	  	    	BeadRepoManager repo = new BeadRepoManager();
 	  	    	repo.activateBead("SenderInfoBead");
@@ -163,10 +173,30 @@ public class App extends Application
 	}
 	
 	private static void notificationToFire(){
-		FirebaseManager.getDatabase().child("web/selectedNotification/").addValueEventListener( new ValueEventListener() {
+		FirebaseManager.getDatabase().child("web/fire/").addValueEventListener( new ValueEventListener() {
 	  		  @Override
 	  		  public void onDataChange(DataSnapshot snapshot) {
-	  			  
+	  			if(snapshot.getValue()!=null){
+	  				HashMap result = snapshot.getValue(HashMap.class);
+	  				UpliftedNotification n = new UpliftedNotification();
+	  				HashMap app = (HashMap) result.get("app");
+	  				HashMap subject = (HashMap) result.get("subject");
+	  				
+	  				n.setNotificationId((Integer) result.get("notificationId"));
+	  				
+	  				n.setSender((String) result.get("sender"));
+	  				n.setSubject((String) subject.get("subject"));
+	  				n.setApp((String) app.get("name"));
+	  				n.setDate(DateUtility.stringToDate((String) result.get("date")));
+	  				
+	  				n.setSenderRank((Integer) result.get("senderRank"));
+	  				n.setAppRank((Integer) result.get("appRank"));
+	  				n.setSubjectRank((Integer) result.get("subjectRank"));
+	  				n.setBodyRank((Integer) result.get("bodyRank"));
+	  				n.setDateRank((Integer) result.get("dateRank"));
+	  				fireNotification(n, "Custom");
+	  				
+	  			}
 	  		  }
 	  		  @Override public void onCancelled(FirebaseError error) {}
 		});
