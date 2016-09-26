@@ -124,6 +124,7 @@ Runnable{
 		Triplet operational = new Triplet();
 		InfoItemFields info = new InfoItemFields();
 		info.setInformationValue(String.valueOf(inferredValue));
+		info.setInfoBeadId(notification.getNotificationId());
 		operational.setInformationItem(info);
 		operational.setDetectionTime(new Date());
 		this.setOperational(operational);

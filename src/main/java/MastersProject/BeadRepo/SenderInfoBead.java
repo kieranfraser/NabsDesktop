@@ -129,7 +129,9 @@ Runnable{
 		info.setInformationValue(String.valueOf(inferredValue));
 		operational.setInformationItem(info);
 		operational.setDetectionTime(new Date());
+		info.setInfoBeadId(notification.getNotificationId());
 		this.setOperational(operational);
+		
 	}
 
 	@Override

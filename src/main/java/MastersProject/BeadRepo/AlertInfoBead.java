@@ -6,6 +6,8 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
+import com.firebase.client.Firebase;
+
 import MastersProject.FuzzyLogic.AlertFuzzy;
 import MastersProject.Interface.BeadInputInterface;
 import MastersProject.Interface.BeadOutputInterface;
@@ -36,6 +38,11 @@ Runnable{
 	
 	@Transient
 	private double userLocation;
+	
+	/**
+	 * Used for identifying the results in NabSim
+	 */
+	private int notificationIdPath;
 
 	/**
 	 * Must be initialized to ~0 for fuzzy controller.
@@ -114,7 +121,7 @@ Runnable{
 	 */
 	@Override
 	public void getEvidence(String senderId, Date sentTime, Triplet inputData) {
-		
+		notificationIdPath = inputData.getInformationItem().getInfoBeadId();
 		switch(senderId){
 		case "SUBJECT":
 			this.subjectInput = Double.valueOf(inputData.getInformationItem().getInformationValue());
@@ -133,11 +140,15 @@ Runnable{
 	/**
 	 * In this store - close the entity manager. Must ensure to open it again for the next notification.
 	 * em.close();
+	 * Push the value to a FireBase reference - for comparison of events in NabSim.
 	 */
 	@Override
 	public void storeInfoBeadAttr() {
 		FirebaseManager.getDatabase().child("BeadRepo/"+
 				this.getAttributeValueType()+"/").setValue((InformationBead) this);
+		
+		FirebaseManager.getDatabase().child("web/results/"+notificationIdPath).
+		setValue(this.getOperational().getInformationItem().getInformationValue());
 	}
 
 	@Override

@@ -64,6 +64,7 @@ public class NotificationInfoBead extends InformationBead implements BeadInputIn
 					information.setInfoAccuracy(100.0);
 					information.setInfoConfidenceLevel(100.0);
 					information.setInfoValidFrom(receivedNotificationDate);
+					information.setInfoBeadId(notification.getNotificationId());
 					
 					operational.setInformationItem(information);
 					setOperational(operational);

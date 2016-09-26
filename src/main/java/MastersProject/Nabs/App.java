@@ -20,6 +20,9 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.BeanToCsv;
+import com.opencsv.bean.ColumnPositionMappingStrategy;
 
 import MastersProject.BeadRepo.AlertInfoBead;
 import MastersProject.BeadRepo.AppInfoBead;
@@ -123,10 +126,10 @@ public class App extends Application
 					}
 	  			}
 	  			
-	  			convertDataSetToJSON();
+	  			//convertDataToCSV();
 	  			
 	  			//setWebUserList(users);
-	  			/*subscribeToWebEvents();
+	  			subscribeToWebEvents();
 	  			
 	  			selectedUser = getUserFromId("sp10-01-19");
 	  			
@@ -163,7 +166,7 @@ public class App extends Application
 	  	    	repo.activateBead("AppInfoBead");
 	  	    	repo.initialize();
 	  	    	repo.saveRepoInstance();
-	  	    	repo.activateNotificationListener();*/
+	  	    	repo.activateNotificationListener();
 	  	    	
 	  	    	//launch(args);
 	  	    	//javafx.application.Application.launch(App.class);
@@ -203,10 +206,64 @@ public class App extends Application
 			
 	}
 	
+	private static void convertDataToCSV(){
+		CSVWriter csvWriter = null;
+		try
+		{
+			//Create CSVWriter for writing to Employee.csv 
+			csvWriter = new CSVWriter(new FileWriter("UsersInferred.csv"));
+            BeanToCsv bc = new BeanToCsv();
+          //Creating Employee objects
+        	
+        	
+        	 //mapping of columns with their positions
+            ColumnPositionMappingStrategy mappingStrategy = 
+            		new ColumnPositionMappingStrategy();
+            //Set mappingStrategy type to Employee Type
+            mappingStrategy.setType(User.class);
+            //Fields in Employee Bean
+            String[] columns = new String[]{"id","favoriteApps","activities","events", "randomChoice", "student", "stranger", "personality", "percentageHome","percentageWork", "percentageSocial", "sending User Ids", "notifications"};
+            //Setting the colums for mappingStrategy
+            mappingStrategy.setColumnMapping(columns);
+            //Writing empList to csv file
+            bc.write(mappingStrategy,csvWriter,users);
+            System.out.println("CSV File written successfully!!!");
+		}
+		catch(Exception ee)
+		{
+			ee.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				//closing the writer
+				csvWriter.close();
+			}
+			catch(Exception ee)
+			{
+				ee.printStackTrace();
+			}
+		}
+	}
+	
 	private static void subscribeToWebEvents(){
-		selectedUserEvent();
+		//selectedUserEvent();
 		selectedNotificationEvent();
 		notificationToFire();
+	}
+	
+	private static void setUserObjectsInFirebase(){
+		for(User user: users){
+			int id = 1;
+			for(Notification notification: user.getNotifications()){
+				notification.setId(id);
+				id++;
+				
+				notification.setAppRank(notification.getApp().getRank());
+			}
+		}
+		FirebaseManager.getDatabase().child("web/test/").setValue(users);
 	}
 	
 	private static void notificationToFire(){
@@ -219,7 +276,7 @@ public class App extends Application
 	  				HashMap app = (HashMap) result.get("app");
 	  				HashMap subject = (HashMap) result.get("subject");
 	  				
-	  				n.setNotificationId((Integer) result.get("notificationId"));
+	  				n.setNotificationId((Integer) result.get("id"));
 	  				
 	  				n.setSender((String) result.get("sender"));
 	  				n.setSubject((String) subject.get("subject"));
@@ -247,7 +304,7 @@ public class App extends Application
 	  				HashMap result = snapshot.getValue(HashMap.class);
 	  				ArrayList<CalendarEvent> events = null;
 					try {
-						events = GoogleCalendarData.getNextNEvents((Integer) result.get("notificationId"), DateUtility.stringToDate((String) result.get("date")));
+						events = GoogleCalendarData.getNextNEvents((Integer) result.get("id"), DateUtility.stringToDate((String) result.get("date")));
 					} catch (NumberFormatException | ParseException | IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -262,64 +319,6 @@ public class App extends Application
 	  			  System.out.println("error adding user in firebase");
 	  		  }
 		});
-	}
-		
-	private static void selectedUserEvent(){
-		FirebaseManager.getDatabase().child("web/selectedUser/").addValueEventListener( new ValueEventListener() {
-	  		  @Override
-	  		  public void onDataChange(DataSnapshot snapshot) {
-	  			  if(snapshot.getValue()!=null){
-	  				User userForEvent = getUserFromId((String) snapshot.getValue());
-	  				saveSelectedUser(userForEvent);
-	  			  }
-	  			
-	  		  }
-	  		  @Override public void onCancelled(FirebaseError error) { 
-	  			  System.out.println("error adding user in firebase");
-	  		  }
-		});
-	}
-	
-	private static void saveSelectedUser(User user){
-		
-		String baseRef = "web/selectedUserObject/";
-		FirebaseManager.getDatabase().child(baseRef).removeValue();
-		FirebaseManager.getDatabase().child(baseRef+"id/").setValue(user.getId());
-		FirebaseManager.getDatabase().child(baseRef+"favoriteApps/").setValue(user.getFavoriteApps());
-		FirebaseManager.getDatabase().child(baseRef+"activities/").setValue(user.getActivities());
-		FirebaseManager.getDatabase().child(baseRef+"events/").setValue(user.getEvents());
-		FirebaseManager.getDatabase().child(baseRef+"randomChoice/").setValue(user.getRandomChoice());
-		FirebaseManager.getDatabase().child(baseRef+"student/").setValue(user.isStudent());
-		FirebaseManager.getDatabase().child(baseRef+"stranger/").setValue(user.isStranger());
-		FirebaseManager.getDatabase().child(baseRef+"personality/").setValue(user.getPersonality());
-		FirebaseManager.getDatabase().child(baseRef+"percentageHome/").setValue(user.getPercentageHome());
-		FirebaseManager.getDatabase().child(baseRef+"percentageWork/").setValue(user.getPercentageWork());
-		FirebaseManager.getDatabase().child(baseRef+"percentageSocial/").setValue(user.getPercentageSocial());
-		FirebaseManager.getDatabase().child(baseRef+"sendingUserIds/").setValue(user.getSendingUserIds());
-		String notificationBaseRef = baseRef+"notifications/";
-		int id = 0;
-		for(Notification n: user.getNotifications()){
-			FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"notificationId").setValue(id);
-			FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"sender").setValue(n.getSender());
-			FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"subject").setValue(n.getSubject());
-			FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"app").setValue(n.getApp());
-			FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"body").setValue(n.getBody());
-			FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"date").setValue(n.getDate());
-			FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"senderRank").setValue(n.getSenderRank());
-			FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"subjectRank").setValue(n.getSubjectRank());
-			FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"appRank").setValue(n.getAppRank());
-			FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"bodyRank").setValue(n.getBodyRank());
-			FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"dateRank").setValue(n.getDateRank());
-			id++;
-		}
-	}
-	
-	private static void setWebUserList(ArrayList<User> userObjects){
-		ArrayList<String> users = new ArrayList<String>();
-		for(User user: userObjects){
-			users.add(user.getId());
-		}
-		FirebaseManager.getDatabase().child("web/userStrings").setValue(users);
 	}
     
     /**
