@@ -20,9 +20,6 @@ public class Notification implements Serializable{
 
 	private int id;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	private User sendingUser;
-	
 	private String sender;
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -105,12 +102,6 @@ public class Notification implements Serializable{
 	}
 	public void setDateRank(int dateRank) {
 		this.dateRank = dateRank;
-	}
-	public User getSendingUser() {
-		return sendingUser;
-	}
-	public void setSendingUser(User sendingUser) {
-		this.sendingUser = sendingUser;
 	}
 	@Override
 	public String toString() {

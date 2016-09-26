@@ -1,5 +1,6 @@
 package MastersProject.Nabs;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -13,9 +14,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 
 import MastersProject.BeadRepo.AlertInfoBead;
 import MastersProject.BeadRepo.AppInfoBead;
@@ -85,8 +89,8 @@ public class App extends Application
 	public static void main( String[] args ) throws SQLException, ParseException, IOException
     {
 
-        factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-    	em = factory.createEntityManager();
+        /*factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+    	em = factory.createEntityManager();*/
     	
     	/*FriendsAndFamily ff = new FriendsAndFamily();
     	ff.saveUserList();
@@ -119,8 +123,10 @@ public class App extends Application
 					}
 	  			}
 	  			
+	  			convertDataSetToJSON();
+	  			
 	  			//setWebUserList(users);
-	  			subscribeToWebEvents();
+	  			/*subscribeToWebEvents();
 	  			
 	  			selectedUser = getUserFromId("sp10-01-19");
 	  			
@@ -157,13 +163,44 @@ public class App extends Application
 	  	    	repo.activateBead("AppInfoBead");
 	  	    	repo.initialize();
 	  	    	repo.saveRepoInstance();
-	  	    	repo.activateNotificationListener();
+	  	    	repo.activateNotificationListener();*/
 	  	    	
 	  	    	//launch(args);
 	  	    	//javafx.application.Application.launch(App.class);
 	  		  }
 	  		  @Override public void onCancelled(FirebaseError error) { }
 		});
+	}
+	
+	private static void convertDataSetToJSON(){
+
+			/**
+			 * Storing the upliftedNotification in the Triplet as a json string.
+			 */
+		
+		for(User user: users){
+			int id = 1;
+			for(Notification notification: user.getNotifications()){
+				notification.setId(id);
+				id++;
+				
+				notification.setAppRank(notification.getApp().getRank());
+			}
+		}
+			ObjectMapper mapper = new ObjectMapper();
+			Gson gson = new Gson();
+			try {
+				gson.toJson(users, new FileWriter("jsonUsers.json"));
+				
+				 
+		        mapper.writeValue(new FileWriter("jsonUsersJackson.json"), users);
+		        
+			} catch (JsonIOException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("Conversion and export finished.");
+			
 	}
 	
 	private static void subscribeToWebEvents(){

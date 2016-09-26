@@ -91,7 +91,7 @@ public class BaseNotificationQueryHelper {
     		
     		Notification n = new Notification();
     		n.setId(1234);
-    		n.setSendingUser(userB);
+    		//n.setSendingUser(userB);
     		
     		// Sender value and rank
     		String senderIdentity = senderReceiverRelationship(userA.getId(), userB.getId(), rs.getInt(3), c);
