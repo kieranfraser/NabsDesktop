@@ -125,6 +125,15 @@ public class App extends Application
 						e.printStackTrace();
 					}
 	  			}
+	  			for(User user: users){
+	  				int id = 1;
+	  				for(Notification notification: user.getNotifications()){
+	  					notification.setId(id);
+	  					id++;
+	  					
+	  					notification.setAppRank(notification.getApp().getRank());
+	  				}
+	  			}
 	  			
 	  			//convertDataToCSV();
 	  			
@@ -251,46 +260,61 @@ public class App extends Application
 		//selectedUserEvent();
 		selectedNotificationEvent();
 		notificationToFire();
+		singleNotificationToFire();
 	}
 	
 	private static void setUserObjectsInFirebase(){
-		for(User user: users){
-			int id = 1;
-			for(Notification notification: user.getNotifications()){
-				notification.setId(id);
-				id++;
-				
-				notification.setAppRank(notification.getApp().getRank());
-			}
-		}
 		FirebaseManager.getDatabase().child("web/test/").setValue(users);
 	}
 	
 	private static void notificationToFire(){
-		FirebaseManager.getDatabase().child("web/fire/").addValueEventListener( new ValueEventListener() {
+		FirebaseManager.getDatabase().child("web/fire").addValueEventListener( new ValueEventListener() {
 	  		  @Override
 	  		  public void onDataChange(DataSnapshot snapshot) {
-	  			if(snapshot.getValue()!=null){
-	  				HashMap result = snapshot.getValue(HashMap.class);
-	  				UpliftedNotification n = new UpliftedNotification();
-	  				HashMap app = (HashMap) result.get("app");
-	  				HashMap subject = (HashMap) result.get("subject");
-	  				
-	  				n.setNotificationId((Integer) result.get("id"));
-	  				
-	  				n.setSender((String) result.get("sender"));
-	  				n.setSubject((String) subject.get("subject"));
-	  				n.setApp((String) app.get("name"));
-	  				n.setDate(DateUtility.stringToDate((String) result.get("date")));
-	  				
-	  				n.setSenderRank((Integer) result.get("senderRank"));
-	  				n.setAppRank((Integer) result.get("appRank"));
-	  				n.setSubjectRank((Integer) result.get("subjectRank"));
-	  				n.setBodyRank((Integer) result.get("bodyRank"));
-	  				n.setDateRank((Integer) result.get("dateRank"));
-	  				fireNotification(n, "Custom");
-	  				
-	  			}
+	  			  if(snapshot.getValue() != null){
+		  				User user = getUserFromId((String) snapshot.getValue());
+			  			for(Notification n: user.getNotifications()){
+			  				UpliftedNotification nToSend = new UpliftedNotification();
+			  				nToSend.setSender(n.getSender());
+			  				nToSend.setSubject(n.getSubject().getSubject());
+			  				nToSend.setApp(n.getApp().getName());
+			  				nToSend.setNotificationId(n.getId());
+			  				nToSend.setSenderRank(n.getSenderRank());
+			  				nToSend.setSubjectRank(n.getSubjectRank());
+			  				nToSend.setAppRank(n.getAppRank());
+			  				nToSend.setDate(DateUtility.stringToDate(n.getDate()));
+			  				fireNotification(nToSend, "Custom");
+			  			}
+	  			  }
+	  		  }
+	  		  @Override public void onCancelled(FirebaseError error) {}
+		});
+	}
+	
+	private static void singleNotificationToFire(){
+		FirebaseManager.getDatabase().child("web/fireSingle").addValueEventListener( new ValueEventListener() {
+	  		  @Override
+	  		  public void onDataChange(DataSnapshot snapshot) {
+		  			if(snapshot.getValue()!=null){
+		  				HashMap result = snapshot.getValue(HashMap.class);
+		  				UpliftedNotification n = new UpliftedNotification();
+		  				HashMap app = (HashMap) result.get("app");
+		  				HashMap subject = (HashMap) result.get("subject");
+		  				
+		  				n.setNotificationId((Integer) result.get("id"));
+		  				
+		  				n.setSender((String) result.get("sender"));
+		  				n.setSubject((String) subject.get("subject"));
+		  				n.setApp((String) app.get("name"));
+		  				n.setDate(DateUtility.stringToDate((String) result.get("date")));
+		  				
+		  				n.setSenderRank((Integer) result.get("senderRank"));
+		  				n.setAppRank((Integer) result.get("appRank"));
+		  				n.setSubjectRank((Integer) result.get("subjectRank"));
+		  				
+		  				fireNotification(n, "Custom");
+		  				
+		  			}
 	  		  }
 	  		  @Override public void onCancelled(FirebaseError error) {}
 		});
