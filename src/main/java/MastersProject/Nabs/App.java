@@ -1,7 +1,9 @@
 package MastersProject.Nabs;
 
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -13,6 +15,8 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
+import org.mortbay.log.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.client.DataSnapshot;
@@ -125,6 +129,10 @@ public class App extends Application
 						e.printStackTrace();
 					}
 	  			}
+	  			
+	  			ArrayList<String> subjects = new ArrayList<String>();
+	  			
+	  			
 	  			for(User user: users){
 	  				int id = 1;
 	  				for(Notification notification: user.getNotifications()){
@@ -132,9 +140,26 @@ public class App extends Application
 	  					id++;
 	  					
 	  					notification.setAppRank(notification.getApp().getRank());
+	  					
+	  					if(!subjects.contains(notification.getSubject().getSubject().trim())){
+	  						subjects.add(notification.getSubject().getSubject());
+	  					}
 	  				}
 	  			}
-	  			
+	  			String subjectOutput = "";
+	  			for(String subject: subjects){
+	  				subjectOutput = subjectOutput+subject+"\n";
+	  			}
+	  			PrintWriter pr = null;
+				try {
+					pr = new PrintWriter("subjectOutput.txt");
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}    
+
+	  		    pr.println(subjectOutput);
+	  		    pr.close();
 	  			//convertDataToCSV();
 	  			
 	  			//setWebUserList(users);
@@ -150,7 +175,7 @@ public class App extends Application
 					e.printStackTrace();
 				}
 	  	    	
-	  	    	System.out.println("The total number of users: "+users.size());
+	  	    	/*System.out.println("The total number of users: "+users.size());
 	  	    	int countNotifications = 0;
 	  	    	int countEvents = 0;
 	  	    	int countUsersWithoutNotifications = 0;
@@ -162,7 +187,7 @@ public class App extends Application
 	  	    	}
 	  	    	System.out.println("The total number of notifications: "+countNotifications);
 	  	    	System.out.println("The total number of events: "+countEvents);
-	  	    	System.out.println("The total number of events: "+countUsersWithoutNotifications);
+	  	    	System.out.println("The total number of events: "+countUsersWithoutNotifications);*/
 	  	    	
 	  	    	
 	  	    	
@@ -258,6 +283,7 @@ public class App extends Application
 	
 	private static void subscribeToWebEvents(){
 		//selectedUserEvent();
+		subscribeToVariableValues();
 		selectedNotificationEvent();
 		notificationToFire();
 		singleNotificationToFire();
@@ -267,10 +293,30 @@ public class App extends Application
 		FirebaseManager.getDatabase().child("web/test/").setValue(users);
 	}
 	
+	private static int family = 0;
+	private static int work = 0;
+	private static int social = 0;
+	
+	private static void subscribeToVariableValues(){
+		FirebaseManager.getDatabase().child("web/variable").addValueEventListener( new ValueEventListener() {
+	  		  @Override
+	  		  public void onDataChange(DataSnapshot snapshot) {
+	  			  if(snapshot.getValue() != null){
+		  				HashMap subjectValues = snapshot.getValue(HashMap.class);
+		  				family = (int) subjectValues.get("family");
+		  				work = (int) subjectValues.get("work");
+		  				social = (int) subjectValues.get("social");
+	  			  }
+	  		  }
+	  		  @Override public void onCancelled(FirebaseError error) {}
+		});
+	}
+	
 	private static void notificationToFire(){
 		FirebaseManager.getDatabase().child("web/fire").addValueEventListener( new ValueEventListener() {
 	  		  @Override
 	  		  public void onDataChange(DataSnapshot snapshot) {
+	  			  System.out.println("*******************Firing notification******************************");
 	  			  if(snapshot.getValue() != null){
 		  				User user = getUserFromId((String) snapshot.getValue());
 			  			for(Notification n: user.getNotifications()){
@@ -283,6 +329,17 @@ public class App extends Application
 			  				nToSend.setSubjectRank(n.getSubjectRank());
 			  				nToSend.setAppRank(n.getAppRank());
 			  				nToSend.setDate(DateUtility.stringToDate(n.getDate()));
+			  				switch(n.getSubject().getSubject()){
+			  				case "family":
+			  					nToSend.setSubjectRank(family);
+			  					break;
+			  				case "work":
+			  					nToSend.setSubjectRank(work);
+			  					break;
+			  				case "social":
+			  					nToSend.setSubjectRank(social);
+			  					break;
+			  				}
 			  				fireNotification(nToSend, "Custom");
 			  			}
 	  			  }
@@ -328,10 +385,14 @@ public class App extends Application
 	  				HashMap result = snapshot.getValue(HashMap.class);
 	  				ArrayList<CalendarEvent> events = null;
 					try {
+						System.out.println("kieran fraser" + DateUtility.stringToDate((String) result.get("date")));
 						events = GoogleCalendarData.getNextNEvents((Integer) result.get("id"), DateUtility.stringToDate((String) result.get("date")));
 					} catch (NumberFormatException | ParseException | IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+					}
+					for(CalendarEvent event: events){
+						System.out.println("kieran " +event.getStartDate() );
 					}
 	  				
 	  				System.out.println(events.get(0).toString());

@@ -15,6 +15,7 @@ import MastersProject.Models.InfoItemFields;
 import MastersProject.Models.InformationBead;
 import MastersProject.Models.Triplet;
 import MastersProject.Nabs.App;
+import PhDProject.FriendsFamily.Models.Result;
 import PhDProject.Managers.FirebaseManager;
 
 @Entity
@@ -57,18 +58,14 @@ Runnable{
 	public void inferInfoBeadAttr() {
 		super.inferInfoBeadAttr();
 		
-		System.out.println("Sender input in alert bead: "+senderInput);
-		System.out.println("Subject input in alert bead: "+subjectInput);
-		System.out.println("Application input in alert bead: "+appInput);
-		System.out.println("Location input in alert bead: "+userLocation);
 		
 		// Mamdami inferrence controller 
 		AlertFuzzy alertFuzzy = new AlertFuzzy();
 		double inferredValue = alertFuzzy.processalert(senderInput, subjectInput, appInput);
-		System.out.println("Inferred minutes: "+inferredValue);
+		
 		//String result = "Receive Notification "+this.getPartNumber()+" in: "+DateUtility.cleanMinutes(inferredValue)+"\n";
 		
-		String result = "Receive Notification "+this.getPartNumber()+" at: \n";
+		String result = "";
 		
 		
 		// now - interrupt
@@ -148,7 +145,7 @@ Runnable{
 				this.getAttributeValueType()+"/").setValue((InformationBead) this);
 		
 		FirebaseManager.getDatabase().child("web/results/"+notificationIdPath).
-		setValue(this.getOperational().getInformationItem().getInformationValue());
+		setValue(new Result(notificationIdPath, this.getOperational().getInformationItem().getInformationValue()));
 	}
 
 	@Override
