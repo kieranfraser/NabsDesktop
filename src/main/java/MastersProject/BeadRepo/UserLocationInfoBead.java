@@ -100,6 +100,11 @@ Runnable{
 		
 		ArrayList<String> userDetails = EventInference.getCurrentLocationAndEventName(event, notification);
 		calendarLocation = userDetails.get(1);
+							
+		if( (notification.getDate().before(event.getEndDate()) || notification.getDate().equals(event.getEndDate())) 
+				&& (notification.getDate().after(event.getStartDate()) || notification.getDate().equals(event.getStartDate())) ){
+    		calendarLocation = "event";
+    	}
 				
 		this.run();
 	}
@@ -115,12 +120,21 @@ Runnable{
 			calendarLocation = "unknown";
 		}
 		System.out.println(calendarLocation);
-		if(calendarLocation.contains(userLocation) && !userLocation.contains("unknown")){ // if there's an event occurring and the user is attending it
+		/*if(calendarLocation.contains(userLocation) && !userLocation.contains("unknown")){ // if there's an event occurring and the user is attending it
 			inferredValue = 1.0;
 		}
 		else{ 
 			inferredValue = 0.0;
+		}*/
+		
+		if(calendarLocation == "event"){
+			inferredValue = 1.0;
 		}
+		else{
+			inferredValue = 0.0;
+		}
+		
+		System.out.println("kieran fraser "+calendarLocation+" "+inferredValue);
 		
 		Triplet operational = new Triplet();
 		InfoItemFields info = new InfoItemFields();

@@ -174,4 +174,12 @@ public class EventInference {
 		}
 		return result;
 	}
+	
+	public static boolean checkIfEventOccurring(UpliftedNotification notification){
+		boolean eventOccurring = false;
+		
+		
+		
+		return eventOccurring;
+	}
 }

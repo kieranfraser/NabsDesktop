@@ -70,17 +70,17 @@ Runnable{
 		
 		// now - interrupt
 		if(inferredValue<5.0){ 
-			result = result + "Notify now "+this.getPartNumber()+"\n";
+			result = result + "Now "+this.getPartNumber()+"\n";
 		
 		// verysoon - next break
 		}else if(inferredValue<15){ 
 			
 			if(userLocation == 1.0){ // if there's an event on
-				result = result + "at next break - "+App.getNextBreak()+" - "+this.getPartNumber()+"\n";
+				result = result + "Next break - "+App.getNextBreak()+" - "+this.getPartNumber()+"\n";
 				
 			}
 			else{
-				result = result + "Notify now "+this.getPartNumber()+"\n";
+				result = result + "Now "+this.getPartNumber()+"\n";
 			}
 		
 		// soon - next free period
@@ -88,18 +88,18 @@ Runnable{
 			
 			
 			if(userLocation == 1.0){
-				result = result + "Notify next free period - "+App.getNextFreePeriod()+" - "+this.getPartNumber()+"\n";
+				result = result + "Next free period "+App.getNextFreePeriod()+" - "+this.getPartNumber()+"\n";
 			}
 			else{
-				result = result + "Notify now "+this.getPartNumber()+"\n";
+				result = result + "Now "+this.getPartNumber()+"\n";
 			}
 			
 		// Later & Much Later	
 		}else if(inferredValue<60){ 
-			result = result + "Notify  Later-  next contextual relevant event - "+App.getNextContextRelevant()+" - "+"\n";
+			result = result + "Little Later "+App.getNextContextRelevant()+" - "+"\n";
 		}
 		else{
-			result = result + "Notify Much Later - next contextual relevant event - "+App.getNextContextRelevant()+" - "+"\n";
+			result = result + "Much Later "+App.getNextContextRelevant()+" - "+"\n";
 		}
 		//System.out.println(result);
 		//App.resultCallback.resultCallback(Integer.valueOf(this.getPartNumber()), result);
