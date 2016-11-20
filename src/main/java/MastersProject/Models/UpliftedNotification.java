@@ -25,7 +25,7 @@ public class UpliftedNotification implements Serializable{
 	private int appRank;
 	private int subjectRank;
 	private int bodyRank;
-	private int dateRank;
+	private int dateRank;	
 	
 	public int getSenderRank() {
 		return senderRank;

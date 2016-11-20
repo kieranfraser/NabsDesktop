@@ -17,6 +17,7 @@ import MastersProject.Models.Triplet;
 import MastersProject.Nabs.App;
 import PhDProject.FriendsFamily.Models.Result;
 import PhDProject.Managers.FirebaseManager;
+import PhDProject.Managers.StatisticsManager;
 
 @Entity
 @DiscriminatorValue("Alert")
@@ -135,17 +136,22 @@ Runnable{
 	}
 
 	/**
-	 * In this store - close the entity manager. Must ensure to open it again for the next notification.
-	 * em.close();
-	 * Push the value to a FireBase reference - for comparison of events in NabSim.
+	 * Changed for experiment 1 whereby the results are being stored in firebase under individual paramId, userId
+	 * and 
 	 */
 	@Override
 	public void storeInfoBeadAttr() {
-		FirebaseManager.getDatabase().child("BeadRepo/"+
+		/*FirebaseManager.getDatabase().child("BeadRepo/"+
 				this.getAttributeValueType()+"/").setValue((InformationBead) this);
 		
 		FirebaseManager.getDatabase().child("web/results/"+notificationIdPath).
-		setValue(new Result(notificationIdPath, this.getOperational().getInformationItem().getInformationValue()));
+		setValue(new Result(notificationIdPath, this.getOperational().getInformationItem().getInformationValue()));*/
+		
+		
+		/*FirebaseManager.getDatabase().child("Exp1/"+App.getCurrentParamId()+"/"+
+				App.getCurrentUserId()+"/"+notificationIdPath).
+		setValue(this.getOperational().getInformationItem().getInformationValue());*/
+		StatisticsManager.getStatsManager().updateStats(this.getOperational().getInformationItem().getInformationValue());
 	}
 
 	@Override

@@ -1,0 +1,25 @@
+particle 1 is updating position
+due to fitness value of: 159.68826907301064
+which is less than: 187.35849056603774
+[1, 2, 2, 2, 3, 1, 2, 3, 3, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 3, 2, 3, 1, 5, 5, 2, 4, 1, 5, 2, 2, 2, 4, 1, 5, 3, 2, 4, 3, 2, 2, 4, 4, 1, 3]
+[2, 2, 3, 1, 1, 2, 1, 1, 1, 3, 1, 2, 1, 1, 1, 2, 1, 1, 5, 2, 3, 1, 5, 3, 3, 3, 2, 5, 1, 5, 4, 2, 5, 5, 1, 1, 3, 1, 4, 1, 3, 5, 2, 2, 1]
+particle 8 is updating position
+due to fitness value of: 157.83429040196881
+which is less than: 159.68826907301064
+[3, 2, 3, 1, 1, 3, 1, 1, 1, 3, 1, 2, 1, 1, 1, 3, 1, 1, 5, 2, 2, 1, 5, 4, 4, 3, 3, 5, 1, 5, 3, 1, 5, 5, 1, 1, 4, 1, 3, 1, 3, 5, 1, 3, 1]
+[3, 2, 3, 1, 1, 2, 1, 1, 1, 3, 1, 1, 3, 1, 3, 1, 1, 3, 5, 4, 2, 4, 3, 4, 4, 4, 4, 2, 4, 5, 4, 2, 3, 2, 2, 1, 3, 1, 4, 1, 4, 5, 2, 4, 1]
+Iteration 1
+Current best percentage = 157.83429040196881
+3, 3, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 3, 1, 3, 1, 1, 3, 5, 3, 3, 3, 4, 3, 5, 5, 3, 3, 3, 5, 3, 1, 4, 1, 1, 1, 2, 1, 3, 1, 3, 5, 3, 5, 1, 
+-------------
+
+Current fitness of particle 0: 321.8785890073831
+Current fitness of particle 1: 159.68826907301064
+Current fitness of particle 2: 221.1320754716981
+Current fitness of particle 3: 179.61443806398688
+Current fitness of particle 4: 321.8785890073831
+Current fitness of particle 5: 273.5684987694832
+Current fitness of particle 6: 169.61443806398688
+Current fitness of particle 7: 168.8679245283019
+Current fitness of particle 8: 157.83429040196881
+Current fitness of particle 9: 230.0

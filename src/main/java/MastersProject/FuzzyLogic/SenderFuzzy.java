@@ -14,13 +14,19 @@ import com.fuzzylite.term.ZShape;
 import com.fuzzylite.variable.InputVariable;
 import com.fuzzylite.variable.OutputVariable;
 
+import PhDProject.Managers.ParameterManager;
+
 public class SenderFuzzy {
 	Engine engine;
 	InputVariable senderImportance;
 	InputVariable eventRelevance;
 	OutputVariable senderRelevance;
 	
+	String[] params;
+	
 	public SenderFuzzy(){
+		params = ParameterManager.getParamManager().getSenderParams();
+		
 	    engine = new Engine();
 	    engine.setName("sender-context");
 	
@@ -55,15 +61,15 @@ public class SenderFuzzy {
 		engine.addOutputVariable(senderRelevance);
 		
 		RuleBlock ruleBlock = new RuleBlock();
-		ruleBlock.addRule(Rule.parse("if SenderImportance is NIP and EventRelevance is NOTRELEVANT then SenderRelevance is LOW", engine));
-		ruleBlock.addRule(Rule.parse("if SenderImportance is IMPORTANT and EventRelevance is NOTRELEVANT then SenderRelevance is MEDIUM", engine));
-		ruleBlock.addRule(Rule.parse("if SenderImportance is VIP and EventRelevance is NOTRELEVANT then SenderRelevance is MEDIUM", engine));
-		ruleBlock.addRule(Rule.parse("if SenderImportance is NIP and EventRelevance is RELEVANT then SenderRelevance is LOW", engine));
-		ruleBlock.addRule(Rule.parse("if SenderImportance is IMPORTANT and EventRelevance is RELEVANT then SenderRelevance is MEDIUM", engine));
-		ruleBlock.addRule(Rule.parse("if SenderImportance is VIP and EventRelevance is RELEVANT then SenderRelevance is HIGH", engine));
-		ruleBlock.addRule(Rule.parse("if SenderImportance is NIP and EventRelevance is VERYRELEVANT then SenderRelevance is MEDIUM", engine));
-		ruleBlock.addRule(Rule.parse("if SenderImportance is IMPORTANT and EventRelevance is VERYRELEVANT then SenderRelevance is HIGH", engine));
-		ruleBlock.addRule(Rule.parse("if SenderImportance is VIP and EventRelevance is VERYRELEVANT then SenderRelevance is HIGH", engine));
+		ruleBlock.addRule(Rule.parse("if SenderImportance is NIP and EventRelevance is NOTRELEVANT then SenderRelevance is "+params[0], engine));
+		ruleBlock.addRule(Rule.parse("if SenderImportance is IMPORTANT and EventRelevance is NOTRELEVANT then SenderRelevance is "+params[1], engine));
+		ruleBlock.addRule(Rule.parse("if SenderImportance is VIP and EventRelevance is NOTRELEVANT then SenderRelevance is "+params[2], engine));
+		ruleBlock.addRule(Rule.parse("if SenderImportance is NIP and EventRelevance is RELEVANT then SenderRelevance is "+params[3], engine));
+		ruleBlock.addRule(Rule.parse("if SenderImportance is IMPORTANT and EventRelevance is RELEVANT then SenderRelevance is "+params[4], engine));
+		ruleBlock.addRule(Rule.parse("if SenderImportance is VIP and EventRelevance is RELEVANT then SenderRelevance is "+params[5], engine));
+		ruleBlock.addRule(Rule.parse("if SenderImportance is NIP and EventRelevance is VERYRELEVANT then SenderRelevance is "+params[6], engine));
+		ruleBlock.addRule(Rule.parse("if SenderImportance is IMPORTANT and EventRelevance is VERYRELEVANT then SenderRelevance is "+params[7], engine));
+		ruleBlock.addRule(Rule.parse("if SenderImportance is VIP and EventRelevance is VERYRELEVANT then SenderRelevance is "+params[8], engine));
 		engine.addRuleBlock(ruleBlock);
 		
 									// conjunction, disjunction, implication, accumulation, defuzzifier

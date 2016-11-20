@@ -7,14 +7,21 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.mortbay.log.Log;
 
@@ -45,9 +52,12 @@ import PhDProject.FriendsFamily.Models.MobileApp;
 import PhDProject.FriendsFamily.Models.Notification;
 import PhDProject.FriendsFamily.Models.Subject;
 import PhDProject.FriendsFamily.Models.User;
+import PhDProject.FriendsFamily.PSO.Particle;
 import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
 import PhDProject.Managers.BeadRepoManager;
 import PhDProject.Managers.FirebaseManager;
+import PhDProject.Managers.ParameterManager;
+import PhDProject.Managers.StatisticsManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -92,6 +102,9 @@ public class App extends Application
 	private static User selectedUser;
 	
 	public static ResultCallback resultCallback;
+	
+	private static BeadRepoManager repo;
+	private static int paramId;
 
 	public static void main( String[] args ) throws SQLException, ParseException, IOException
     {
@@ -146,7 +159,9 @@ public class App extends Application
 	  					}
 	  				}
 	  			}
-	  			String subjectOutput = "";
+	  			
+	  			
+	  			/*String subjectOutput = "";
 	  			for(String subject: subjects){
 	  				subjectOutput = subjectOutput+subject+"\n";
 	  			}
@@ -159,21 +174,15 @@ public class App extends Application
 				}    
 
 	  		    pr.println(subjectOutput);
-	  		    pr.close();
+	  		    pr.close();*/
 	  			//convertDataToCSV();
 	  			
 	  			//setWebUserList(users);
-	  			subscribeToWebEvents();
+	  			//subscribeToWebEvents();
 	  			
-	  			selectedUser = getUserFromId("sp10-01-19");
 	  			
-	  			try {
-					selectedUser.printEvents();
-		  			selectedUser.printNotifications();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				/*selectedUser.printEvents();
+				selectedUser.printNotifications();*/
 	  	    	
 	  	    	/*System.out.println("The total number of users: "+users.size());
 	  	    	int countNotifications = 0;
@@ -191,7 +200,7 @@ public class App extends Application
 	  	    	
 	  	    	
 	  	    	
-	  	    	BeadRepoManager repo = new BeadRepoManager();
+	  	    	repo = new BeadRepoManager();
 	  	    	repo.activateBead("SenderInfoBead");
 	  	    	repo.activateBead("SubjectInfoBead");
 	  	    	repo.activateBead("AlertInfoBead");
@@ -199,8 +208,11 @@ public class App extends Application
 	  	    	repo.activateBead("NotificationInfoBead");
 	  	    	repo.activateBead("AppInfoBead");
 	  	    	repo.initialize();
-	  	    	repo.saveRepoInstance();
-	  	    	repo.activateNotificationListener();
+	  	    	//repo.saveRepoInstance();
+	  	    	//repo.activateNotificationListener();
+	  	    	
+	  	    	//experiment1();
+	  	    	experiment2();
 	  	    	
 	  	    	//launch(args);
 	  	    	//javafx.application.Application.launch(App.class);
@@ -657,4 +669,211 @@ public class App extends Application
 		}
 	}
 	
+	public static ArrayList<Integer> gBestPosition;
+	public static double[] gBestPercent;
+	private static ArrayList<Particle> particles;
+	private static PrintWriter pr;
+	private static String textName = "PSO.txt";
+	private static ArrayList<User> relevantUsers;
+	
+	private static ArrayList<double[]> particleFitness;
+	
+	public static void experiment2(){
+		Integer[] optimal = {1, 1, 1, 1, 2, 2, 1, 3, 1, 1, 1, 1, 2, 1, 1, 1, 2, 3, 2, 5, 5, 1, 5, 5, 4, 4, 4, 3, 4, 3, 3, 2, 5, 2, 5, 3, 5, 2, 5, 3, 2, 4, 2, 1, 3};
+		relevantUsers = findRelevantUsers();
+		
+		ArrayList<User> givenUser = new ArrayList<User>();
+		System.out.println("notification size: "+relevantUsers.get(1).getNotifications().size());
+		givenUser.add(relevantUsers.get(1));
+		relevantUsers = givenUser;
+		
+		List<Integer> converting = Arrays.asList(optimal);
+		ArrayList<Integer> converted = new ArrayList<Integer>();
+		for(int val:converting){
+			converted.add(val);
+		}
+		gBestPosition = converted;
+		testFinalResult();
+	}
+	
+	public static void experiment1(){
+		System.out.println("Experiment PSO");
+		pr = null;
+		try {
+			pr = new PrintWriter(textName);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}    
+		
+		relevantUsers = findRelevantUsers();
+		ArrayList<User> givenUser = new ArrayList<User>();
+		System.out.println("notification size: "+relevantUsers.get(1).getNotifications().size());
+		givenUser.add(relevantUsers.get(1));
+		relevantUsers = givenUser;
+		
+		particleFitness = new ArrayList<double[]>();
+		
+		particles = new ArrayList<Particle>();
+		for(int i=0; i<15; i++){
+			particles.add(new Particle());
+		}
+		gBestPosition = new ArrayList<Integer>();
+		
+		for(int iterations=0; iterations<5; iterations++){
+			
+			iteration(iterations);
+			pr.println(Arrays.toString(gBestPercent));
+			pr.println(gBestPosition);
+		}
+		
+	    pr.close();
+	}
+	
+	private static void printStats(int iterations){
+		    pr.println("Iteration "+iterations);
+		    pr.println("Best Fitness\n"+Arrays.toString(gBestPercent));
+		    pr.println("Best Position\n"+gBestPosition);
+		    pr.println("\n-------------\n");
+		    int i=0;
+		    for(double[] value : particleFitness){
+		    	pr.println("Current fitness of particle "+i+"\n: "+Arrays.toString(value)+"\n");
+		    	i++;
+		    }
+	}
+	
+	private static void iteration(int iteration){
+		int i = 0;
+		particleFitness = new ArrayList<double[]>();
+		for(Particle p:particles){
+			double[] fitnessValue = fitnessFunction(p);
+			ArrayList<Integer> position = p.getCurrentPosition();
+			p.setCurrentFitness(fitnessValue);
+			particleFitness.add(i, fitnessValue);
+			if(StatisticsManager.checkLessThanEqual(fitnessValue, p.getpBestPercentage())){
+				p.setpBestPercentage(fitnessValue);
+				p.setpBestPosition(p.getCurrentPosition());
+			}
+			if(StatisticsManager.checkLessThanEqual(fitnessValue, gBestPercent)){
+				pr.println("particle "+i+" is updating position");
+				pr.println("due to fitness value of: \n"+Arrays.toString(fitnessValue));
+				pr.println("which is less than: \n"+Arrays.toString(gBestPercent));
+				pr.println("\n");
+				
+				gBestPercent = fitnessValue;
+				gBestPosition = position;
+				
+				pr.println(gBestPosition);
+				pr.println(p.getCurrentPosition());
+			}
+			i++;
+		}
+		printStats(iteration);
+		
+		for(Particle p: particles){
+			p.updateVelocity();
+			if(p.checkPositionSameAs(gBestPosition)){
+				p.explore();
+			}
+		}
+	}
+	
+	private static double[] fitnessFunction(Particle p){
+		// Set current particles params to the fuzzy classes
+		ParameterManager paramManager = ParameterManager.getParamManager();
+		paramManager.setSenderParams(p.getSenderParams().toArray(new String[p.getSenderParams().size()]));
+		paramManager.setSubjectParams(p.getSubjectParams().toArray(new String[p.getSubjectParams().size()]));
+		paramManager.setAlertParams(p.getAlertParams().toArray( new String[p.getAlertParams().size()] ) );
+		
+		for(User possibleUser: relevantUsers){
+			selectedUser = possibleUser;
+			for(Notification n: possibleUser.getNotifications()){
+					UpliftedNotification nToSend = new UpliftedNotification();
+					nToSend.setSender(n.getSender());
+					nToSend.setSubject(n.getSubject().getSubject());
+					nToSend.setApp(n.getApp().getName());
+					nToSend.setNotificationId(n.getId());
+					nToSend.setSenderRank(n.getSenderRank());
+					nToSend.setSubjectRank(n.getSubjectRank());
+					nToSend.setAppRank(n.getAppRank());
+					nToSend.setDate(DateUtility.stringToDate(n.getDate()));
+					switch(n.getSubject().getSubject()){
+					case "family":
+						nToSend.setSubjectRank(family);
+						break;
+					case "work":
+						nToSend.setSubjectRank(work);
+						break;
+					case "social":
+						nToSend.setSubjectRank(social);
+						break;
+					}
+					repo.activateNotification(nToSend);
+			}
+		}
+		double[] fitnessValue = StatisticsManager.getStatsManager().workFunction();
+		StatisticsManager.getStatsManager().reset();
+		return fitnessValue;
+	}
+	
+	private static ArrayList<User> findRelevantUsers(){
+		ArrayList<User> foundUsers = new ArrayList<User>();
+		for(User possibleUser: users){
+			for(Notification n: possibleUser.getNotifications()){
+				if(n.getSubject().getSubject().contains("social") || n.getSubject().getSubject().contains("work")){
+
+					foundUsers.add(possibleUser);
+					break;
+					/*if(foundUsers.size()<1){
+						foundUsers.add(possibleUser);
+						break;
+					}*/
+				}
+			}
+		}
+		System.out.println("Size of found users: "+foundUsers.size());
+		return foundUsers;
+	}
+	
+	private static void testFinalResult(){
+
+		StatisticsManager.getStatsManager().reset();
+		// Set current particles params to the fuzzy classes
+		ArrayList<String> gBest = ParameterManager.convertBestToParamArray(gBestPosition);
+		ParameterManager paramManager = ParameterManager.getParamManager();
+		paramManager.setSenderParams(ParameterManager.getSenderParams(gBest));
+		paramManager.setSubjectParams(ParameterManager.getSubjectParams(gBest));
+		paramManager.setAlertParams(ParameterManager.getAlertParams(gBest));
+		
+		for(User possibleUser: relevantUsers){
+			selectedUser = possibleUser;
+			for(Notification n: possibleUser.getNotifications()){
+					UpliftedNotification nToSend = new UpliftedNotification();
+					nToSend.setSender(n.getSender());
+					nToSend.setSubject(n.getSubject().getSubject());
+					nToSend.setApp(n.getApp().getName());
+					nToSend.setNotificationId(n.getId());
+					nToSend.setSenderRank(n.getSenderRank());
+					nToSend.setSubjectRank(n.getSubjectRank());
+					nToSend.setAppRank(n.getAppRank());
+					nToSend.setDate(DateUtility.stringToDate(n.getDate()));
+					switch(n.getSubject().getSubject()){
+					case "family":
+						nToSend.setSubjectRank(family);
+						break;
+					case "work":
+						nToSend.setSubjectRank(work);
+						break;
+					case "social":
+						nToSend.setSubjectRank(social);
+						break;
+					}
+					repo.activateNotification(nToSend);
+			}
+		}
+		double[] fitnessValue = StatisticsManager.getStatsManager().workFunction();
+		System.out.print("Fitness value: "+Arrays.toString(fitnessValue));
+		StatisticsManager.getStatsManager().printStats();
+		StatisticsManager.getStatsManager().reset();
+	}
 }

@@ -17,6 +17,7 @@ import MastersProject.Constants.ActivationType;
 import MastersProject.Constants.BeadType;
 import MastersProject.Interface.BeadInputInterface;
 import MastersProject.Models.InformationBead;
+import MastersProject.Models.UpliftedNotification;
 
 public class BeadRepoManager {
 	
@@ -89,15 +90,15 @@ public class BeadRepoManager {
 			try{
 				Method getAuthorizedListeners = bead.getClass().getMethod("getAuthorizationToSendToID", null);
 				ArrayList<String> authorizedListeners = (ArrayList<String>) getAuthorizedListeners.invoke(bead, null);	
-				
-				for(String beadName: authorizedListeners){
-					Object listenerBead = activeBeadObjects.get(beadName);
-					if(listenerBead != null){
-						Method addListener = bead.getClass().getMethod("addListener", BeadInputInterface.class);
-						addListener.invoke(bead, (BeadInputInterface) listenerBead);
+				if(authorizedListeners != null){
+					for(String beadName: authorizedListeners){
+						Object listenerBead = activeBeadObjects.get(beadName);
+						if(listenerBead != null){
+							Method addListener = bead.getClass().getMethod("addListener", BeadInputInterface.class);
+							addListener.invoke(bead, (BeadInputInterface) listenerBead);
+						}
 					}
 				}
-				
 			} catch(Exception e){
 				System.out.println("Connect bead error: "+bead);
 			}
@@ -131,4 +132,12 @@ public class BeadRepoManager {
 			bead.notificationReceived();
 		}
 	}
+	
+	public void activateNotification(UpliftedNotification notification){
+		if(activeBeadObjects.get(NotificationInfoBead.NAME)!=null){
+			NotificationInfoBead bead = (NotificationInfoBead) activeBeadObjects.get(NotificationInfoBead.NAME);
+			bead.notificationToCompute(notification);
+		}
+	}
+
 }

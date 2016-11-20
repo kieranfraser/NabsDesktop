@@ -13,13 +13,19 @@ import com.fuzzylite.term.ZShape;
 import com.fuzzylite.variable.InputVariable;
 import com.fuzzylite.variable.OutputVariable;
 
+import PhDProject.Managers.ParameterManager;
+
 public class SubjectFuzzy {
 	Engine engine;
 	InputVariable subjectImportance;
 	InputVariable eventRelevance;
 	OutputVariable subjectRelevance;
 	
+	String[] params;
+	
 	public SubjectFuzzy(){
+		params = ParameterManager.getParamManager().getSubjectParams();
+		
 	    engine = new Engine();
 	    engine.setName("subject-context");
 	
@@ -54,15 +60,15 @@ public class SubjectFuzzy {
 		engine.addOutputVariable(subjectRelevance);
 		
 		RuleBlock ruleBlock = new RuleBlock();
-		ruleBlock.addRule(Rule.parse("if subjectImportance is NIP and EventRelevance is NOTRELEVANT then subjectRelevance is LOW", engine));
-		ruleBlock.addRule(Rule.parse("if subjectImportance is IMPORTANT and EventRelevance is NOTRELEVANT then subjectRelevance is MEDIUM", engine));
-		ruleBlock.addRule(Rule.parse("if subjectImportance is VIP and EventRelevance is NOTRELEVANT then subjectRelevance is MEDIUM", engine));
-		ruleBlock.addRule(Rule.parse("if subjectImportance is NIP and EventRelevance is RELEVANT then subjectRelevance is MEDIUM", engine));
-		ruleBlock.addRule(Rule.parse("if subjectImportance is IMPORTANT and EventRelevance is RELEVANT then subjectRelevance is HIGH", engine));
-		ruleBlock.addRule(Rule.parse("if subjectImportance is VIP and EventRelevance is RELEVANT then subjectRelevance is HIGH", engine));
-		ruleBlock.addRule(Rule.parse("if subjectImportance is NIP and EventRelevance is VERYRELEVANT then subjectRelevance is MEDIUM", engine));
-		ruleBlock.addRule(Rule.parse("if subjectImportance is IMPORTANT and EventRelevance is VERYRELEVANT then subjectRelevance is HIGH", engine));
-		ruleBlock.addRule(Rule.parse("if subjectImportance is VIP and EventRelevance is VERYRELEVANT then subjectRelevance is HIGH", engine));
+		ruleBlock.addRule(Rule.parse("if subjectImportance is NIP and EventRelevance is NOTRELEVANT then subjectRelevance is "+params[0], engine));
+		ruleBlock.addRule(Rule.parse("if subjectImportance is IMPORTANT and EventRelevance is NOTRELEVANT then subjectRelevance is "+params[1], engine));
+		ruleBlock.addRule(Rule.parse("if subjectImportance is VIP and EventRelevance is NOTRELEVANT then subjectRelevance is "+params[2], engine));
+		ruleBlock.addRule(Rule.parse("if subjectImportance is NIP and EventRelevance is RELEVANT then subjectRelevance is "+params[3], engine));
+		ruleBlock.addRule(Rule.parse("if subjectImportance is IMPORTANT and EventRelevance is RELEVANT then subjectRelevance is "+params[4], engine));
+		ruleBlock.addRule(Rule.parse("if subjectImportance is VIP and EventRelevance is RELEVANT then subjectRelevance is "+params[5], engine));
+		ruleBlock.addRule(Rule.parse("if subjectImportance is NIP and EventRelevance is VERYRELEVANT then subjectRelevance is "+params[6], engine));
+		ruleBlock.addRule(Rule.parse("if subjectImportance is IMPORTANT and EventRelevance is VERYRELEVANT then subjectRelevance is "+params[7], engine));
+		ruleBlock.addRule(Rule.parse("if subjectImportance is VIP and EventRelevance is VERYRELEVANT then subjectRelevance is "+params[8], engine));
 		engine.addRuleBlock(ruleBlock);
 		
 

@@ -20,6 +20,7 @@ import MastersProject.Models.InformationBead;
 import MastersProject.Models.Triplet;
 import MastersProject.Models.UpliftedNotification;
 import PhDProject.Managers.FirebaseManager;
+import PhDProject.Managers.StatisticsManager;
 
 @Entity
 @DiscriminatorValue("Notification")
@@ -78,6 +79,40 @@ public class NotificationInfoBead extends InformationBead implements BeadInputIn
 			}
 			@Override public void onCancelled(FirebaseError error) { }
   		});
+	}
+	
+	public void notificationToCompute(UpliftedNotification notification){
+		Date receivedNotificationDate = new Date();
+		activate();
+		Triplet operational = new Triplet();
+		operational.setDetectionTime(receivedNotificationDate);
+		
+		InfoItemFields information = new InfoItemFields();
+		ObjectMapper mapper = new ObjectMapper();
+		String notificationString = null;
+		try {
+			 notificationString = mapper.writeValueAsString(notification);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		information.setInformationValue(notificationString);
+		information.setInfoAccuracy(100.0);
+		information.setInfoConfidenceLevel(100.0);
+		information.setInfoValidFrom(receivedNotificationDate);
+		information.setInfoBeadId(notification.getNotificationId());
+		
+		operational.setInformationItem(information);
+		setOperational(operational);
+		
+		// For experimental purposes - need the time/date of current notification
+		StatisticsManager.getStatsManager().setCurrentNotification(notification);
+		
+		// Update the bead in database
+		storeInfoBeadAttr();
+		
+		// push triplet to listening beads - sender, subject
+		sendToConsumer(getId(), receivedNotificationDate, operational);
 	}
 
 	

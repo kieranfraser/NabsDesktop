@@ -1,0 +1,20 @@
+particle 3 is updating position
+due to fitness value of: 129.90976210008205
+which is less than: 136.43150123051683
+[3, 1, 3, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 3, 1, 1, 1, 1, 4, 1, 5, 1, 1, 5, 1, 1, 1, 1, 1, 5, 5, 5, 5, 1, 4, 1, 5, 1, 1, 5, 1, 4, 1]
+[3, 1, 3, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 3, 1, 1, 3, 4, 3, 1, 5, 1, 3, 5, 3, 2, 1, 2, 4, 4, 5, 5, 2, 1, 4, 1, 5, 1, 1, 5, 1, 4, 1]
+Iteration 5
+Current best percentage = 129.90976210008205
+1, 1, 3, 1, 1, 1, 2, 2, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 2, 3, 2, 1, 3, 5, 2, 5, 2, 1, 1, 1, 4, 5, 5, 5, 3, 1, 3, 1, 5, 1, 1, 5, 1, 5, 1, 
+-------------
+
+Current fitness of particle 0: 223.76538146021326
+Current fitness of particle 1: 195.32403609515998
+Current fitness of particle 2: 198.695652173913
+Current fitness of particle 3: 129.90976210008205
+Current fitness of particle 4: 188.1132075471698
+Current fitness of particle 5: 180.56603773584905
+Current fitness of particle 6: 194.6349466776046
+Current fitness of particle 7: 211.84577522559476
+Current fitness of particle 8: 153.2813781788351
+Current fitness of particle 9: 144.87284659557014

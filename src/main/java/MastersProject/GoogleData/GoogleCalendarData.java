@@ -202,6 +202,7 @@ public class GoogleCalendarData {
     
     private static void addMorningEvent(User user, LocalDateTime notificationDate, boolean greaterDate){
     	PhDProject.FriendsFamily.Models.Event newEvent = new PhDProject.FriendsFamily.Models.Event();
+    	System.out.println(user.isStudent());
 		newEvent.setFixedEventMorning(user.isStudent(), notificationDate);
 		if(DateFormatUtility.checkBeforeHour(notificationDate, newEvent.getInferredEndDate())){
 			possibleEvents.add(newEvent);

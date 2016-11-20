@@ -1,0 +1,15 @@
+Iteration 4
+Current best percentage = 136.43150123051683
+3, 1, 3, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1, 3, 1, 1, 1, 1, 3, 1, 5, 2, 1, 5, 1, 1, 1, 1, 1, 5, 5, 5, 5, 1, 3, 1, 5, 1, 1, 5, 1, 3, 1, 
+-------------
+
+Current fitness of particle 0: 174.34782608695653
+Current fitness of particle 1: 180.6726825266612
+Current fitness of particle 2: 257.67022149302704
+Current fitness of particle 3: 224.47087776866286
+Current fitness of particle 4: 162.149302707137
+Current fitness of particle 5: 154.2411812961444
+Current fitness of particle 6: 168.95816242821988
+Current fitness of particle 7: 272.7153404429861
+Current fitness of particle 8: 225.93929450369154
+Current fitness of particle 9: 162.26415094339623
