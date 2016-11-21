@@ -118,7 +118,7 @@ public class App extends Application
     	selectedUser = getUserFromId("sp10-01-05");
     	System.out.println(selectedUser.getId());*/
     	//FirebaseManager.getDatabase().child("FriendsFamily/users/").setValue(selectedUser);
-    	    	
+    	System.out.println("Have actually started..");
     	initNabsServer();
     	
     	//users = User.getAllUsers(em);
@@ -211,8 +211,8 @@ public class App extends Application
 	  	    	//repo.saveRepoInstance();
 	  	    	//repo.activateNotificationListener();
 	  	    	
-	  	    	//experiment1();
-	  	    	experiment2();
+	  	    	experiment1();
+	  	    	//experiment2();
 	  	    	
 	  	    	//launch(args);
 	  	    	//javafx.application.Application.launch(App.class);
@@ -675,11 +675,12 @@ public class App extends Application
 	private static PrintWriter pr;
 	private static String textName = "PSO.txt";
 	private static ArrayList<User> relevantUsers;
+	private static User relevantUser;
 	
 	private static ArrayList<double[]> particleFitness;
 	
 	public static void experiment2(){
-		Integer[] optimal = {1, 1, 1, 1, 2, 2, 1, 3, 1, 1, 1, 1, 2, 1, 1, 1, 2, 3, 2, 5, 5, 1, 5, 5, 4, 4, 4, 3, 4, 3, 3, 2, 5, 2, 5, 3, 5, 2, 5, 3, 2, 4, 2, 1, 3};
+		Integer[] optimal = {3, 3, 1, 2, 2, 1, 2, 3, 2, 2, 1, 1, 3, 3, 3, 1, 1, 1, 3, 1, 4, 4, 5, 2, 5, 3, 3, 4, 5, 3, 2, 4, 2, 3, 5, 3, 3, 5, 3, 1, 4, 4, 5, 3, 2};
 		relevantUsers = findRelevantUsers();
 		
 		ArrayList<User> givenUser = new ArrayList<User>();
@@ -699,35 +700,41 @@ public class App extends Application
 	public static void experiment1(){
 		System.out.println("Experiment PSO");
 		pr = null;
-		try {
-			pr = new PrintWriter(textName);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}    
+		   
 		
 		relevantUsers = findRelevantUsers();
-		ArrayList<User> givenUser = new ArrayList<User>();
+		/*ArrayList<User> givenUser = new ArrayList<User>();
 		System.out.println("notification size: "+relevantUsers.get(1).getNotifications().size());
 		givenUser.add(relevantUsers.get(1));
-		relevantUsers = givenUser;
-		
-		particleFitness = new ArrayList<double[]>();
-		
-		particles = new ArrayList<Particle>();
-		for(int i=0; i<15; i++){
-			particles.add(new Particle());
-		}
-		gBestPosition = new ArrayList<Integer>();
-		
-		for(int iterations=0; iterations<5; iterations++){
+		relevantUsers = givenUser;*/
+		for(User user: relevantUsers){
+			try {
+				pr = new PrintWriter(user.getId()+".txt");
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} 
 			
-			iteration(iterations);
-			pr.println(Arrays.toString(gBestPercent));
-			pr.println(gBestPosition);
+			relevantUser = user;
+			particleFitness = new ArrayList<double[]>();
+			
+			particles = new ArrayList<Particle>();
+			for(int i=0; i<15; i++){
+				particles.add(new Particle());
+			}
+			gBestPosition = new ArrayList<Integer>();
+			gBestPercent = null;
+			
+			for(int iterations=0; iterations<5; iterations++){
+				
+				iteration(iterations);
+				pr.println(Arrays.toString(gBestPercent));
+				pr.println(gBestPosition);
+			}
+			StatisticsManager.saveOptimalStats(relevantUser.getId(), gBestPosition, Arrays.toString(gBestPercent));
+		    pr.close();
 		}
 		
-	    pr.close();
 	}
 	
 	private static void printStats(int iterations){
@@ -761,6 +768,7 @@ public class App extends Application
 				pr.println("\n");
 				
 				gBestPercent = fitnessValue;
+				gBestPosition = new ArrayList<Integer>();
 				gBestPosition = position;
 				
 				pr.println(gBestPosition);
@@ -771,10 +779,10 @@ public class App extends Application
 		printStats(iteration);
 		
 		for(Particle p: particles){
-			p.updateVelocity();
-			if(p.checkPositionSameAs(gBestPosition)){
-				p.explore();
+			if(!p.checkPositionSameAs(gBestPosition)){
+				p.updateVelocity();
 			}
+			pr.println(gBestPosition);
 		}
 	}
 	
@@ -785,32 +793,32 @@ public class App extends Application
 		paramManager.setSubjectParams(p.getSubjectParams().toArray(new String[p.getSubjectParams().size()]));
 		paramManager.setAlertParams(p.getAlertParams().toArray( new String[p.getAlertParams().size()] ) );
 		
-		for(User possibleUser: relevantUsers){
-			selectedUser = possibleUser;
-			for(Notification n: possibleUser.getNotifications()){
-					UpliftedNotification nToSend = new UpliftedNotification();
-					nToSend.setSender(n.getSender());
-					nToSend.setSubject(n.getSubject().getSubject());
-					nToSend.setApp(n.getApp().getName());
-					nToSend.setNotificationId(n.getId());
-					nToSend.setSenderRank(n.getSenderRank());
-					nToSend.setSubjectRank(n.getSubjectRank());
-					nToSend.setAppRank(n.getAppRank());
-					nToSend.setDate(DateUtility.stringToDate(n.getDate()));
-					switch(n.getSubject().getSubject()){
-					case "family":
-						nToSend.setSubjectRank(family);
-						break;
-					case "work":
-						nToSend.setSubjectRank(work);
-						break;
-					case "social":
-						nToSend.setSubjectRank(social);
-						break;
-					}
-					repo.activateNotification(nToSend);
-			}
+		//for(User possibleUser: relevantUsers){
+		selectedUser = relevantUser;
+		for(Notification n: relevantUser.getNotifications()){
+				UpliftedNotification nToSend = new UpliftedNotification();
+				nToSend.setSender(n.getSender());
+				nToSend.setSubject(n.getSubject().getSubject());
+				nToSend.setApp(n.getApp().getName());
+				nToSend.setNotificationId(n.getId());
+				nToSend.setSenderRank(n.getSenderRank());
+				nToSend.setSubjectRank(n.getSubjectRank());
+				nToSend.setAppRank(n.getAppRank());
+				nToSend.setDate(DateUtility.stringToDate(n.getDate()));
+				switch(n.getSubject().getSubject()){
+				case "family":
+					nToSend.setSubjectRank(family);
+					break;
+				case "work":
+					nToSend.setSubjectRank(work);
+					break;
+				case "social":
+					nToSend.setSubjectRank(social);
+					break;
+				}
+				repo.activateNotification(nToSend);
 		}
+		//}
 		double[] fitnessValue = StatisticsManager.getStatsManager().workFunction();
 		StatisticsManager.getStatsManager().reset();
 		return fitnessValue;
