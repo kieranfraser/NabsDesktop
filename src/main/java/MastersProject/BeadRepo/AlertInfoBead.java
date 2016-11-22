@@ -141,17 +141,18 @@ Runnable{
 	 */
 	@Override
 	public void storeInfoBeadAttr() {
-		/*FirebaseManager.getDatabase().child("BeadRepo/"+
+		FirebaseManager.getDatabase().child("BeadRepo/"+
 				this.getAttributeValueType()+"/").setValue((InformationBead) this);
 		
 		FirebaseManager.getDatabase().child("web/results/"+notificationIdPath).
-		setValue(new Result(notificationIdPath, this.getOperational().getInformationItem().getInformationValue()));*/
+		setValue(new Result(notificationIdPath, this.getOperational().getInformationItem().getInformationValue()));
 		
 		
 		/*FirebaseManager.getDatabase().child("Exp1/"+App.getCurrentParamId()+"/"+
 				App.getCurrentUserId()+"/"+notificationIdPath).
 		setValue(this.getOperational().getInformationItem().getInformationValue());*/
-		StatisticsManager.getStatsManager().updateStats(this.getOperational().getInformationItem().getInformationValue());
+		
+		//StatisticsManager.getStatsManager().updateStats(this.getOperational().getInformationItem().getInformationValue());
 	}
 
 	@Override

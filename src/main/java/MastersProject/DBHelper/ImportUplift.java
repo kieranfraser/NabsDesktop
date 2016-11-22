@@ -21,6 +21,8 @@ import MastersProject.Models.UpliftedNotification;
 
 public class ImportUplift {
 	
+	public static final String[] realWorldFiles = {"kieranJan20","kieranJan21","kieranJan22","owenDec02","owenDec10","owenDec16"};
+	
 	/**
 	 * Table names
 	 */

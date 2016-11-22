@@ -43,6 +43,7 @@ import MastersProject.BeadRepo.NotificationInfoBead;
 import MastersProject.BeadRepo.SenderInfoBead;
 import MastersProject.BeadRepo.SubjectInfoBead;
 import MastersProject.BeadRepo.UserLocationInfoBead;
+import MastersProject.DBHelper.ImportUplift;
 import MastersProject.GoogleData.CalendarEvent;
 import MastersProject.GoogleData.GoogleCalendarData;
 import MastersProject.Models.UpliftedNotification;
@@ -82,6 +83,7 @@ public class App extends Application
 	private static ArrayList<UpliftedNotification> notifications;
 	private static UpliftedNotification notification;
 	private static int notificationNumber;
+	private static ArrayList<ArrayList<UpliftedNotification>> realNotifications;
 	
 	private static String notificationsExcelInput = "kieranJan20.xlsx";
 	private static int notificationSize;
@@ -159,7 +161,14 @@ public class App extends Application
 	  					}
 	  				}
 	  			}
-	  			
+	  			repo = new BeadRepoManager();
+	  	    	repo.activateBead("SenderInfoBead");
+	  	    	repo.activateBead("SubjectInfoBead");
+	  	    	repo.activateBead("AlertInfoBead");
+	  	    	repo.activateBead("UserLocationInfoBead");
+	  	    	repo.activateBead("NotificationInfoBead");
+	  	    	repo.activateBead("AppInfoBead");
+	  	    	repo.initialize();
 	  			
 	  			/*String subjectOutput = "";
 	  			for(String subject: subjects){
@@ -177,9 +186,55 @@ public class App extends Application
 	  		    pr.close();*/
 	  			//convertDataToCSV();
 	  			
-	  			//setWebUserList(users);
-	  			//subscribeToWebEvents();
+	  	    	realNotifications = useRealWorldData();
+	  	    	ArrayList<User> realUsers = new ArrayList<User>();
+	  	    	int i = 0;
+	  	    	for(ArrayList<UpliftedNotification> notificationList: realNotifications){
+	  	    		User user = users.get(i);
+	  	    		ArrayList<Notification> userNotifications = new ArrayList<Notification>();
+	  	    		int counter = 0;
+	  	    		for(UpliftedNotification notification: notificationList){
+	  	    			Notification n = new Notification();
+	  	    			n.setSender(notification.getSender());
+	  	    			n.setSenderRank(notification.getSenderRank());
+	  	    			Subject subject = new Subject();
+	  	    			subject.setSubject(notification.getSubject());
+	  	    			n.setSubject(subject);
+	  	    			n.setSubjectRank(notification.getSubjectRank());
+	  	    			MobileApp app = new MobileApp();
+	  	    			app.setName(notification.getApp());
+	  	    			n.setApp(app);
+	  	    			n.setAppRank(notification.getAppRank());
+						n.setDate(DateFormatUtility.convertDateToStringUTC(notification.getDate()));
+						n.setId(counter);
+						n.setBody("");
+						n.setBodyRank(0);
+						n.setDateRank(0);
+						
+						userNotifications.add(n);
+						counter++;
+	  	    		}
+	  	    		user.setNotifications(userNotifications);
+	  	    		if(i<3){
+	  	    			user.setId("kieran"+i);
+	  	    		}
+	  	    		else{
+	  	    			user.setId("owen"+i);
+	  	    		}
+	  	    		realUsers.add(user);
+	  	    		i++;
+	  	    	}
+	  			users = realUsers;
+	  			System.out.println("Number of realUsers: "+users.size());
+	  			for(User user: users){
+	  				System.out.println(user.getNotifications().size());
+	  			}
 	  			
+
+	  			repo.saveRepoInstance();
+	  	    	repo.activateNotificationListener();
+	  			setUserObjectsInFirebase();
+	  			subscribeToWebEvents();
 	  			
 				/*selectedUser.printEvents();
 				selectedUser.printNotifications();*/
@@ -200,25 +255,35 @@ public class App extends Application
 	  	    	
 	  	    	
 	  	    	
-	  	    	repo = new BeadRepoManager();
-	  	    	repo.activateBead("SenderInfoBead");
-	  	    	repo.activateBead("SubjectInfoBead");
-	  	    	repo.activateBead("AlertInfoBead");
-	  	    	repo.activateBead("UserLocationInfoBead");
-	  	    	repo.activateBead("NotificationInfoBead");
-	  	    	repo.activateBead("AppInfoBead");
-	  	    	repo.initialize();
-	  	    	//repo.saveRepoInstance();
-	  	    	//repo.activateNotificationListener();
 	  	    	
-	  	    	experiment1();
+	  	    	
+	  	    	
+	  	    	//experiment1();
 	  	    	//experiment2();
+	  	    	experiment3(); // real world test
 	  	    	
 	  	    	//launch(args);
 	  	    	//javafx.application.Application.launch(App.class);
 	  		  }
 	  		  @Override public void onCancelled(FirebaseError error) { }
 		});
+	}
+	
+	private static ArrayList<ArrayList<UpliftedNotification>> useRealWorldData(){
+		ImportUplift upliftManager = new ImportUplift();
+		ArrayList<ArrayList<UpliftedNotification>> userNotifications = new ArrayList<ArrayList<UpliftedNotification>>();
+		System.out.println("Getting real world data..");
+		for(String file: ImportUplift.realWorldFiles){
+			try {
+				notifications = upliftManager.importFromExcel(file+".xlsx");
+				userNotifications.add(notifications);
+				System.out.println("notifications: "+notifications.size());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return userNotifications;
 	}
 	
 	private static void convertDataSetToJSON(){
@@ -341,7 +406,7 @@ public class App extends Application
 			  				nToSend.setSubjectRank(n.getSubjectRank());
 			  				nToSend.setAppRank(n.getAppRank());
 			  				nToSend.setDate(DateUtility.stringToDate(n.getDate()));
-			  				switch(n.getSubject().getSubject()){
+			  				/*switch(n.getSubject().getSubject()){
 			  				case "family":
 			  					nToSend.setSubjectRank(family);
 			  					break;
@@ -351,7 +416,10 @@ public class App extends Application
 			  				case "social":
 			  					nToSend.setSubjectRank(social);
 			  					break;
-			  				}
+			  				case "interest":
+			  					nToSend.setSubjectRank(social);
+			  					break;
+			  				}*/
 			  				fireNotification(nToSend, "Custom");
 			  			}
 	  			  }
@@ -398,7 +466,7 @@ public class App extends Application
 	  				ArrayList<CalendarEvent> events = null;
 					try {
 						System.out.println("kieran fraser" + DateUtility.stringToDate((String) result.get("date")));
-						events = GoogleCalendarData.getNextNEvents((Integer) result.get("id"), DateUtility.stringToDate((String) result.get("date")));
+						events = GoogleCalendarData.getNextNEvents(10, DateUtility.stringToDate((String) result.get("date")));
 					} catch (NumberFormatException | ParseException | IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -883,5 +951,9 @@ public class App extends Application
 		System.out.print("Fitness value: "+Arrays.toString(fitnessValue));
 		StatisticsManager.getStatsManager().printStats();
 		StatisticsManager.getStatsManager().reset();
+	}
+
+	private static void experiment3(){
+		
 	}
 }

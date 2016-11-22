@@ -3,13 +3,15 @@ package MastersProject.GoogleData;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -20,14 +22,16 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.DateTime;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Calendar;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.model.Events;
+import com.google.gdata.util.ServiceException;
 
-import MastersProject.Nabs.App;
-import PhDProject.FriendsFamily.Models.Event;
-import PhDProject.FriendsFamily.Models.User;
-import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
+import MastersProject.Utilities.DateUtility;
 
 
 public class GoogleCalendarData {
@@ -106,8 +110,8 @@ public class GoogleCalendarData {
                 .setApplicationName(APPLICATION_NAME)
                 .build();
     }
-    
-    /**
+    /*
+    *//**
      * Get the next n events from the date and time input
      * 
      * This needs to be changed for Nabsim - the events are generated 
@@ -119,7 +123,7 @@ public class GoogleCalendarData {
      * @return An array list of calendar events 
      * @throws ParseException 
      * @throws IOException 
-     */
+     *//*
     public static ArrayList<CalendarEvent> getNextNEvents(int n, Date dateFrom) 
     		throws ParseException, IOException {
     	counter = 0;
@@ -184,7 +188,7 @@ public class GoogleCalendarData {
 		
 		// check counter - repeat until 10 met.
     	
-    	/*Thread t = new Thread(new Runnable(){
+    	Thread t = new Thread(new Runnable(){
     	    @Override
     	    public void run() {
     	    	try {
@@ -195,7 +199,7 @@ public class GoogleCalendarData {
 				}
     	    }
     	});
-    	t.start();*/
+    	t.start();
     	
     	return requiredEvents;
     }
@@ -228,17 +232,17 @@ public class GoogleCalendarData {
 		};
     }
     
-    /**
+    *//**
      * Get the next event - to be used for the user context - 
      * now generated based on the inferred values from Friends & Family data-set
      * @param dateFrom
      * @return
      * @throws ParseException
      * @throws IOException
-     */
+     *//*
    public static CalendarEvent getNextEvent(Date dateFrom)
 	   throws ParseException, IOException {
-   		/*com.google.api.services.calendar.Calendar service = getCalendarService();
+   		com.google.api.services.calendar.Calendar service = getCalendarService();
     	calendarIDS = new ArrayList<String>();
     	calendars = new ArrayList<Calendar>();
 
@@ -252,11 +256,72 @@ public class GoogleCalendarData {
     	Date convertedStartDate = DateUtility.convertEventDateTimeToDate(items.get(0).getStart());
     	Date convertedEndDate = DateUtility.convertEventDateTimeToDate(items.get(0).getEnd());
     	CalendarEvent event = new CalendarEvent(items.get(0).getDescription(),
-    			convertedStartDate, convertedEndDate, items.get(0).getLocation(), items.get(0).getSummary());*/
+    			convertedStartDate, convertedEndDate, items.get(0).getLocation(), items.get(0).getSummary());
 	    ArrayList<CalendarEvent> events = getNextNEvents(10, dateFrom);
 	    CalendarEvent nextEvent = events.get(0);
         return nextEvent;
     }
-    
+    */
       
+    /**
+     * Get the next n events from the date and time input
+     * @param n - number of events
+     * @param date - the date to compare
+     * @return An array list of calendar events 
+     * @throws ParseException 
+     * @throws IOException 
+     */
+    public static ArrayList<CalendarEvent> getNextNEvents(int n, Date dateFrom) 
+    		throws ParseException, IOException {
+    	com.google.api.services.calendar.Calendar service = getCalendarService();
+    	
+    	calendarIDS = new ArrayList<String>();
+    	calendars = new ArrayList<Calendar>();
+    	//DateTime date = new DateTime(dateFrom.getTime());
+    	DateTime date = new DateTime(dateFrom, TimeZone.getDefault());
+        Events events = service.events().list("primary")
+            .setTimeMin(date)
+            .setOrderBy("startTime")
+            .setSingleEvents(true)
+            .execute();
+        List<Event> items = events.getItems();
+        ArrayList<CalendarEvent> requiredEvents = new ArrayList<CalendarEvent>();
+        
+        for(int i=0; i<n; i++){
+        	System.out.println(items.get(i).getStart());
+        	Date convertedStartDate = DateUtility.convertEventDateTimeToDate(items.get(i).getStart());
+        	Date convertedEndDate = DateUtility.convertEventDateTimeToDate(items.get(i).getEnd());
+        	CalendarEvent event = new CalendarEvent(items.get(i).getDescription(),
+        			convertedStartDate, convertedEndDate, items.get(i).getLocation(), items.get(i).getSummary());
+        	requiredEvents.add(event);
+        }
+        return requiredEvents;
+    }
+    
+    /**
+     * Get the next event - to be used for the user context
+     * @param dateFrom
+     * @return
+     * @throws ParseException
+     * @throws IOException
+     */
+   public static CalendarEvent getNextEvent(Date dateFrom)
+	   throws ParseException, IOException {
+   		com.google.api.services.calendar.Calendar service = getCalendarService();
+    	calendarIDS = new ArrayList<String>();
+    	calendars = new ArrayList<Calendar>();
+
+    	DateTime date = new DateTime(dateFrom, TimeZone.getDefault());
+        Events events = service.events().list("primary")
+            .setTimeMin(date)
+            .setOrderBy("startTime")
+            .setSingleEvents(true)
+            .execute();
+        List<Event> items = events.getItems();
+    	Date convertedStartDate = DateUtility.convertEventDateTimeToDate(items.get(0).getStart());
+    	Date convertedEndDate = DateUtility.convertEventDateTimeToDate(items.get(0).getEnd());
+    	CalendarEvent event = new CalendarEvent(items.get(0).getDescription(),
+    			convertedStartDate, convertedEndDate, items.get(0).getLocation(), items.get(0).getSummary());
+        return event;
+    }
 }
