@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +30,7 @@ import org.mortbay.log.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.GenericTypeIndicator;
 import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -51,6 +54,7 @@ import MastersProject.Utilities.DateUtility;
 import MastersProject.Utilities.ResultCallback;
 import PhDProject.FriendsFamily.Models.MobileApp;
 import PhDProject.FriendsFamily.Models.Notification;
+import PhDProject.FriendsFamily.Models.Params;
 import PhDProject.FriendsFamily.Models.Subject;
 import PhDProject.FriendsFamily.Models.User;
 import PhDProject.FriendsFamily.PSO.Particle;
@@ -107,6 +111,8 @@ public class App extends Application
 	
 	private static BeadRepoManager repo;
 	private static int paramId;
+	
+	private static ArrayList<Params> paramList;
 
 	public static void main( String[] args ) throws SQLException, ParseException, IOException
     {
@@ -192,7 +198,7 @@ public class App extends Application
 	  	    	for(ArrayList<UpliftedNotification> notificationList: realNotifications){
 	  	    		User user = users.get(i);
 	  	    		ArrayList<Notification> userNotifications = new ArrayList<Notification>();
-	  	    		int counter = 0;
+	  	    		int counter = 1;
 	  	    		for(UpliftedNotification notification: notificationList){
 	  	    			Notification n = new Notification();
 	  	    			n.setSender(notification.getSender());
@@ -234,7 +240,8 @@ public class App extends Application
 	  			repo.saveRepoInstance();
 	  	    	repo.activateNotificationListener();
 	  			setUserObjectsInFirebase();
-	  			subscribeToWebEvents();
+	  			FirebaseManager.getDatabase().child("web/fire/").removeValue();
+	  			getParams();
 	  			
 				/*selectedUser.printEvents();
 				selectedUser.printNotifications();*/
@@ -260,12 +267,37 @@ public class App extends Application
 	  	    	
 	  	    	//experiment1();
 	  	    	//experiment2();
-	  	    	experiment3(); // real world test
 	  	    	
 	  	    	//launch(args);
 	  	    	//javafx.application.Application.launch(App.class);
 	  		  }
 	  		  @Override public void onCancelled(FirebaseError error) { }
+		});
+	}
+	
+	private static void getParams(){
+		FirebaseManager.getDatabase().child("Exp1/").addValueEventListener( new ValueEventListener() {
+	  		  @Override
+	  		  public void onDataChange(DataSnapshot snapshot) {
+	  			  if(snapshot.getValue() != null){
+
+		  			  paramList = new ArrayList<Params>();
+	  				  HashMap result = snapshot.getValue(HashMap.class);
+	  				  Iterator it = result.entrySet().iterator();
+	  				  while (it.hasNext()) {
+		  			      Params param = new Params();
+	  					  Map.Entry pair = (Map.Entry) it.next();
+		  			      param.setUser((String) pair.getKey());
+		  			      Map paramObject = (LinkedHashMap) pair.getValue();
+		  			      param.setParams((ArrayList) paramObject.get("optimalParams"));
+		  			      param.setOptimalError((String) paramObject.get("optimalResult"));
+		  			      paramList.add(param);
+		  			      it.remove(); // avoids a ConcurrentModificationException
+	  				  }
+	  	  			subscribeToWebEvents();
+	  			  }
+	  		  }
+	  		  @Override public void onCancelled(FirebaseError error) {}
 		});
 	}
 	
@@ -393,9 +425,16 @@ public class App extends Application
 		FirebaseManager.getDatabase().child("web/fire").addValueEventListener( new ValueEventListener() {
 	  		  @Override
 	  		  public void onDataChange(DataSnapshot snapshot) {
+	  			  ParameterManager paramManager = ParameterManager.getParamManager();
+	  			  ArrayList<String> newParams = paramManager.convertBestToParamArray(paramList.get(family).getParams());
+	  			  paramManager.setSenderParams(newParams);
+	  			  paramManager.setSubjectParams(newParams);
+	  			  paramManager.setAlertParams(newParams);
+	  			  
 	  			  System.out.println("*******************Firing notification******************************");
 	  			  if(snapshot.getValue() != null){
 		  				User user = getUserFromId((String) snapshot.getValue());
+		  				System.out.println(user.getNotifications().size());
 			  			for(Notification n: user.getNotifications()){
 			  				UpliftedNotification nToSend = new UpliftedNotification();
 			  				nToSend.setSender(n.getSender());
@@ -951,9 +990,5 @@ public class App extends Application
 		System.out.print("Fitness value: "+Arrays.toString(fitnessValue));
 		StatisticsManager.getStatsManager().printStats();
 		StatisticsManager.getStatsManager().reset();
-	}
-
-	private static void experiment3(){
-		
 	}
 }

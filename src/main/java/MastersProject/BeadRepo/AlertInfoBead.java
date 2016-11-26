@@ -71,17 +71,17 @@ Runnable{
 		
 		// now - interrupt
 		if(inferredValue<5.0){ 
-			result = result + "Now "+this.getPartNumber()+"\n";
+			result = result + "1 "+"\n";
 		
 		// verysoon - next break
 		}else if(inferredValue<15){ 
 			
 			if(userLocation == 1.0){ // if there's an event on
-				result = result + "Next break - "+App.getNextBreak()+" - "+this.getPartNumber()+"\n";
+				result = result + "2"+"\n";
 				
 			}
 			else{
-				result = result + "Now "+this.getPartNumber()+"\n";
+				result = result + "1"+"\n";
 			}
 		
 		// soon - next free period
@@ -89,18 +89,18 @@ Runnable{
 			
 			
 			if(userLocation == 1.0){
-				result = result + "Next free period "+App.getNextFreePeriod()+" - "+this.getPartNumber()+"\n";
+				result = result + "3"+"\n";
 			}
 			else{
-				result = result + "Now "+this.getPartNumber()+"\n";
+				result = result + "1 "+"\n";
 			}
 			
 		// Later & Much Later	
 		}else if(inferredValue<60){ 
-			result = result + "Little Later "+App.getNextContextRelevant()+" - "+"\n";
+			result = result + "4"+"\n";
 		}
 		else{
-			result = result + "Much Later "+App.getNextContextRelevant()+" - "+"\n";
+			result = result + "5"+"\n";
 		}
 		//System.out.println(result);
 		//App.resultCallback.resultCallback(Integer.valueOf(this.getPartNumber()), result);

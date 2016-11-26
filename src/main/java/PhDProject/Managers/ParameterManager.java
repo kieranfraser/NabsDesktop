@@ -49,14 +49,38 @@ public class ParameterManager {
 	public void setSenderParams(String[] senderParams) {
 		this.senderParams = senderParams;
 	}
+	
+	public void setSenderParams(ArrayList<String> params){
+		ArrayList<String> senderArray = new ArrayList<String>();
+		for(int i=0; i<9; i++){
+			senderArray.add(params.get(i));
+		}
+		this.senderParams = senderArray.toArray(this.senderParams);
+	}
 
 	public void setSubjectParams(String[] subjectParams) {
 		this.subjectParams = subjectParams;
+	}
+	
+	public void setSubjectParams(ArrayList<String> params){
+		ArrayList<String> subjectArray = new ArrayList<String>();
+		for(int i=9; i<18; i++){
+			subjectArray.add(params.get(i));
+		}
+		this.subjectParams = subjectArray.toArray(this.subjectParams);
 	}
 
 	public void setAlertParams(String[] alertParams) {
 		this.alertParams = alertParams;
 	}	
+	
+	public void setAlertParams(ArrayList<String> params){
+		ArrayList<String> alertArray = new ArrayList<String>();
+		for(int i=18; i<params.size(); i++){
+			alertArray.add(params.get(i));
+		}
+		this.alertParams = alertArray.toArray(this.alertParams);
+	}
 	
 	public static ArrayList<String> convertBestToParamArray(ArrayList<Integer> gBest){
 		ArrayList<String> convertedArray = new ArrayList<String>();
