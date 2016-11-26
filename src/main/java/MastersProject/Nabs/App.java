@@ -305,9 +305,9 @@ public class App extends Application
 		FirebaseManager.getDatabase().child("web/test/").setValue(users);
 	}
 	
-	private static int family = 0;
-	private static int work = 0;
-	private static int social = 0;
+	private static int family = 10;
+	private static int work = 7;
+	private static int social = 8;
 	
 	private static void subscribeToVariableValues(){
 		FirebaseManager.getDatabase().child("web/variable").addValueEventListener( new ValueEventListener() {
