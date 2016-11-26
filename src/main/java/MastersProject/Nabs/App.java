@@ -211,8 +211,8 @@ public class App extends Application
 	  	    	//repo.saveRepoInstance();
 	  	    	//repo.activateNotificationListener();
 	  	    	
-	  	    	experiment1();
-	  	    	//experiment2();
+	  	    	//experiment1();
+	  	    	experiment2();
 	  	    	
 	  	    	//launch(args);
 	  	    	//javafx.application.Application.launch(App.class);
@@ -680,12 +680,16 @@ public class App extends Application
 	private static ArrayList<double[]> particleFitness;
 	
 	public static void experiment2(){
-		Integer[] optimal = {3, 3, 1, 2, 2, 1, 2, 3, 2, 2, 1, 1, 3, 3, 3, 1, 1, 1, 3, 1, 4, 4, 5, 2, 5, 3, 3, 4, 5, 3, 2, 4, 2, 3, 5, 3, 3, 5, 3, 1, 4, 4, 5, 3, 2};
+		//Integer[] optimal = {3, 3, 1, 2, 2, 1, 2, 3, 2, 2, 1, 1, 3, 3, 3, 1, 1, 1, 3, 1, 4, 4, 5, 2, 5, 3, 3, 4, 5, 3, 2, 4, 2, 3, 5, 3, 3, 5, 3, 1, 4, 4, 5, 3, 2};
+		//Integer[] optimal = {1, 2, 3, 3, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 2, 2, 1, 1, 2, 4, 3, 3, 5, 2, 4, 3, 3, 3, 4, 3, 4, 4, 5, 2, 3, 4, 2, 4, 2, 5, 4, 3, 1, 3, 2};
+		Integer[] optimal = {2, 1, 1, 2, 2, 1, 2, 1, 1, 1, 2, 2, 2, 1, 2, 1, 2, 2, 5, 1, 1, 2, 4, 1, 2, 4, 4, 3, 1, 1, 5, 1, 1, 4, 2, 4, 5, 2, 3, 5, 4, 3, 5, 1, 3};
 		relevantUsers = findRelevantUsers();
 		
 		ArrayList<User> givenUser = new ArrayList<User>();
-		System.out.println("notification size: "+relevantUsers.get(1).getNotifications().size());
-		givenUser.add(relevantUsers.get(1));
+
+		System.out.println("notification size: "+getUserFromId("sp10-01-42").getId());
+		System.out.println("notification size: "+getUserFromId("sp10-01-42").getNotifications().size());
+		givenUser.add(getUserFromId("sp10-01-42"));
 		relevantUsers = givenUser;
 		
 		List<Integer> converting = Arrays.asList(optimal);
