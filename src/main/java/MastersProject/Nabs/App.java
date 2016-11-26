@@ -175,6 +175,9 @@ public class App extends Application
 	  	    	repo.activateBead("NotificationInfoBead");
 	  	    	repo.activateBead("AppInfoBead");
 	  	    	repo.initialize();
+	  	    	
+
+	  			//getClosestUsers();
 	  			
 	  			/*String subjectOutput = "";
 	  			for(String subject: subjects){
@@ -275,6 +278,56 @@ public class App extends Application
 		});
 	}
 	
+	private static void getOptimalParams(){
+		double globalError = 10000;
+		int paramIndex = 0;
+		String pUser = "";
+		int counter = 0;
+		for(Params p: paramList){
+			String error = p.getOptimalError().substring(1, p.getOptimalError().length()-1);
+			double[] numbers = Arrays.asList(error.split(","))
+                    .stream()
+                    .map(String::trim)
+                    .mapToDouble(Double::parseDouble).toArray();
+			double totalError = 0;
+			for(double value: numbers){
+				totalError += value;
+			}
+			if(totalError < globalError){
+				globalError = totalError;
+				paramIndex = counter;
+				pUser = p.getUser();
+			}
+			counter++;
+		}
+		System.out.println(paramIndex);
+		System.out.println(pUser);
+	}
+	
+	private static void getClosestUsers(){
+		relevantUsers = findRelevantUsers();
+		double kieranClosest = 1000;
+		double owenClosest = 1000;
+		String kieranClosestUser = "";
+		String owenClosestUser = "";
+		for(User user: relevantUsers){
+			if(Math.abs(user.getNotifications().size() - 36) < kieranClosest && user.getNotifications().size() > 10){
+				kieranClosest = Math.abs(user.getNotifications().size() - 36);
+				kieranClosestUser = user.getId();
+			}
+			if(Math.abs(user.getNotifications().size() - 26) < owenClosest && user.getNotifications().size() > 10){
+				owenClosest = Math.abs(user.getNotifications().size() - 26);
+				owenClosestUser = user.getId();
+			}
+		}
+		System.out.println(kieranClosest);
+		System.out.println(kieranClosestUser);
+		
+
+		System.out.println(owenClosest);
+		System.out.println(owenClosestUser);
+	}
+	
 	private static void getParams(){
 		FirebaseManager.getDatabase().child("Exp1/").addValueEventListener( new ValueEventListener() {
 	  		  @Override
@@ -294,7 +347,8 @@ public class App extends Application
 		  			      paramList.add(param);
 		  			      it.remove(); // avoids a ConcurrentModificationException
 	  				  }
-	  	  			subscribeToWebEvents();
+	  	  			//getOptimalParams();
+	  	  			//subscribeToWebEvents();
 	  			  }
 	  		  }
 	  		  @Override public void onCancelled(FirebaseError error) {}
