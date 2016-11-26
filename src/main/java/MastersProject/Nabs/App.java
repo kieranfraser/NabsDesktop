@@ -194,6 +194,11 @@ public class App extends Application
 	  		    pr.println(subjectOutput);
 	  		    pr.close();*/
 	  			//convertDataToCSV();
+	  	    	
+	  	    	/*System.out.println(getUserFromId("sp10-01-46").getNotifications().size());
+	  	    	for(User user: findRelevantUsers()){
+	  	    		System.out.println(user.getNotifications().size());
+	  	    	}*/
 	  			
 	  	    	realNotifications = useRealWorldData();
 	  	    	ArrayList<User> realUsers = new ArrayList<User>();
@@ -348,7 +353,7 @@ public class App extends Application
 		  			      it.remove(); // avoids a ConcurrentModificationException
 	  				  }
 	  	  			//getOptimalParams();
-	  	  			//subscribeToWebEvents();
+	  	  			subscribeToWebEvents();
 	  			  }
 	  		  }
 	  		  @Override public void onCancelled(FirebaseError error) {}
@@ -484,6 +489,7 @@ public class App extends Application
 	  			  paramManager.setSenderParams(newParams);
 	  			  paramManager.setSubjectParams(newParams);
 	  			  paramManager.setAlertParams(newParams);
+	  			  FirebaseManager.getDatabase().child("Exp1Res/optimal/").setValue(paramList.get(family).getUser());
 	  			  
 	  			  System.out.println("*******************Firing notification******************************");
 	  			  if(snapshot.getValue() != null){
