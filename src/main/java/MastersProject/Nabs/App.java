@@ -352,8 +352,9 @@ public class App extends Application
 		  			      paramList.add(param);
 		  			      it.remove(); // avoids a ConcurrentModificationException
 	  				  }
+	  				  System.out.println(paramList.get(11).getUser());
 	  	  			//getOptimalParams();
-	  	  			subscribeToWebEvents();
+	  	  			//subscribeToWebEvents();
 	  			  }
 	  		  }
 	  		  @Override public void onCancelled(FirebaseError error) {}
