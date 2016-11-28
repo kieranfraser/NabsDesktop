@@ -1,5 +1,7 @@
 package MastersProject.FuzzyLogic;
 
+import java.util.ArrayList;
+
 import com.fuzzylite.Engine;
 import com.fuzzylite.defuzzifier.Centroid;
 import com.fuzzylite.defuzzifier.Defuzzifier;
@@ -24,10 +26,13 @@ public class AlertFuzzy {
 	OutputVariable alertOutput;
 
 	String[] params;
+	ArrayList<Double> mParams;
 	
 	public AlertFuzzy(){
 
 		params = ParameterManager.getParamManager().getAlertParams();
+		
+		mParams = ParameterManager.getParamManager().getAlertMParams();
 		
 	    engine = new Engine();
 	    engine.setName("alert-context");
@@ -35,25 +40,25 @@ public class AlertFuzzy {
 	    senderInput = new InputVariable();
 	    senderInput.setName("SenderInput");
 	    senderInput.setRange(0.000, 1.000);
-	    senderInput.addTerm(new Triangle("NIP", 0.000, 0.000, 0.400));
-	    senderInput.addTerm(new Triangle("IMPORTANT", 0.200, 0.500, 0.800));
-	    senderInput.addTerm(new Triangle("VIP", 0.600, 1.000, 1.000));
+	    senderInput.addTerm(new Triangle("NIP", 0.000, 0.000, mParams.get(0)));
+	    senderInput.addTerm(new Triangle("IMPORTANT", mParams.get(1), mParams.get(2), mParams.get(3)));
+	    senderInput.addTerm(new Triangle("VIP", mParams.get(4), 1.000, 1.000));
 		engine.addInputVariable(senderInput);
 		
 		subjectInput = new InputVariable();
 		subjectInput.setName("SubjectInput");
 		subjectInput.setRange(0.000, 1.000);
-		subjectInput.addTerm(new Triangle("NIP", 0.000, 0.000, 0.400));
-		subjectInput.addTerm(new Triangle("IMPORTANT", 0.200, 0.500, 0.800));
-		subjectInput.addTerm(new Triangle("VIP", 0.600, 1.000, 1.000));
+		subjectInput.addTerm(new Triangle("NIP", 0.000, 0.000, mParams.get(5)));
+		subjectInput.addTerm(new Triangle("IMPORTANT", mParams.get(6), mParams.get(7), mParams.get(8)));
+		subjectInput.addTerm(new Triangle("VIP", mParams.get(9), 1.000, 1.000));
 		engine.addInputVariable(subjectInput);
 		
 		appInput = new InputVariable();
 		appInput.setName("AppInput");
 		appInput.setRange(0.000, 1.000);
-		appInput.addTerm(new Triangle("NIP", 0.000, 0.000, 0.500));
-		appInput.addTerm(new Trapezoid("IMPORTANT", 0.2, 0.55, 0.63, 0.87));
-		appInput.addTerm(new Triangle("VIP", 0.600, 1.000, 1.000));
+		appInput.addTerm(new Triangle("NIP", 0.000, 0.000, mParams.get(10)));
+		appInput.addTerm(new Trapezoid("IMPORTANT", mParams.get(11), mParams.get(12), mParams.get(13), mParams.get(14)));
+		appInput.addTerm(new Triangle("VIP", mParams.get(15), 1.000, 1.000));
 		engine.addInputVariable(appInput);
 		
 		alertOutput = new OutputVariable();
@@ -65,11 +70,11 @@ public class AlertFuzzy {
 		alertOutput.setDefaultValue(Double.NaN);
 		alertOutput.setLockPreviousOutputValue(false);
 		alertOutput.setLockOutputValueInRange(false);
-		alertOutput.addTerm(new Triangle("NOW", 0.000, 0.000, 10.01));
-		alertOutput.addTerm(new Triangle("VERYSOON", 5.000, 10.001, 20.001));
-		alertOutput.addTerm(new Triangle("SOON", 15.000, 20.000, 40.001));
-		alertOutput.addTerm(new Triangle("LATER", 25.000, 50.000, 70.001));
-		alertOutput.addTerm(new SShape("MUCHLATER", 57.5, 77.5));
+		alertOutput.addTerm(new Triangle("NOW", 0.000, 0.000, mParams.get(16)));
+		alertOutput.addTerm(new Triangle("VERYSOON", mParams.get(17), mParams.get(18), mParams.get(19)));
+		alertOutput.addTerm(new Triangle("SOON", mParams.get(20), mParams.get(21), mParams.get(22)));
+		alertOutput.addTerm(new Triangle("LATER", mParams.get(23), mParams.get(24), mParams.get(25)));
+		alertOutput.addTerm(new SShape("MUCHLATER", mParams.get(26), 77.5));
 		engine.addOutputVariable(alertOutput);
 		
 		RuleBlock ruleBlock = new RuleBlock();

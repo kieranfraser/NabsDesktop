@@ -349,14 +349,14 @@ public class StatisticsManager {
 		int counter = 0;
 		if(best != null){
 			for(int i=0; i<array1.length; i++){
-				if(array1[i] < best[i]){
+				if(array1[i] <= best[i]){
 					counter++;
 					if(i == 0 || i == 5){
 						counter+=2;
 					}
 				}
 			}
-			if(counter > (array1.length*0.8)){
+			if(counter > (array1.length*0.9)){
 				lessEqual = true;
 			}
 		}
@@ -366,8 +366,8 @@ public class StatisticsManager {
 		return lessEqual;
 	}
 	
-	public static void saveOptimalStats(String user, ArrayList<Integer> optimalParams, String optimalResult){
-		FirebaseManager.getDatabase().child("Exp1/"+user+"/optimalParams/").setValue(optimalParams);
-		FirebaseManager.getDatabase().child("Exp1/"+user+"/optimalResult/").setValue(optimalResult);
+	public static void saveOptimalStats(String user, ArrayList<Double> optimalParams, String optimalResult){
+		FirebaseManager.getDatabase().child("Exp2/"+user+"/optimalParams/").setValue(optimalParams);
+		FirebaseManager.getDatabase().child("Exp2/"+user+"/optimalResult/").setValue(optimalResult);
 	}
 }

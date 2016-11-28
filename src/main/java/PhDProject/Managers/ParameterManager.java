@@ -1,6 +1,7 @@
 package PhDProject.Managers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ParameterManager {
 	
@@ -22,17 +23,38 @@ public class ParameterManager {
 	private String[] alertParams = {MUCHLATER, MUCHLATER, LATER, MUCHLATER, LATER, SOON, SOON, SOON, VERYSOON,
 			LATER, SOON, SOON, SOON, VERYSOON, VERYSOON, SOON, NOW, NOW, VERYSOON, VERYSOON, VERYSOON, VERYSOON, VERYSOON, VERYSOON, NOW, NOW, NOW};
 	
+	private Double[] alertMembershipParams = {0.000, 0.000, 0.400,
+			 																0.200, 0.500, 0.800,
+			 																0.600, 1.000, 1.000,
+			 																0.000, 0.000, 0.400,
+			 																0.200, 0.500, 0.800,
+			 																0.600, 1.000, 1.000,
+			 																0.000, 0.000, 0.500,
+			 																0.2, 0.55, 0.63, 0.87,
+			 																0.600, 1.000, 1.000,
+			 																0.000, 0.000, 10.01,
+			 																5.000, 10.001, 20.001,
+			 																15.000, 20.000, 40.001,
+			 																25.000, 50.000, 70.001,
+			 																57.5, 77.5};
+	private ArrayList<Double> alertMParams;
+	
 	public static synchronized ParameterManager getParamManager(){
 		if(instance!=null){
 			return instance;
 		}
 		else{
 			instance = new ParameterManager();
+			instance.initializeParams();
 			return instance;
 		}
 	}
 	
 	public ParameterManager(){}
+	
+	private void initializeParams(){
+		alertMParams = new ArrayList<Double>(Arrays.asList(alertMembershipParams));
+	}
 
 	public String[] getSenderParams() {
 		return senderParams;
@@ -125,5 +147,15 @@ public class ParameterManager {
 		String[] result = new String[alertParams.size()];
 		return alertParams.toArray(result);
 	}
+
+	public ArrayList<Double> getAlertMParams() {
+		return alertMParams;
+	}
+
+	public void setAlertMParams(ArrayList<Double> alertMParams) {
+		this.alertMParams = alertMParams;
+	}
+	
+	
 	
 }

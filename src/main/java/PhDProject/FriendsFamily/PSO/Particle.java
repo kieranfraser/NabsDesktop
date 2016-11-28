@@ -8,27 +8,19 @@ import PhDProject.Managers.ParameterManager;
 
 public class Particle {
 	
-	private static final int DIMENSION = 45;
-	private static final int POSSIBLE_VALUES = 2;
+	private static final int DIMENSION = 27;
 	private static final double C1 = 2;
 	private static final double C2 = 2;
-	private static final double VELOCITY_MIN = -2.0;
-	private static final double VELOCITY_MAX = 2.0;
-	private static final int POSITION_MIN = 1;
-	private static final int POSITION_MAX = 3;
+	private static final double ZERO = 0;
+	private static final double POSITION_MIN = 0.001;
+	private static final double POSITION_MAX_ONE = 1;
+	private static final double POSITION_MAX_ONE_HUNDRED = 100;
+	private static final int CROSSOVER = 16;
 	
-	private static final int RULE_CROSSOVER = 18;
-	
-	private static final int POSSIBLE_VALUES_OUTPUT = 5;
-	private static final double VELOCITY_MIN_OUTPUT = -4.0;
-	private static final double VELOCITY_MAX_OUTPUT = 4.0;
-	private static final int POSITION_MIN_OUTPUT = 1;
-	private static final int POSITION_MAX_OUTPUT = 5;
-	
-	private ArrayList<Integer> currentPosition;
+	private ArrayList<Double> currentPosition;
 	private ArrayList<Double> currentVelocity;
 	
-	private ArrayList<Integer> pBestPosition;
+	private ArrayList<Double> pBestPosition;
 	private double[] pBestPercentage;
 	
 	private double[] currentFitness;
@@ -37,19 +29,23 @@ public class Particle {
 	
 	public Particle(){
 		rand = new Random(); 
-		this.currentPosition = new ArrayList<Integer>();
+		this.currentPosition = new ArrayList<Double>();
 		this.currentVelocity = new ArrayList<Double>();
 		
-		this.pBestPosition = new ArrayList<Integer>();
+		this.pBestPosition = new ArrayList<Double>();
 		
 		for(int i = 0; i<DIMENSION; i++){
-			if(i<RULE_CROSSOVER){ 
-				currentPosition.add(rand.nextInt(POSSIBLE_VALUES) + 1);
-				currentVelocity.add(rand.nextInt(3) - 1.0); // gives a value in the range of -1 to 1
+			if(i<CROSSOVER){
+				double random = rand.nextDouble(); 
+				currentPosition.add(random == ZERO ? POSITION_MIN : random);
+				random = rand.nextDouble();
+				currentVelocity.add(random); 
 			}
 			else{
-				currentPosition.add(rand.nextInt(POSSIBLE_VALUES_OUTPUT) + 1);
-				currentVelocity.add(rand.nextInt(3) - 1.0); // gives a value in the range of -1 to 1
+				double random = (double) rand.nextInt(101); 
+				currentPosition.add(random == ZERO ? POSITION_MIN : random);
+				random = (double) rand.nextInt(101); 
+				currentVelocity.add(random); 
 			}
 		}
 	}
@@ -57,77 +53,39 @@ public class Particle {
 	public void updateVelocity(){
 		double newVelocity = 0;
 		for(int i = 0; i<DIMENSION; i++){
-			if(i<RULE_CROSSOVER){
-				newVelocity = currentVelocity.get(i) + (C1 * rand.nextDouble() * (pBestPosition.get(i)-currentPosition.get(i))) + (C2 * rand.nextDouble() * (App.gBestPosition.get(i) - currentPosition.get(i)));
-				if(newVelocity<VELOCITY_MIN){
-					newVelocity = VELOCITY_MIN;
-				} else if(newVelocity>VELOCITY_MAX){
-					newVelocity=VELOCITY_MAX;
-				}
-			}
-			else{
-				newVelocity = currentVelocity.get(i) + (C1 * rand.nextDouble() * (pBestPosition.get(i)-currentPosition.get(i))) + (C2 * rand.nextDouble() * (App.gBestPosition.get(i) - currentPosition.get(i)));
-				if(newVelocity<VELOCITY_MIN_OUTPUT){
-					newVelocity = VELOCITY_MIN_OUTPUT;
-				} else if(newVelocity>VELOCITY_MAX_OUTPUT){
-					newVelocity=VELOCITY_MAX_OUTPUT;
-				}
-			}
+			newVelocity = currentVelocity.get(i) + (C1 * rand.nextDouble() * (pBestPosition.get(i)-currentPosition.get(i))) + (C2 * rand.nextDouble() * (App.gBestPosition.get(i) - currentPosition.get(i)));
 			
 			currentVelocity.set(i, newVelocity);
 			updatePosition(i, newVelocity);
 		}
-		
-		// if the current position is equal to the global best - randomly switch values
 	}
 	
 	private void updatePosition(int i, double velocity){
-		int newPositionAddition = 0;
-		if(velocity > 0){
-			newPositionAddition = 1;
-		} else if(velocity < 0){
-			newPositionAddition = -1;
-		}
-		else{
-			newPositionAddition = 0;
-		}
-		int newPosition = currentPosition.get(i) + newPositionAddition;	
-		if(i<RULE_CROSSOVER){
-			if(newPosition<POSITION_MIN){
+		double newPosition = POSITION_MIN;
+		newPosition = currentPosition.get(i) + velocity;
+		if(i < CROSSOVER){
+			if(newPosition>POSITION_MAX_ONE){
+				newPosition = POSITION_MAX_ONE;
+			}
+			else if(newPosition <= POSITION_MIN){
 				newPosition = POSITION_MIN;
-			} else if(newPosition>POSITION_MAX){
-				newPosition = POSITION_MAX;
 			}
 		}
-		else{
-			if(newPosition<POSITION_MIN_OUTPUT){
-				newPosition = POSITION_MIN_OUTPUT;
-			} else if(newPosition>POSITION_MAX_OUTPUT){
-				newPosition = POSITION_MAX_OUTPUT;
+		else {
+			if(newPosition>POSITION_MAX_ONE_HUNDRED){
+				newPosition = POSITION_MAX_ONE_HUNDRED;
+			}
+			else if(newPosition <= POSITION_MIN){
+				newPosition = POSITION_MIN;
 			}
 		}
 		currentPosition.set(i, newPosition);
 	}
 	
-	public void explore(){
-		int randomExplore = rand.nextInt(currentPosition.size()/2);
-		for(int i = 0; i<randomExplore; i++){
-			int randomPosition = rand.nextInt(currentPosition.size());
-			if(randomPosition<RULE_CROSSOVER){
-				int randomValue = rand.nextInt(POSSIBLE_VALUES) + 1;
-				currentPosition.set(randomPosition, randomValue);
-			} 
-			else {
-				int randomValue = rand.nextInt(POSSIBLE_VALUES_OUTPUT) + 1;
-				currentPosition.set(randomPosition, randomValue);
-			}
-		}
-	}
-	
-	public boolean checkPositionSameAs(ArrayList<Integer> otherPosition){
+	public boolean checkPositionSameAs(ArrayList<Double> otherPosition){
 		int counter = 0;
 		int i = 0;
-		for(int val: currentPosition){
+		for(double val: currentPosition){
 			if(val == otherPosition.get(i)){
 				counter++;
 			}
@@ -150,66 +108,6 @@ public class Particle {
 		this.currentFitness = currentPercent;
 	}
 
-	public ArrayList<String> getSenderParams(){
-		ArrayList<String> senderParams = new ArrayList<String>();
-		for(int i=0; i<9; i++){
-			switch(currentPosition.get(i)){
-			case 1:
-				senderParams.add(ParameterManager.LOW);
-				break;
-			case 2:
-				senderParams.add(ParameterManager.MEDIUM);
-				break;
-			case 3:
-				senderParams.add(ParameterManager.HIGH);
-				break;
-			}
-		}
-		return senderParams;
-	}
-	
-	public ArrayList<String> getSubjectParams(){
-		ArrayList<String> subjectParams = new ArrayList<String>();
-		for(int i=9; i<18; i++){
-			switch(currentPosition.get(i)){
-			case 1:
-				subjectParams.add(ParameterManager.LOW);
-				break;
-			case 2:
-				subjectParams.add(ParameterManager.MEDIUM);
-				break;
-			case 3:
-				subjectParams.add(ParameterManager.HIGH);
-				break;
-			}
-		}
-		return subjectParams;
-	}
-	
-	public ArrayList<String> getAlertParams(){
-		ArrayList<String> alertParams = new ArrayList<String>();
-		for(int i=18; i<45; i++){
-			switch(currentPosition.get(i)){
-			case 1:
-				alertParams.add(ParameterManager.NOW);
-				break;
-			case 2:
-				alertParams.add(ParameterManager.VERYSOON);
-				break;
-			case 3:
-				alertParams.add(ParameterManager.SOON);
-				break;
-			case 4:
-				alertParams.add(ParameterManager.LATER);
-				break;
-			case 5:
-				alertParams.add(ParameterManager.MUCHLATER);
-				break;
-			}
-		}
-		return alertParams;
-	}
-	
 	public double[] getpBestPercentage() {
 		return pBestPercentage;
 	}
@@ -217,11 +115,11 @@ public class Particle {
 		this.pBestPercentage = pBestPercentage;
 	}
 
-	public ArrayList<Integer> getCurrentPosition() {
+	public ArrayList<Double> getCurrentPosition() {
 		return currentPosition;
 	}
 
-	public void setCurrentPosition(ArrayList<Integer> currentPosition) {
+	public void setCurrentPosition(ArrayList<Double> currentPosition) {
 		this.currentPosition = currentPosition;
 	}
 
@@ -233,11 +131,11 @@ public class Particle {
 		this.currentVelocity = currentVelocity;
 	}
 
-	public ArrayList<Integer> getpBestPosition() {
+	public ArrayList<Double> getpBestPosition() {
 		return pBestPosition;
 	}
 
-	public void setpBestPosition(ArrayList<Integer> pBestPosition) {
+	public void setpBestPosition(ArrayList<Double> pBestPosition) {
 		this.pBestPosition = pBestPosition;
 	}
 }

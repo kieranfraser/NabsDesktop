@@ -212,8 +212,8 @@ public class App extends Application
 	  	    	//repo.activateNotificationListener();
 	  	    	
 	  	    	// Experiment 2!!
-	  	    	//experiment1();
-	  	    	experiment2();
+	  	    	experiment1();
+	  	    	//experiment2();
 	  	    	
 	  	    	//launch(args);
 	  	    	//javafx.application.Application.launch(App.class);
@@ -670,7 +670,7 @@ public class App extends Application
 		}
 	}
 	
-	public static ArrayList<Integer> gBestPosition;
+	public static ArrayList<Double> gBestPosition;
 	public static double[] gBestPercent;
 	private static ArrayList<Particle> particles;
 	private static PrintWriter pr;
@@ -684,19 +684,19 @@ public class App extends Application
 		//Integer[] optimal = {3, 3, 1, 2, 2, 1, 2, 3, 2, 2, 1, 1, 3, 3, 3, 1, 1, 1, 3, 1, 4, 4, 5, 2, 5, 3, 3, 4, 5, 3, 2, 4, 2, 3, 5, 3, 3, 5, 3, 1, 4, 4, 5, 3, 2};
 		//Integer[] optimal = {1, 2, 3, 3, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 2, 2, 1, 1, 2, 4, 3, 3, 5, 2, 4, 3, 3, 3, 4, 3, 4, 4, 5, 2, 3, 4, 2, 4, 2, 5, 4, 3, 1, 3, 2};
 		
-		Integer[] optimal = {2, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 3, 3, 2, 1, 2, 2, 4, 1, 1, 4, 2, 4, 3, 2, 2, 4, 2, 2, 4, 3, 5, 5, 1, 2, 1, 4, 3, 4, 3, 2, 3, 3, 1};
+		Double[] optimal = {0.7149151661911818, 0.6998002688091841, 0.5058283920721023, 0.8976874964441978, 0.4446433900780228, 0.35887721250006543, 0.49202906254112966, 0.11417781525985293, 0.8134354676802653, 0.18967999004297886, 0.3369536290653503, 0.35809665368716737, 0.10277559413104431, 0.8148358796764275, 0.5936162432215714, 0.27139128651121724, 32.0, 94.0, 43.0, 1.0, 37.0, 62.0, 37.0, 34.0, 75.0, 87.0, 85.0};
 		relevantUsers = findRelevantUsers();
 		
 		ArrayList<User> givenUser = new ArrayList<User>();
 
-		System.out.println("notification size: "+getUserFromId("sp10-01-42").getId());
-		System.out.println("notification size: "+getUserFromId("sp10-01-42").getNotifications().size());
-		givenUser.add(getUserFromId("sp10-01-42"));
+		System.out.println("notification size: "+getUserFromId("sp10-01-45").getId());
+		System.out.println("notification size: "+getUserFromId("sp10-01-45").getNotifications().size());
+		givenUser.add(getUserFromId("sp10-01-45"));
 		relevantUsers = givenUser;
 		
-		List<Integer> converting = Arrays.asList(optimal);
-		ArrayList<Integer> converted = new ArrayList<Integer>();
-		for(int val:converting){
+		List<Double> converting = Arrays.asList(optimal);
+		ArrayList<Double> converted = new ArrayList<Double>();
+		for(double val:converting){
 			converted.add(val);
 		}
 		gBestPosition = converted;
@@ -713,6 +713,20 @@ public class App extends Application
 		System.out.println("notification size: "+relevantUsers.get(1).getNotifications().size());
 		givenUser.add(relevantUsers.get(1));
 		relevantUsers = givenUser;*/
+		
+		
+		/*System.out.println(relevantUsers.size());
+		User userTest = relevantUsers.get(0);
+		System.out.println(userTest.getNotifications().size());
+		int countTest = 0;
+		for(Notification n: userTest.getNotifications()){
+			if(n.getSubject().getSubject().contains("work") || n.getSubject().getSubject().contains("social")){
+				countTest++;
+			}
+		}
+		System.out.println(countTest);*/
+		
+		
 		for(User user: relevantUsers){
 			try {
 				pr = new PrintWriter(user.getId()+".txt");
@@ -728,7 +742,7 @@ public class App extends Application
 			for(int i=0; i<15; i++){
 				particles.add(new Particle());
 			}
-			gBestPosition = new ArrayList<Integer>();
+			gBestPosition = new ArrayList<Double>();
 			gBestPercent = null;
 			
 			for(int iterations=0; iterations<5; iterations++){
@@ -750,7 +764,7 @@ public class App extends Application
 		    pr.println("\n-------------\n");
 		    int i=0;
 		    for(double[] value : particleFitness){
-		    	pr.println("Current fitness of particle "+i+"\n: "+Arrays.toString(value)+"\n");
+		    	pr.println("Current fitness of particle "+i+":\n "+Arrays.toString(value)+"\n");
 		    	i++;
 		    }
 	}
@@ -760,7 +774,7 @@ public class App extends Application
 		particleFitness = new ArrayList<double[]>();
 		for(Particle p:particles){
 			double[] fitnessValue = fitnessFunction(p);
-			ArrayList<Integer> position = p.getCurrentPosition();
+			ArrayList<Double> position = p.getCurrentPosition();
 			p.setCurrentFitness(fitnessValue);
 			particleFitness.add(i, fitnessValue);
 			if(StatisticsManager.checkLessThanEqual(fitnessValue, p.getpBestPercentage())){
@@ -774,7 +788,7 @@ public class App extends Application
 				pr.println("\n");
 				
 				gBestPercent = fitnessValue;
-				gBestPosition = new ArrayList<Integer>();
+				gBestPosition = new ArrayList<Double>();
 				gBestPosition = position;
 				
 				pr.println(gBestPosition);
@@ -795,9 +809,7 @@ public class App extends Application
 	private static double[] fitnessFunction(Particle p){
 		// Set current particles params to the fuzzy classes
 		ParameterManager paramManager = ParameterManager.getParamManager();
-		paramManager.setSenderParams(p.getSenderParams().toArray(new String[p.getSenderParams().size()]));
-		paramManager.setSubjectParams(p.getSubjectParams().toArray(new String[p.getSubjectParams().size()]));
-		paramManager.setAlertParams(p.getAlertParams().toArray( new String[p.getAlertParams().size()] ) );
+		paramManager.setAlertMParams(p.getCurrentPosition());
 		
 		//for(User possibleUser: relevantUsers){
 		selectedUser = relevantUser;
@@ -853,11 +865,9 @@ public class App extends Application
 
 		StatisticsManager.getStatsManager().reset();
 		// Set current particles params to the fuzzy classes
-		ArrayList<String> gBest = ParameterManager.convertBestToParamArray(gBestPosition);
+		//ArrayList<String> gBest = ParameterManager.convertBestToParamArray(gBestPosition);
 		ParameterManager paramManager = ParameterManager.getParamManager();
-		paramManager.setSenderParams(ParameterManager.getSenderParams(gBest));
-		paramManager.setSubjectParams(ParameterManager.getSubjectParams(gBest));
-		paramManager.setAlertParams(ParameterManager.getAlertParams(gBest));
+		paramManager.setAlertMParams(gBestPosition);
 		
 		for(User possibleUser: relevantUsers){
 			selectedUser = possibleUser;
