@@ -1,6 +1,7 @@
 package PhDProject.Managers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ParameterManager {
 	
@@ -22,17 +23,38 @@ public class ParameterManager {
 	private String[] alertParams = {MUCHLATER, MUCHLATER, LATER, MUCHLATER, LATER, SOON, SOON, SOON, VERYSOON,
 			LATER, SOON, SOON, SOON, VERYSOON, VERYSOON, SOON, NOW, NOW, VERYSOON, VERYSOON, VERYSOON, VERYSOON, VERYSOON, VERYSOON, NOW, NOW, NOW};
 	
+	private Double[] alertMembershipParams = {0.000, 0.000, 0.400,
+			 																0.200, 0.500, 0.800,
+			 																0.600, 1.000, 1.000,
+			 																0.000, 0.000, 0.400,
+			 																0.200, 0.500, 0.800,
+			 																0.600, 1.000, 1.000,
+			 																0.000, 0.000, 0.500,
+			 																0.2, 0.55, 0.63, 0.87,
+			 																0.600, 1.000, 1.000,
+			 																0.000, 0.000, 10.01,
+			 																5.000, 10.001, 20.001,
+			 																15.000, 20.000, 40.001,
+			 																25.000, 50.000, 70.001,
+			 																57.5, 77.5};
+	private ArrayList<Double> alertMParams;
+	
 	public static synchronized ParameterManager getParamManager(){
 		if(instance!=null){
 			return instance;
 		}
 		else{
 			instance = new ParameterManager();
+			instance.initializeParams();
 			return instance;
 		}
 	}
 	
 	public ParameterManager(){}
+	
+	private void initializeParams(){
+		alertMParams = new ArrayList<Double>(Arrays.asList(alertMembershipParams));
+	}
 
 	public String[] getSenderParams() {
 		return senderParams;
@@ -49,38 +71,14 @@ public class ParameterManager {
 	public void setSenderParams(String[] senderParams) {
 		this.senderParams = senderParams;
 	}
-	
-	public void setSenderParams(ArrayList<String> params){
-		ArrayList<String> senderArray = new ArrayList<String>();
-		for(int i=0; i<9; i++){
-			senderArray.add(params.get(i));
-		}
-		this.senderParams = senderArray.toArray(this.senderParams);
-	}
 
 	public void setSubjectParams(String[] subjectParams) {
 		this.subjectParams = subjectParams;
-	}
-	
-	public void setSubjectParams(ArrayList<String> params){
-		ArrayList<String> subjectArray = new ArrayList<String>();
-		for(int i=9; i<18; i++){
-			subjectArray.add(params.get(i));
-		}
-		this.subjectParams = subjectArray.toArray(this.subjectParams);
 	}
 
 	public void setAlertParams(String[] alertParams) {
 		this.alertParams = alertParams;
 	}	
-	
-	public void setAlertParams(ArrayList<String> params){
-		ArrayList<String> alertArray = new ArrayList<String>();
-		for(int i=18; i<params.size(); i++){
-			alertArray.add(params.get(i));
-		}
-		this.alertParams = alertArray.toArray(this.alertParams);
-	}
 	
 	public static ArrayList<String> convertBestToParamArray(ArrayList<Integer> gBest){
 		ArrayList<String> convertedArray = new ArrayList<String>();
@@ -149,5 +147,12 @@ public class ParameterManager {
 		String[] result = new String[alertParams.size()];
 		return alertParams.toArray(result);
 	}
-	
+
+	public ArrayList<Double> getAlertMParams() {
+		return alertMParams;
+	}
+
+	public void setAlertMParams(ArrayList<Double> alertMParams) {
+		this.alertMParams = alertMParams;
+	}
 }

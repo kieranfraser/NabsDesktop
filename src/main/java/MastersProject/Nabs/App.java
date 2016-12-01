@@ -334,7 +334,7 @@ public class App extends Application
 	}
 	
 	private static void getParams(){
-		FirebaseManager.getDatabase().child("Exp1/").addValueEventListener( new ValueEventListener() {
+		FirebaseManager.getDatabase().child("Exp2/").addValueEventListener( new ValueEventListener() {
 	  		  @Override
 	  		  public void onDataChange(DataSnapshot snapshot) {
 	  			  if(snapshot.getValue() != null){
@@ -352,9 +352,9 @@ public class App extends Application
 		  			      paramList.add(param);
 		  			      it.remove(); // avoids a ConcurrentModificationException
 	  				  }
-	  				  System.out.println(paramList.get(11).getUser());
+	  				//System.out.println(paramList.get(11).getUser());
 	  	  			//getOptimalParams();
-	  	  			//subscribeToWebEvents();
+	  	  			subscribeToWebEvents();
 	  			  }
 	  		  }
 	  		  @Override public void onCancelled(FirebaseError error) {}
@@ -486,11 +486,8 @@ public class App extends Application
 	  		  @Override
 	  		  public void onDataChange(DataSnapshot snapshot) {
 	  			  ParameterManager paramManager = ParameterManager.getParamManager();
-	  			  ArrayList<String> newParams = paramManager.convertBestToParamArray(paramList.get(family).getParams());
-	  			  paramManager.setSenderParams(newParams);
-	  			  paramManager.setSubjectParams(newParams);
-	  			  paramManager.setAlertParams(newParams);
-	  			  FirebaseManager.getDatabase().child("Exp1Res/optimal/").setValue(paramList.get(family).getUser());
+	  			  paramManager.setAlertMParams(paramList.get(family).getParams());
+	  			  FirebaseManager.getDatabase().child("Exp2Res/optimal/").setValue(paramList.get(family).getUser());
 	  			  
 	  			  System.out.println("*******************Firing notification******************************");
 	  			  if(snapshot.getValue() != null){
