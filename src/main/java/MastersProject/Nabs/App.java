@@ -107,15 +107,14 @@ public class App extends Application
         /*factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     	em = factory.createEntityManager();*/
     	
-    	//FriendsAndFamily ff = new FriendsAndFamily();
-    	//ff.saveUserList();
-    	//users = ff.getUsers();
-    	//selectedUser = getUserFromId("sp10-01-05");
-    	//System.out.println(selectedUser.getId());
+    	FriendsAndFamily ff = new FriendsAndFamily();
+    	users = ff.getUsers();
+    	selectedUser = getUserFromId("sp10-01-05");
+    	System.out.println(selectedUser.getId());
     	//FirebaseManager.getDatabase().child("FriendsFamily/users/").setValue(selectedUser);
     	System.out.println("Have actually started..");
-    	initNabsServer();
-    	//convertDataSetToJSON();
+    	//initNabsServer();
+    	convertDataSetToJSON();
     	return;
     	//users = User.getAllUsers(em);
     }
@@ -236,6 +235,7 @@ public class App extends Application
 		
 		updateEventDates();
 		setUserObjectsInFirebase();
+		FriendsAndFamily.saveUserList(users);
 		ObjectMapper mapper = new ObjectMapper();
 		Gson gson = new Gson();
 		try {
