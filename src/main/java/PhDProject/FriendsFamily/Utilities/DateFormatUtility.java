@@ -17,12 +17,19 @@ public class DateFormatUtility {
 	public static String convertDateToStringUTC(Date date){
 		String result = null;
 		
-		DateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		
 		result = formatter.format(date);
 		
 		return result;
+	}
+	
+	public static LocalDateTime convertStringToLocalDateTime(String string){
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"); 
+		LocalDateTime dateTime = LocalDateTime.parse(string, formatter);
+		return dateTime;
+
 	}
 	
 	public static Date convertStringToDate(String date){
@@ -97,4 +104,5 @@ public class DateFormatUtility {
 		else
 			return true;
 	}
+
 }

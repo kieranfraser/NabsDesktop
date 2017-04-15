@@ -7,9 +7,8 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -20,10 +19,6 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import org.mortbay.log.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.client.DataSnapshot;
@@ -48,9 +43,9 @@ import MastersProject.GoogleData.GoogleCalendarData;
 import MastersProject.Models.UpliftedNotification;
 import MastersProject.Utilities.DateUtility;
 import MastersProject.Utilities.ResultCallback;
-import PhDProject.FriendsFamily.Models.MobileApp;
+import PhDProject.FriendsFamily.FriendsAndFamily;
+import PhDProject.FriendsFamily.Models.Event;
 import PhDProject.FriendsFamily.Models.Notification;
-import PhDProject.FriendsFamily.Models.Subject;
 import PhDProject.FriendsFamily.Models.User;
 import PhDProject.FriendsFamily.PSO.Particle;
 import PhDProject.FriendsFamily.Utilities.DateFormatUtility;
@@ -112,15 +107,16 @@ public class App extends Application
         /*factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     	em = factory.createEntityManager();*/
     	
-    	/*FriendsAndFamily ff = new FriendsAndFamily();
-    	ff.saveUserList();
-    	users = ff.getUsers();
-    	selectedUser = getUserFromId("sp10-01-05");
-    	System.out.println(selectedUser.getId());*/
+    	//FriendsAndFamily ff = new FriendsAndFamily();
+    	//ff.saveUserList();
+    	//users = ff.getUsers();
+    	//selectedUser = getUserFromId("sp10-01-05");
+    	//System.out.println(selectedUser.getId());
     	//FirebaseManager.getDatabase().child("FriendsFamily/users/").setValue(selectedUser);
     	System.out.println("Have actually started..");
     	initNabsServer();
-    	
+    	//convertDataSetToJSON();
+    	return;
     	//users = User.getAllUsers(em);
     }
 	
@@ -212,8 +208,8 @@ public class App extends Application
 	  	    	//repo.activateNotificationListener();
 	  	    	
 	  	    	// Experiment 2!!
-	  	    	experiment1();
-	  	    	//experiment2();
+	  	    	//experiment1();
+	  	    	experiment2();
 	  	    	
 	  	    	//launch(args);
 	  	    	//javafx.application.Application.launch(App.class);
@@ -237,22 +233,50 @@ public class App extends Application
 				notification.setAppRank(notification.getApp().getRank());
 			}
 		}
-			ObjectMapper mapper = new ObjectMapper();
-			Gson gson = new Gson();
-			try {
-				gson.toJson(users, new FileWriter("jsonUsers.json"));
-				
-				 
-		        mapper.writeValue(new FileWriter("jsonUsersJackson.json"), users);
-		        
-			} catch (JsonIOException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			System.out.println("Conversion and export finished.");
+		
+		updateEventDates();
+		setUserObjectsInFirebase();
+		ObjectMapper mapper = new ObjectMapper();
+		Gson gson = new Gson();
+		try {
+			gson.toJson(users, new FileWriter("jsonUsers_april20172.json"));
 			
+			 
+	        mapper.writeValue(new FileWriter("jsonUsersJackson.json"), users);
+	        
+		} catch (JsonIOException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Conversion and export finished.");
 	}
 	
+	private static void updateEventDates() {
+		for(User user : users){
+			
+			LocalDateTime eventStart = !user.getEvents().isEmpty() ? user.getEvents().get(0).getInferredStartDate() : null;
+			String notificationStart = !user.getNotifications().isEmpty() ? user.getNotifications().get(0).getDate() : null;
+			
+			if(eventStart != null && notificationStart != null){
+				LocalDateTime notifDate = DateFormatUtility.convertStringToLocalDateTime(notificationStart);
+				
+				int difference = eventStart.compareTo(notifDate);
+				
+				if(difference<0){
+					Duration duration = Duration.between(eventStart, notifDate);
+					for(Event e : user.getEvents()){
+						e.setInferredStartDate(e.getInferredStartDate().plus(duration));
+						e.setInferredEndDate(e.getInferredEndDate().plus(duration));
+					}
+					eventStart = eventStart.plus(duration);
+				}
+			}
+					
+		}
+		System.out.println("finished update event dates");
+		
+	}
+
 	private static void convertDataToCSV(){
 		CSVWriter csvWriter = null;
 		try
@@ -303,6 +327,7 @@ public class App extends Application
 	}
 	
 	private static void setUserObjectsInFirebase(){
+		System.out.println("Setting values in firebase");
 		FirebaseManager.getDatabase().child("web/test/").setValue(users);
 	}
 	
@@ -684,7 +709,7 @@ public class App extends Application
 		//Integer[] optimal = {3, 3, 1, 2, 2, 1, 2, 3, 2, 2, 1, 1, 3, 3, 3, 1, 1, 1, 3, 1, 4, 4, 5, 2, 5, 3, 3, 4, 5, 3, 2, 4, 2, 3, 5, 3, 3, 5, 3, 1, 4, 4, 5, 3, 2};
 		//Integer[] optimal = {1, 2, 3, 3, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 2, 2, 1, 1, 2, 4, 3, 3, 5, 2, 4, 3, 3, 3, 4, 3, 4, 4, 5, 2, 3, 4, 2, 4, 2, 5, 4, 3, 1, 3, 2};
 		
-		Double[] optimal = {0.7149151661911818, 0.6998002688091841, 0.5058283920721023, 0.8976874964441978, 0.4446433900780228, 0.35887721250006543, 0.49202906254112966, 0.11417781525985293, 0.8134354676802653, 0.18967999004297886, 0.3369536290653503, 0.35809665368716737, 0.10277559413104431, 0.8148358796764275, 0.5936162432215714, 0.27139128651121724, 32.0, 94.0, 43.0, 1.0, 37.0, 62.0, 37.0, 34.0, 75.0, 87.0, 85.0};
+		Double[] optimal = {0.7254811797820513, 0.001, 1.0, 0.3374609091378106, 0.8119610137590335, 0.001, 1.0, 0.8336674958147481, 1.0, 0.001, 1.0, 0.001, 0.8923721251833423, 0.2770605692384287, 0.001, 0.8465980564136953, 0.001, 100.0, 100.0, 0.001, 0.001, 0.001, 42.052753600365946, 100.0, 100.0, 17.522830722991017, 84.40155029078612};
 		relevantUsers = findRelevantUsers();
 		
 		ArrayList<User> givenUser = new ArrayList<User>();
