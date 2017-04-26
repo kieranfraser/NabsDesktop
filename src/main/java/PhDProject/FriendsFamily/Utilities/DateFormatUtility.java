@@ -25,6 +25,20 @@ public class DateFormatUtility {
 		return result;
 	}
 	
+	public static LocalDateTime convertStringToLocalDateTime(String string){
+		DateTimeFormatter formatter;
+		LocalDateTime dateTime;
+		try{
+			formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm:ss"); 
+			dateTime = LocalDateTime.parse(string, formatter);
+		} catch(Exception e){
+			formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"); 
+			dateTime = LocalDateTime.parse(string, formatter);
+		}
+		return dateTime;
+
+	}
+	
 	public static Date convertStringToDate(String date){
 		Date result = null;			
 

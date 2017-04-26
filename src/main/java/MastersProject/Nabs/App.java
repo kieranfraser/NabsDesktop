@@ -8,6 +8,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import org.mortbay.log.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
@@ -48,6 +50,8 @@ import MastersProject.GoogleData.GoogleCalendarData;
 import MastersProject.Models.UpliftedNotification;
 import MastersProject.Utilities.DateUtility;
 import MastersProject.Utilities.ResultCallback;
+import PhDProject.FriendsFamily.FriendsAndFamily;
+import PhDProject.FriendsFamily.Models.Event;
 import PhDProject.FriendsFamily.Models.MobileApp;
 import PhDProject.FriendsFamily.Models.Notification;
 import PhDProject.FriendsFamily.Models.Subject;
@@ -112,22 +116,31 @@ public class App extends Application
         /*factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     	em = factory.createEntityManager();*/
     	
-    	/*FriendsAndFamily ff = new FriendsAndFamily();
-    	ff.saveUserList();
+    	FriendsAndFamily ff = new FriendsAndFamily();
+    	//ff.saveUserList();
     	users = ff.getUsers();
     	selectedUser = getUserFromId("sp10-01-05");
-    	System.out.println(selectedUser.getId());*/
+    	System.out.println(selectedUser.getId());
     	//FirebaseManager.getDatabase().child("FriendsFamily/users/").setValue(selectedUser);
     	System.out.println("Have actually started..");
+    	/*System.out.println("starting update");
+			updateEventDates();
+			System.out.println("starting conversion");
+			Firebase ref = FirebaseManager.getDatabase().child("Friends&Family/");
+			ref.removeValue();
+			FriendsAndFamily.saveUserList(users);
+			System.out.println("saved Users");
+			convertDataSetToJSON();*/
     	initNabsServer();
     	
     	//users = User.getAllUsers(em);
     }
 	
 	private static void initNabsServer(){
-		FirebaseManager.getDatabase().child("Friends&Family/users/").addValueEventListener(new ValueEventListener() {
+		FirebaseManager.getDatabase().child("Friends&Family/users/").addListenerForSingleValueEvent(new ValueEventListener() {
 	  		  @Override
 	  		  public void onDataChange(DataSnapshot snapshot) {
+	  			  System.out.println("Received users");
 	  			users = new ArrayList<>();
 	  			Map<String, String> result = snapshot.getValue(HashMap.class);
 	  			for (Map.Entry<String, String> entry : result.entrySet())
@@ -159,6 +172,12 @@ public class App extends Application
 	  					}
 	  				}
 	  			}
+	  			/*System.out.println("starting update");
+	  			updateEventDates();
+	  			System.out.println("starting conversion");
+	  			FriendsAndFamily.saveUserList(users);
+	  			System.out.println("saved Users");
+	  			convertDataSetToJSON();*/
 	  			
 	  			
 	  			/*String subjectOutput = "";
@@ -178,7 +197,6 @@ public class App extends Application
 	  			//convertDataToCSV();
 	  			
 	  			//setWebUserList(users);
-	  			//subscribeToWebEvents();
 	  			
 	  			
 				/*selectedUser.printEvents();
@@ -209,17 +227,46 @@ public class App extends Application
 	  	    	repo.activateBead("AppInfoBead");
 	  	    	repo.initialize();
 	  	    	//repo.saveRepoInstance();
-	  	    	//repo.activateNotificationListener();
+	  	    	repo.activateNotificationListener();
 	  	    	
 	  	    	// Experiment 2!!
-	  	    	experiment1();
+	  	    	//experiment1();
 	  	    	//experiment2();
 	  	    	
 	  	    	//launch(args);
 	  	    	//javafx.application.Application.launch(App.class);
+	  	    	
+
+	  			subscribeToWebEvents();
 	  		  }
 	  		  @Override public void onCancelled(FirebaseError error) { }
 		});
+	}
+	
+	private static void updateEventDates() {
+		for(User user : users){
+			
+			LocalDateTime eventStart = !user.getEvents().isEmpty() ? user.getEvents().get(0).getInferredStartDate() : null;
+			String notificationStart = !user.getNotifications().isEmpty() ? user.getNotifications().get(0).getDate() : null;
+			
+			if(eventStart != null && notificationStart != null){
+				LocalDateTime notifDate = DateFormatUtility.convertStringToLocalDateTime(notificationStart);
+				
+				int difference = eventStart.compareTo(notifDate);
+				
+				if(difference<0){
+					Duration duration = Duration.between(eventStart, notifDate);
+					for(Event e : user.getEvents()){
+						e.setInferredStartDate(e.getInferredStartDate().plus(duration));
+						e.setInferredEndDate(e.getInferredEndDate().plus(duration));
+					}
+					eventStart = eventStart.plus(duration);
+				}
+			}
+					
+		}
+		System.out.println("finished update event dates");
+		
 	}
 	
 	private static void convertDataSetToJSON(){
@@ -240,10 +287,10 @@ public class App extends Application
 			ObjectMapper mapper = new ObjectMapper();
 			Gson gson = new Gson();
 			try {
-				gson.toJson(users, new FileWriter("jsonUsers.json"));
+				gson.toJson(users, new FileWriter("260417_1.json"));
 				
 				 
-		        mapper.writeValue(new FileWriter("jsonUsersJackson.json"), users);
+		        mapper.writeValue(new FileWriter("260417_2.json"), users);
 		        
 			} catch (JsonIOException | IOException e) {
 				// TODO Auto-generated catch block
@@ -295,11 +342,23 @@ public class App extends Application
 	}
 	
 	private static void subscribeToWebEvents(){
-		//selectedUserEvent();
+		subscribeToSelectedUser();
 		subscribeToVariableValues();
-		selectedNotificationEvent();
+		//selectedNotificationEvent();
 		notificationToFire();
 		singleNotificationToFire();
+	}
+	
+	private static void subscribeToSelectedUser(){
+		FirebaseManager.getDatabase().child("web/selectedUserObject/id").addValueEventListener( new ValueEventListener() {
+	  		  @Override
+	  		  public void onDataChange(DataSnapshot snapshot) {
+	  			  if(snapshot.getValue() != null){
+	  				selectedUser = getUserFromId((String) snapshot.getValue());
+	  			  }
+	  		  }
+	  		  @Override public void onCancelled(FirebaseError error) {}
+		});
 	}
 	
 	private static void setUserObjectsInFirebase(){
@@ -362,32 +421,33 @@ public class App extends Application
 	}
 	
 	private static void singleNotificationToFire(){
-		FirebaseManager.getDatabase().child("web/fireSingle").addValueEventListener( new ValueEventListener() {
-	  		  @Override
-	  		  public void onDataChange(DataSnapshot snapshot) {
-		  			if(snapshot.getValue()!=null){
-		  				HashMap result = snapshot.getValue(HashMap.class);
-		  				UpliftedNotification n = new UpliftedNotification();
-		  				HashMap app = (HashMap) result.get("app");
-		  				HashMap subject = (HashMap) result.get("subject");
-		  				
-		  				n.setNotificationId((Integer) result.get("id"));
-		  				
-		  				n.setSender((String) result.get("sender"));
-		  				n.setSubject((String) subject.get("subject"));
-		  				n.setApp((String) app.get("name"));
-		  				n.setDate(DateUtility.stringToDate((String) result.get("date")));
-		  				
-		  				n.setSenderRank((Integer) result.get("senderRank"));
-		  				n.setAppRank((Integer) result.get("appRank"));
-		  				n.setSubjectRank((Integer) result.get("subjectRank"));
-		  				
-		  				fireNotification(n, "Custom");
-		  				
-		  			}
-	  		  }
-	  		  @Override public void onCancelled(FirebaseError error) {}
-		});
+  			FirebaseManager.getDatabase().child("web/fireSingle").addValueEventListener( new ValueEventListener() {
+  	  		  @Override
+  	  		  public void onDataChange(DataSnapshot snapshot) {
+  		  			if(snapshot.getValue()!=null){
+  		  				System.out.println("single fire notification");
+  		  				HashMap result = snapshot.getValue(HashMap.class);
+  		  				UpliftedNotification n = new UpliftedNotification();
+  		  				HashMap app = (HashMap) result.get("app");
+  		  				HashMap subject = (HashMap) result.get("subject");
+  		  				
+  		  				n.setNotificationId((Integer) result.get("id"));
+  		  				
+  		  				n.setSender((String) result.get("sender"));
+  		  				n.setSubject((String) subject.get("subject"));
+  		  				n.setApp((String) app.get("name"));
+  		  				n.setDate(DateUtility.stringToDate((String) result.get("date")));
+  		  				
+  		  				n.setSenderRank((Integer) result.get("senderRank"));
+  		  				n.setAppRank((Integer) result.get("appRank"));
+  		  				n.setSubjectRank((Integer) result.get("subjectRank"));
+  		  				
+  		  				fireNotification(n, "Custom");
+  		  				
+  		  			}
+  	  		  }
+  	  		  @Override public void onCancelled(FirebaseError error) {}
+  		});
 	}
 	
 	private static void selectedNotificationEvent(){
@@ -549,7 +609,7 @@ public class App extends Application
 	 * @return
 	 */
 	public static void fireNotification(UpliftedNotification customNotification, String type){
-		
+		System.out.println("firingNotification");
 		result = null;
 		switch(type){
 		case "Nabbed":

@@ -73,8 +73,8 @@ public class FriendsAndFamily {
 		return userB;
 	}
 
-	public void saveUserList(){
-		/*ArrayList<String> userStrings = new ArrayList<>();
+	public static void saveUserList(ArrayList<User> users){
+		ArrayList<String> userStrings = new ArrayList<>();
 		for(User user: users){
 			try {
 				userStrings.add(FirebaseManager.convertUserToString(user));
@@ -86,9 +86,9 @@ public class FriendsAndFamily {
 		for(String userString: userStrings){
 			Firebase ref = FirebaseManager.getDatabase().child("Friends&Family/users/").push();
 			ref.setValue(userString);
-		}*/
+		}
 		
-		for(User user: users){
+		/*for(User user: users){
 			String baseRef = "FriendsFamily/"+user.getId()+"/";
 			FirebaseManager.getDatabase().child(baseRef+"favoriteApps/").setValue(user.getFavoriteApps());
 			FirebaseManager.getDatabase().child(baseRef+"activities/").setValue(user.getActivities());
@@ -116,7 +116,7 @@ public class FriendsAndFamily {
 				FirebaseManager.getDatabase().child(notificationBaseRef+"/"+id+"/"+"dateRank").setValue(n.getDateRank());
 				id++;
 			}			
-		}
+		}*/
 	}
 
 	public ArrayList<User> getUsers() {
